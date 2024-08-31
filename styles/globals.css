@@ -1,0 +1,207 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Base colors */
+  --black: #101318;
+  --white: #ffffff;
+
+  /* Brand colors */
+  --brand-primary: #10b981;
+  --brand-secondary: #34d399;
+  --brand-tertiary: #a3e635;
+  --brand-gradient: linear-gradient(to right, #10b981, #a3e635);
+
+  /* Point colors */
+  --point-purple: #a855f7;
+  --point-blue: #3b82f6;
+  --point-cyan: #06b6d4;
+  --point-pink: #ec4899;
+  --point-rose: #f43f5e;
+  --point-orange: #f97316;
+  --point-yellow: #eab308;
+
+  /* Background colors */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-inverse: var(--white);
+
+  /* Interaction colors */
+  --it-inactive: #94a3b8;
+  --it-hover: #059669;
+  --it-pressed: #047857;
+  --it-focus: #10b981;
+
+  /* Border color */
+  --bd-primary: rgba(248, 250, 252, 0.5);
+
+  /* Text colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #e2e8f0;
+  --text-default: #64748b;
+  --text-inverse: var(--white);
+  --text-disabled: #94a3b8;
+
+  /* Status color */
+  --status-danger: #dc2626;
+
+  /* Icon colors */
+  --icon-primary: #64748b;
+  --icon-secondary: #f8fafc;
+  --icon-tertiary: #10b981;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+/* weight */
+/*  bold    : 700
+    semibold: 600
+    medium  : 500
+    regular : 400 */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Text-4xl */
+  .font-medium-40 {
+    @apply text-[40px] font-medium leading-[48px];
+  }
+
+  /* Text-3xl */
+  .font-bold-32 {
+    @apply text-[32px] font-bold leading-[38px];
+  }
+
+  .font-semibold-32 {
+    @apply text-[32px] font-semibold leading-[38px];
+  }
+
+  /* Text-2xl */
+  .font-bold-24 {
+    @apply text-[24px] font-bold leading-[28px];
+  }
+
+  .font-semibold-24 {
+    @apply text-[24px] font-semibold leading-[28px];
+  }
+
+  .font-medium-24 {
+    @apply text-[24px] font-medium leading-[28px];
+  }
+
+  .font-regular-24 {
+    @apply text-[24px] font-normal leading-[28px];
+  }
+
+  /* Text-xl */
+  .font-bold-20 {
+    @apply text-[20px] font-bold leading-[24px];
+  }
+
+  .font-semibold-20 {
+    @apply text-[20px] font-semibold leading-[24px];
+  }
+
+  .font-medium-20 {
+    @apply text-[20px] font-medium leading-[24px];
+  }
+
+  .font-regular-20 {
+    @apply text-[20px] font-normal leading-[24px];
+  }
+
+  /* Text-2lg */
+  .font-bold-18 {
+    @apply text-[18px] font-bold leading-[21px];
+  }
+
+  .font-semibold-18 {
+    @apply text-[18px] font-semibold leading-[21px];
+  }
+
+  .font-medium-18 {
+    @apply text-[18px] font-medium leading-[21px];
+  }
+
+  .font-regular-18 {
+    @apply text-[18px] font-normal leading-[21px];
+  }
+
+  /* Text-lg */
+  .font-bold-16 {
+    @apply text-[16px] font-bold leading-[19px];
+  }
+
+  .font-semibold-16 {
+    @apply text-[16px] font-semibold leading-[19px];
+  }
+
+  .font-medium-16 {
+    @apply text-[16px] font-medium leading-[19px];
+  }
+
+  .font-regular-16 {
+    @apply text-[16px] font-normal leading-[19px];
+  }
+
+  /* Text-md */
+  .font-bold-14 {
+    @apply text-[14px] font-bold leading-[17px];
+  }
+
+  .font-semibold-14 {
+    @apply text-[14px] font-semibold leading-[17px];
+  }
+
+  .font-medium-14 {
+    @apply text-[14px] font-medium leading-[17px];
+  }
+
+  .font-regular-14 {
+    @apply text-[14px] font-normal leading-[17px];
+  }
+
+  /* Text-sm */
+  .font-semibold-13 {
+    @apply text-[13px] font-semibold leading-[16px];
+  }
+
+  .font-medium-13 {
+    @apply text-[13px] font-medium leading-[16px];
+  }
+
+  /* Text-xs */
+  .font-semibold-12 {
+    @apply text-[12px] font-semibold leading-[14px];
+  }
+
+  .font-medium-12 {
+    @apply text-[12px] font-medium leading-[14px];
+  }
+
+  .font-regular-12 {
+    @apply text-[12px] font-normal leading-[14px];
+  }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+}
