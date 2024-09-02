@@ -38,7 +38,7 @@
   --it-focus: #10b981;
 
   /* Border color */
-  --bd-primary: rgba(248, 250, 252, 0.5);
+  --bd-primary: rgba(248, 250, 252, 0.1);
 
   /* Text colors */
   --text-primary: #f8fafc;
