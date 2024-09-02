@@ -1,9 +1,9 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import logo from '@/assets/image/logo/logo.svg';
 import userIcon from '@/assets/image/icon/user.svg';
 import toggleIcon from '@/assets/image/icon/header-toggle.svg';
 import menuIcon from '@/assets/image/icon/gnb-menu.svg';
-import Link from 'next/link';
 
 export default function Header() {
   return (
