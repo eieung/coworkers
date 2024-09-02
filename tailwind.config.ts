@@ -85,6 +85,11 @@ const config: Config = {
         "icon-secondary": "var(--icon-secondary)",
         "icon-tertiary": "var(--icon-tertiary)",
       },
+      screens: {
+        sm: { max: "767px" },
+        md: { min: "768px", max: "1199px" },
+        lg: { min: "1200px" },
+      },
     },
   },
   plugins: [],
