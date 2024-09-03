@@ -1,10 +1,12 @@
-import LoginForm from "@/components/authentication/loginForm";
+import LoginForm from '@/components/authentication/loginForm';
+import SocialLogin from '@/components/authentication/socialLogin';
 
 export default function Login() {
   return (
-    <div className="w-343 mx-auto mt-84 flex-center flex-col gap-24">
+    <div className="flex-center mx-auto mt-84 w-343 flex-col gap-24">
       <h2 className="font-bold-24 text-text-primary">로그인</h2>
       <LoginForm />
+      <SocialLogin />
     </div>
   );
 }
