@@ -3,7 +3,7 @@ interface ButtonProps {
   items: keyof typeof itemVariants;
   fullWidth: boolean;
   height?: number;
-  font?: any;
+  font?: string;
   onClick?: () => void;
 }
 
@@ -27,7 +27,7 @@ const itemVariants = {
 };
 
 const heightClass = (height: number) => `h-${height}`;
-const fontClass = (font: string) => `font-${font}`;
+const fontClass = (font: string) => font;
 
 export default function Button(props: ButtonProps) {
   const { title, items, fullWidth, height, font, onClick } = props;
@@ -35,7 +35,6 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       className={`${itemVariants[items]} ${fullWidth ? 'w-full' : ''} ${height ? heightClass(height) : ''} ${font ? fontClass(font) : ''}`}
-      style={{ height }}
       onClick={onClick}
     >
       {title}
