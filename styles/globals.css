@@ -268,4 +268,9 @@ th {
   .flex-center {
     @apply flex justify-center items-center;
   }
+
+  .password-input-translate {
+    @apply absolute top-1/2 right-1;
+    transform: translate(-50%, -50%);
+  }
 }
