@@ -7,9 +7,9 @@ import menuIcon from '@/assets/image/icon/gnb-menu.svg';
 
 export default function Header() {
   return (
-    <header className="z-999 fixed top-0 flex h-60 w-full items-center justify-center border-b border-transparent border-b-bd-primary bg-bg-secondary px-16 py-20 md:px-24 md:py-20">
-      <div className="flex w-1200 items-center justify-between md:h-20">
-        <div className="flex items-center justify-between gap-x-16 md:gap-x-32 lg:gap-x-40">
+    <header className="z-999 sticky top-0 flex h-[60px] w-full items-center justify-center border-b border-transparent border-b-bd-primary bg-bg-secondary px-4 py-5 md:px-6 md:py-5">
+      <div className="flex w-[1200px] items-center justify-between md:h-5">
+        <div className="flex items-center justify-between gap-x-4 md:gap-x-8 lg:gap-x-10">
           <Image
             src={menuIcon}
             alt="메뉴"
@@ -21,11 +21,11 @@ export default function Header() {
             <Image
               src={logo}
               alt="코워커스"
-              className="h-20 w-102 md:h-20 md:w-102 lg:h-32 lg:w-158"
+              className="h-5 w-[102px] md:h-5 md:w-[102px] lg:h-8 lg:w-[158px]"
             />
           </Link>
-          <div className="flex gap-x-32 sm:hidden">
-            <div className="flex gap-x-11">
+          <div className="flex gap-x-8 sm:hidden">
+            <div className="flex gap-x-[11px]">
               <Link href="/exam">
                 <span className="font-medium-16 text-text-primary">
                   경영관리팀
