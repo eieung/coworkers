@@ -18,12 +18,13 @@ export type ButtonVariant = keyof typeof itemVariants;
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  appearance?: ButtonVariant;
-  fullWidth?: boolean;
-  size?: 'large' | 'xsmall' | 'floating-large' | 'floating-medium';
-  disabled?: boolean;
-  children?: string;
+  appearance: ButtonVariant;
+  fullWidth: boolean;
+  size: 'large' | 'xsmall' | 'floating-large' | 'floating-medium';
+  disabled: boolean;
+  children: string;
   className?: string;
+  font?: string;
 }
 
 export default function Button({
@@ -32,9 +33,11 @@ export default function Button({
   size = 'large',
   disabled = false,
   children,
+  font,
   className,
   ...rest
 }: ButtonProps) {
+  const fontClass = (font: string) => `${font}`;
   return (
     <button
       {...rest}
@@ -47,6 +50,7 @@ export default function Button({
         size === 'floating-large' && 'h-[48px] px-[21px]',
         size === 'floating-medium' && 'h-[40px] px-[21px]',
         itemVariants[appearance],
+        font && fontClass(font),
         className,
       )}
     >
