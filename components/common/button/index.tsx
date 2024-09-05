@@ -9,9 +9,9 @@ const itemVariants = {
     'rounded-[12px] border-[1px] border-solid border-text-secondary bg-white text-text-default',
   danger: 'rounded-[12px] bg-status-danger text-white',
   'floating-solid':
-    'rounded-[40px] bg-brand-primary text-white hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive',
+    'rounded-[40px] bg-brand-primary text-white shadow-floating hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive',
   'floating-outlined':
-    'rounded-[40px] border-1 border-solid border-brand-primary bg-bg-inverse text-brand-primary hover:border-it-hover hover:text-it-hover active:border-it-pressed active:text-it-pressed disabled:border-it-inactive disabled:text-it-inactive',
+    'rounded-[40px] border-1 border-solid border-brand-primary bg-bg-inverse text-brand-primary shadow-floating hover:border-it-hover hover:text-it-hover active:border-it-pressed active:text-it-pressed disabled:border-it-inactive disabled:text-it-inactive',
 } as const;
 
 export type ButtonVariant = keyof typeof itemVariants;

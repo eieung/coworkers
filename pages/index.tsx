@@ -1,5 +1,73 @@
 import Button from '@/components/common/button';
 
 export default function Home() {
-  return <></>;
+  return (
+    <>
+      <Button
+        size="large"
+        font="font-bold-24"
+        appearance="solid"
+        fullWidth={true}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="large"
+        appearance="outlined"
+        fullWidth={true}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="large"
+        appearance="secondary-outlined"
+        fullWidth={true}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="xsmall"
+        appearance="solid"
+        fullWidth={false}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="xsmall"
+        appearance="outlined"
+        fullWidth={false}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="floating-large"
+        appearance="floating-solid"
+        fullWidth={false}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="floating-medium"
+        appearance="floating-solid"
+        fullWidth={false}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+      <Button
+        size="floating-large"
+        appearance="floating-outlined"
+        fullWidth={false}
+        children="생성하기"
+        className=""
+        disabled={false}
+      />
+    </>
+  );
 }
