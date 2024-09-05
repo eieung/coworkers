@@ -1,14 +1,15 @@
-import Button from '@/components/common/button/Button';
+import Button from '@/components/common/button';
 
 export default function Home() {
   return (
     <>
       <Button
-        size="xsmall"
-        appearance="outlined"
+        size="floating-large"
+        appearance="floating-outlined"
         fullWidth={false}
-        children="테스트용"
-        className="mt-100"
+        children="+ 할 일 추가"
+        className=""
+        disabled={true}
       />
     </>
   );
