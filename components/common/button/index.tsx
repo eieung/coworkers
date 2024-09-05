@@ -16,7 +16,8 @@ const itemVariants = {
 
 export type ButtonVariant = keyof typeof itemVariants;
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   appearance?: ButtonVariant;
   fullWidth?: boolean;
   size?: 'large' | 'xsmall' | 'floating-large' | 'floating-medium';
