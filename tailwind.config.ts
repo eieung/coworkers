@@ -1,11 +1,5 @@
 import type { Config } from 'tailwindcss';
 
-const createPxValues = (count: number) => {
-  return Object.fromEntries(
-    Array.from({ length: count + 1 }, (_, i) => [`${i}`, `${i}px`]),
-  );
-};
-
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -14,22 +8,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      borderWidth: createPxValues(10),
-      fontSize: createPxValues(100),
-      lineHeight: createPxValues(100),
-      minWidth: createPxValues(200),
-      minHeight: createPxValues(200),
-      maxWidth: createPxValues(2000),
-      maxHeight: createPxValues(2000),
-      spacing: createPxValues(2000),
-      width: createPxValues(2000),
-      height: createPxValues(2000),
-      borderRadius: createPxValues(200),
-
       screens: {
         sm: { max: '767px' },
         md: { min: '768px', max: '1199px' },
         lg: { min: '1200px' },
+      },
+      boxShadow: {
+        floating: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       },
 
       // 기본 값
