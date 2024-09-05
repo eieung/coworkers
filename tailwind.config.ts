@@ -31,6 +31,9 @@ const config: Config = {
         md: { min: '768px', max: '1199px' },
         lg: { min: '1200px' },
       },
+      boxShadow: {
+        floating: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+      },
 
       // 기본 값
       backgroundImage: {
