@@ -57,6 +57,9 @@
   --icon-tertiary: #10b981;
 }
 
+body {
+  background-color: var(--bg-primary);
+}
 blockquote,
 body,
 dd,
@@ -83,7 +86,6 @@ ul {
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
-  background-color: var(--bg-primary);
 }
 h1,
 h2,
@@ -290,4 +292,18 @@ th {
     @apply absolute left-0 top-12;
     transform: translate(-50%, 0%);
   }
+}
+
+/* 공통 Toastify 설정 */
+.toast-container .Toastify__toast {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.Toastify__toast .Toastify__progress-bar {
+  background: var(--brand-secondary);
+}
+
+.Toastify__toast .Toastify__progress-bar--bg {
+  background: var(--brand-secondary);
 }
