@@ -4,9 +4,9 @@ const itemVariants = {
   solid:
     'rounded-[12px] bg-brand-primary text-white hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive',
   outlined:
-    'outlined-[1px] rounded-[12px] border-[1px] border-solid border-brand-primary bg-white text-brand-primary hover:border-it-hover hover:text-it-hover active:border-it-pressed active:text-it-pressed disabled:border-it-inactive disabled:text-it-inactive',
+    'rounded-[12px] border border-solid border-brand-primary bg-white text-brand-primary hover:border-it-hover hover:text-it-hover active:border-it-pressed active:text-it-pressed disabled:border-it-inactive disabled:text-it-inactive',
   'secondary-outlined':
-    'rounded-[12px] border-[1px] border-solid border-text-secondary bg-white text-text-default',
+    'rounded-[12px] border border-solid border-text-secondary bg-white text-text-default',
   danger: 'rounded-[12px] bg-status-danger text-white',
   'floating-solid':
     'rounded-[40px] bg-brand-primary text-white shadow-floating hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive',
@@ -18,10 +18,10 @@ export type ButtonVariant = keyof typeof itemVariants;
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  appearance: ButtonVariant;
-  fullWidth: boolean;
-  size: 'large' | 'xsmall' | 'floating-large' | 'floating-medium';
-  disabled: boolean;
+  appearance?: ButtonVariant;
+  fullWidth?: boolean;
+  size?: 'large' | 'xsmall' | 'floating-large' | 'floating-medium';
+  disabled?: boolean;
   children: string;
   className?: string;
   font?: string;
@@ -44,11 +44,14 @@ export default function Button({
       disabled={disabled}
       className={clsx(
         fullWidth && 'w-full',
-        !fullWidth && 'px-[12px]',
-        size === 'large' && 'h-[48px]',
-        size === 'xsmall' && 'h-[32px]',
-        size === 'floating-large' && 'h-[48px] px-[21px]',
-        size === 'floating-medium' && 'h-[40px] px-[21px]',
+        !fullWidth &&
+          size !== 'floating-large' &&
+          size !== 'floating-medium' &&
+          'px-3',
+        size === 'large' && 'h-12',
+        size === 'xsmall' && 'h-8',
+        size === 'floating-large' && 'h-12 px-[21px]',
+        size === 'floating-medium' && 'h-10 px-[21px]',
         itemVariants[appearance],
         font && fontClass(font),
         className,
