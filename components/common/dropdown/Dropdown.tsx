@@ -19,7 +19,7 @@ export default function Dropdown({ trigger, items }: DropdownProps) {
       </button>
 
       {isOpen && (
-        <ul className="absolute right-0 mt-2 w-48 bg-bg-secondary text-white rounded-2xl border border-bd-primary">
+        <ul className="absolute right-0 mt-2 w-48 bg-bg-secondary text-white rounded-xl border border-bd-primary">
           {items.map((item, index) => (
             <li
               key={index}
