@@ -4,7 +4,7 @@ import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
-import { toastContainerProps } from '@/constants/Toast';
+import { toastContainerProps } from '@/constants/toast';
 
 const DynamicToastContainer = dynamic(
   () => import('react-toastify').then((mod) => mod.ToastContainer),
