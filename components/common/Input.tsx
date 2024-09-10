@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import clsx from 'clsx';
 import visibilityOn from '@/assets/image/icon/visibility_on.svg';
 import visibilityOff from '@/assets/image/icon/visibility_off.svg';
@@ -48,67 +48,67 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-export default function Input({
-  label,
-  invalid,
-  validationMessage,
-  type = 'text',
-  className,
-  ...props
-}: InputProps) {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    { label, invalid, validationMessage, type = 'text', className, ...props },
+    ref,
+  ) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
+    const togglePasswordVisibility = () => {
+      setIsPasswordVisible(!isPasswordVisible);
+    };
 
-  return (
-    <div>
-      {label && (
-        <label
-          htmlFor={props.id}
-          className="font-medium-16 mb-3 inline-block text-text-primary"
-        >
-          {label}
-        </label>
-      )}
-      <span className="relative">
-        <input
-          type={type === 'password' && isPasswordVisible ? 'text' : type}
-          className={clsx(
-            'placeholder:font-regular-16 rounded-[12px] border border-solid border-bd-primary bg-bg-secondary p-4 text-text-primary outline-none placeholder:text-text-default',
-            'hover:border-it-hover',
-            'focus:border-it-focus',
-            type === 'password' ? 'pr-10' : 'pr-4',
-            invalid && 'border-red-500',
-            !invalid &&
-              props.value &&
-              props.value !== '' &&
-              'border-bd-primary',
-            className,
-          )}
-          {...props}
-        />
-        {type === 'password' && (
-          <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="password-input-translate"
+    return (
+      <div className="inline-flex flex-col justify-start">
+        {label && (
+          <label
+            htmlFor={props.id}
+            className="font-medium-16 mb-3 inline-block text-text-primary"
           >
-            <Image
-              src={isPasswordVisible ? visibilityOn : visibilityOff}
-              alt={isPasswordVisible ? '비밀번호 표시' : '비밀번호 숨김'}
-              width={24}
-              height={24}
-            />
-          </button>
+            {label}
+          </label>
         )}
-      </span>
-      {invalid && validationMessage && (
-        <span className="font-medium-14 mt-2 inline-block text-red-500">
-          {validationMessage}
+        <span className="relative">
+          <input
+            ref={ref}
+            type={type === 'password' && isPasswordVisible ? 'text' : type}
+            className={clsx(
+              'placeholder:font-regular-16 rounded-[12px] border border-solid border-bd-primary bg-bg-secondary p-4 text-text-primary outline-none placeholder:text-text-default',
+              'hover:border-it-hover',
+              'focus:border-it-focus',
+              type === 'password' ? 'pr-10' : 'pr-4',
+              invalid && 'border-red-500',
+              !invalid && props.value && 'border-bd-primary',
+              className,
+            )}
+            {...props}
+          />
+          {type === 'password' && (
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="password-input-translate"
+            >
+              <Image
+                src={isPasswordVisible ? visibilityOn : visibilityOff}
+                alt={isPasswordVisible ? '비밀번호 표시' : '비밀번호 숨김'}
+                width={24}
+                height={24}
+              />
+            </button>
+          )}
         </span>
-      )}
-    </div>
-  );
-}
+        {invalid && validationMessage && (
+          <span className="font-medium-14 mt-2 block text-red-500">
+            {validationMessage}
+          </span>
+        )}
+      </div>
+    );
+  },
+);
+
+Input.displayName = 'Input';
+
+export default Input;
