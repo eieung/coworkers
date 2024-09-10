@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, forwardRef } from 'react';
+import { useRef, useEffect, forwardRef } from 'react';
 import clsx from 'clsx';
 
 interface TextareaProps
