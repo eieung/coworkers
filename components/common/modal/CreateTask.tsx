@@ -57,9 +57,11 @@ export default function CreateTask({ close }: CreateTaskProps) {
         {inputs?.[FORM_FIELD.TITLE] && (
           <div className="mt-4">
             <Controller
-              name="title"
+              name={inputs[FORM_FIELD.TITLE]?.name as keyof FormData}
               control={control}
-              rules={{ required: inputs[FORM_FIELD.TITLE].placeholder }}
+              rules={{
+                required: inputs[FORM_FIELD.TITLE].placeholder,
+              }}
               render={({ field }) => (
                 <Input
                   {...inputs[FORM_FIELD.TITLE]}
@@ -80,7 +82,7 @@ export default function CreateTask({ close }: CreateTaskProps) {
         {inputs?.[FORM_FIELD.MEMO] && (
           <div className="mt-4">
             <Controller
-              name="memo"
+              name={inputs[FORM_FIELD.MEMO]?.name as keyof FormData}
               control={control}
               rules={{ required: inputs[FORM_FIELD.MEMO].placeholder }}
               render={({ field }) => (
