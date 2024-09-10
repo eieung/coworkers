@@ -70,7 +70,7 @@ export default function DatePicker({ close }: DatePickerProps) {
         {inputs.length > 0 && (
           <>
             {inputs[FORM_FIELD.TITLE] && (
-              <div className="mt-6">
+              <div className="mt-6 flex flex-col">
                 <Controller
                   name={inputs[FORM_FIELD.TITLE].name as keyof FormData}
                   control={control}

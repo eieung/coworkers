@@ -78,7 +78,7 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         {inputs?.map((input, index) => (
-          <div className="mt-4" key={index}>
+          <div className="mt-4 flex flex-col" key={index}>
             <Controller
               name={input.name as keyof FormData}
               control={control}

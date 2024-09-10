@@ -43,7 +43,7 @@ export default function CreateTaskList({ close }: CreateTaskListProps) {
       showCloseIcon={true}
       description={description}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         {inputs?.[0] && (
           <Controller
             name="value"

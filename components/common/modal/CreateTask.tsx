@@ -55,7 +55,7 @@ export default function CreateTask({ close }: CreateTaskProps) {
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         {inputs?.[FORM_FIELD.TITLE] && (
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col">
             <Controller
               name={inputs[FORM_FIELD.TITLE]?.name as keyof FormData}
               control={control}
