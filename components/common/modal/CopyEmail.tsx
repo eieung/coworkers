@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '.';
-import { ACTION_TYPE, ModalUserActions } from '@/constants/Modal';
+import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 import { toast } from 'react-toastify';
 import Button from '@/components/common/button';
 import Image from 'next/image';
@@ -29,6 +29,7 @@ export default function CopyEmail({
     try {
       await navigator.clipboard.writeText(text);
       toast('이메일이 클립보드에 복사되었습니다!');
+      close();
     } catch (error) {
       toast.error('이메일 복사에 실패했습니다.');
     }
@@ -65,13 +66,10 @@ export default function CopyEmail({
           {buttons && (
             <Button
               {...buttons[0]}
-              size="floating-large"
               onClick={() => {
                 copyToClipboard(userEmail);
               }}
-            >
-              {buttons[0].children}
-            </Button>
+            />
           )}
         </div>
       </div>

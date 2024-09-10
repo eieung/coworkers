@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from '.';
-import { ACTION_TYPE, ModalUserActions } from '@/constants/Modal';
+import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 import { toast } from 'react-toastify';
 import Button from '@/components/common/button';
 
@@ -24,11 +24,10 @@ export default function InviteMember({ close }: InviteMemberProps) {
           <Button
             {...buttons[0]}
             onClick={() => {
-              toast('복사되었습니다!');
+              toast('링크가 복사되었습니다!');
+              close();
             }}
-          >
-            {buttons[0].children}
-          </Button>
+          />
         )}
       </div>
     </Modal>

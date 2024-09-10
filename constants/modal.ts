@@ -1,8 +1,18 @@
-import { Action } from '@/types/Modal';
+import { ButtonProps } from '@/components/common/button';
 
-export enum BUTTON_TYPE {
-  ONE_BUTTON = 1,
-  TWO_BUTTON,
+export interface InputField {
+  name?: string;
+  height?: string;
+  type?: string;
+  label?: string;
+  placeholder?: string;
+}
+
+export interface Action {
+  title: string;
+  description?: string;
+  buttons?: ButtonProps[];
+  inputs?: InputField[];
 }
 
 export enum ACTION_TYPE {
@@ -14,6 +24,8 @@ export enum ACTION_TYPE {
   DELETE_ACCOUNT,
   LOGOUT,
   CHANGE_PASSWORD,
+  DATE_PICKER,
+  PASSWORD_RESET,
 }
 
 const DEFAULT_BUTTON_FONT = 'font-medium-16';
@@ -106,7 +118,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
     ],
     buttons: [
       {
-        appearance: 'solid',
+        appearance: 'outlined',
         size: 'floating-large',
         disabled: false,
         children: '닫기',
@@ -129,7 +141,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
       '그룹장으로 있는 그룹은 자동으로 삭제되고,\n모든 그룹에서 나가집니다.',
     buttons: [
       {
-        appearance: 'solid',
+        appearance: 'outlined',
         size: 'floating-large',
         disabled: false,
         children: '닫기',
@@ -150,7 +162,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
     title: '로그아웃 하시겠어요?',
     buttons: [
       {
-        appearance: 'solid',
+        appearance: 'outlined',
         size: 'floating-large',
         disabled: false,
         children: '닫기',
@@ -171,11 +183,13 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
     title: '비밀번호 변경하기',
     inputs: [
       {
+        name: 'password',
         height: 'h-12',
         label: '새 비밀번호',
         placeholder: '새 비밀번호를 입력해주세요.',
       },
       {
+        name: 'passwordConfirmation',
         height: 'h-12',
         label: '새 비밀번호 확인',
         placeholder: '새 비밀번호를 다시 한 번 입력해주세요.',
@@ -183,7 +197,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
     ],
     buttons: [
       {
-        appearance: 'solid',
+        appearance: 'outlined',
         size: 'floating-large',
         disabled: false,
         children: '닫기',
@@ -195,6 +209,78 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
         size: 'floating-large',
         disabled: false,
         children: '변경하기',
+        font: DEFAULT_BUTTON_FONT,
+        fullWidth: true,
+      },
+    ],
+  },
+  [ACTION_TYPE.DATE_PICKER]: {
+    title: '할 일 만들기',
+    description:
+      '할 일은 실제로 행동 가능한 작업 중심으로\n작성해주시면 좋습니다.',
+    buttons: [
+      {
+        appearance: 'solid',
+        size: 'floating-large',
+        disabled: false,
+        children: '만들기',
+        font: DEFAULT_BUTTON_FONT,
+        fullWidth: true,
+      },
+    ],
+    inputs: [
+      {
+        name: 'title',
+        height: 'h-12',
+        label: '할 일 제목',
+        placeholder: '할 일 제목을 입력해주세요.',
+      },
+      {
+        name: 'date',
+        height: 'h-12',
+        label: '시작 날짜 및 시간',
+      },
+      {
+        name: 'time',
+        height: 'h-12',
+      },
+      {
+        name: 'repeat',
+        height: 'h-11',
+        label: '반복 설정',
+      },
+      {
+        name: 'memo',
+        height: 'h-[75px]',
+        label: '할 일 메모',
+        placeholder: '메모를 입력해주세요.',
+      },
+    ],
+  },
+  [ACTION_TYPE.PASSWORD_RESET]: {
+    title: '비밀번호 재설정',
+    description: '비밀번호 재설정 링크를 보내드립니다.',
+    inputs: [
+      {
+        name: 'email',
+        height: 'h-12',
+        placeholder: '이메일을 입력하세요.',
+      },
+    ],
+    buttons: [
+      {
+        appearance: 'outlined',
+        size: 'floating-large',
+        disabled: false,
+        children: '닫기',
+        font: DEFAULT_BUTTON_FONT,
+        fullWidth: true,
+      },
+      {
+        appearance: 'solid',
+        size: 'floating-large',
+        disabled: false,
+        children: '링크보내기',
         font: DEFAULT_BUTTON_FONT,
         fullWidth: true,
       },
