@@ -1,0 +1,27 @@
+import Image from 'next/image';
+import kebabIcon from '@/assets/image/icon/kebab.svg';
+import ProgressBar from '@/components/common/progressBar';
+
+export default function Task() {
+  return (
+    <div className="flex flex-row items-center justify-between rounded-xl bg-bg-secondary mb-4">
+      <div className="flex flex-row items-center gap-x-3">
+        <div className="h-10 w-4 rounded-l-xl bg-yellow-400"></div>
+        <b className="font-medium-14 text-text-primary">법인 설립</b>
+      </div>
+      <div className="flex flex-row gap-x-1 pr-2">
+        <div className="flex items-center gap-1 rounded-xl bg-bg-primary px-2">
+          <div className="h-3 w-3">
+            <ProgressBar
+              percentage={75}
+              pathColor="#10b981"
+              trailColor="#f8fafc"
+            />
+          </div>
+          <span className="font-14-regular text-brand-primary">3/5</span>
+        </div>
+        <Image src={kebabIcon} alt="케밥 아이콘" width={16} height={16} />
+      </div>
+    </div>
+  );
+}
