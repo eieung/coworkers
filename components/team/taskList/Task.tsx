@@ -24,7 +24,7 @@ interface TaskProps {
   };
 }
 export default function Task({ task }: TaskProps) {
-    // 진행 상황 비율을 계산
+  // 진행 상황 비율을 계산
   const percentage = Math.round((task.doneTasks / task.totalTasks) * 100);
 
   return (
