@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import settingIcon from '@/assets/image/icon/gear.svg';
 import thumbnailTeam from '@/assets/image/task/thumbnail-team.svg';
+import groupData from '@/data/groupMockData';
 
 export default function TeamSetting() {
+  const { name } = groupData;
   return (
     <div className="relative flex h-16 items-center justify-between rounded-xl bg-bg-secondary px-6 py-5">
-      <strong className="font-bold-20 text-white">경영관리팀</strong>
+      <strong className="font-bold-20 text-white">{name}</strong>
       <Image
         src={thumbnailTeam}
         alt="팀 설정 배경"
