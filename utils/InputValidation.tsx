@@ -1,7 +1,7 @@
-import Input from '@/components/common/Input';
+// useValidation.ts
 import { useState } from 'react';
 
-export default function Example() {
+export const useValidation = () => {
   // 이메일 상태 및 유효성 검사 상태
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -126,42 +126,24 @@ export default function Example() {
     return '';
   };
 
-  return (
-    <div className="m-auto mt-5 flex h-[397px] w-[460px] flex-col gap-y-4">
-      <Input
-        label="이메일"
-        type="email"
-        value={email}
-        onChange={handleEmailChange}
-        onBlur={handleEmailBlur}
-        invalid={!isEmailValid}
-        validationMessage={getEmailValidationMessage()}
-        placeholder="이메일을 입력하세요."
-        className="w-full"
-      />
-      <Input
-        label="비밀번호"
-        type="password"
-        value={password}
-        onChange={handlePasswordChange}
-        onBlur={handlePasswordBlur}
-        invalid={!isPasswordValid}
-        validationMessage={getPasswordValidationMessage()}
-        placeholder="비밀번호를 입력하세요."
-        className="w-full"
-      />
-
-      <Input
-        label="닉네임"
-        type="nickname"
-        value={nickname}
-        onChange={handleNicknameChange}
-        onBlur={handleNicknameBlur}
-        invalid={!isNicknameValid}
-        validationMessage={getNicknameValidationMessage()}
-        placeholder="닉네임을 입력해 주세요."
-        className="w-full"
-      />
-    </div>
-  );
-}
+  return {
+    email,
+    setEmail,
+    isEmailValid,
+    handleEmailChange,
+    handleEmailBlur,
+    getEmailValidationMessage,
+    password,
+    setPassword,
+    isPasswordValid,
+    handlePasswordChange,
+    handlePasswordBlur,
+    getPasswordValidationMessage,
+    nickname,
+    setNickname,
+    isNicknameValid,
+    handleNicknameChange,
+    handleNicknameBlur,
+    getNicknameValidationMessage,
+  };
+};
