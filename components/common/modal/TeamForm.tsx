@@ -17,7 +17,7 @@ const DEFAULT_IMAGE_URL =
   'https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/537/image2.svg';
 
 interface FormData {
-  nameValue: string;
+  name: string;
 }
 
 interface TeamFormProps {
@@ -40,10 +40,10 @@ export default function TeamForm({
   } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
-      nameValue: isEditMode ? name : '',
+      name: isEditMode ? name : '',
     },
   });
-
+  const [imageURL, setImageURL] = useState<string>(image || DEFAULT_IMAGE_URL);
   const [fileValue, setFileValue] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>(image || addImg.src);
 
@@ -57,21 +57,18 @@ export default function TeamForm({
     }
   }, [fileValue, image]);
 
-  const onSubmit = ({ nameValue }: FormData) => {
-    const trimmedNameValue = nameValue.trim();
-    const updatedImage = fileValue ? fileValue : image || DEFAULT_IMAGE_URL;
-
+  const onSubmit = (data: FormData) => {
     const updatedData = {
-      name: trimmedNameValue,
-      image: updatedImage,
+      ...data,
+      image: imageURL,
     };
 
     // 서버에 데이터 전송 로직 추가 필요
 
     toast(
       isEditMode
-        ? `${trimmedNameValue} 수정되었습니다!`
-        : `${trimmedNameValue} 생성되었습니다!`,
+        ? `${data.name} 수정되었습니다!`
+        : `${data.name} 생성되었습니다!`,
     );
 
     close();
@@ -84,11 +81,10 @@ export default function TeamForm({
         return;
       }
 
-      // 서버에 이미지 업로드 로직 필요. 업로드 된 이미지 주소를 setFileValue에 할당
+      // 서버에 이미지 업로드 로직 필요. 업로드 된 이미지 주소를 setImageURL에 할당 필요
+      // setImageURL(url);
 
       setFileValue(file);
-    } else {
-      setFileValue(null);
     }
   };
 
@@ -147,7 +143,7 @@ export default function TeamForm({
         <div className="mt-6 flex flex-col">
           {inputs?.[0] && (
             <Controller
-              name="nameValue"
+              name="name"
               control={control}
               rules={{ required: inputs[0].placeholder }}
               render={({ field }) => (
@@ -155,9 +151,12 @@ export default function TeamForm({
                   {...inputs[0]}
                   {...field}
                   className={clsx('w-full border')}
-                  invalid={!!errors.nameValue}
-                  validationMessage={errors.nameValue?.message}
+                  invalid={!!errors.name}
+                  validationMessage={errors.name?.message}
                   onChange={field.onChange}
+                  onBlur={(e) => {
+                    field.onChange(e.target.value.trim());
+                  }}
                   value={field.value}
                 />
               )}
