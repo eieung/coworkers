@@ -26,6 +26,7 @@ export enum ACTION_TYPE {
   CHANGE_PASSWORD,
   DATE_PICKER,
   PASSWORD_RESET,
+  EDITE_TEAM,
 }
 
 const DEFAULT_BUTTON_FONT = 'font-medium-16';
@@ -283,6 +284,28 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
         children: '링크보내기',
         font: DEFAULT_BUTTON_FONT,
         fullWidth: true,
+      },
+    ],
+  },
+  [ACTION_TYPE.EDITE_TEAM]: {
+    title: '팀 수정하기',
+    buttons: [
+      {
+        children: '수정하기',
+        appearance: 'solid',
+        size: 'floating-large',
+        disabled: false,
+        font: DEFAULT_BUTTON_FONT,
+        fullWidth: true,
+      },
+    ],
+    inputs: [
+      {
+        name: 'name',
+        height: 'h-12',
+        type: 'text',
+        label: '팀 이름',
+        placeholder: '팀 이름을 입력해주세요.',
       },
     ],
   },

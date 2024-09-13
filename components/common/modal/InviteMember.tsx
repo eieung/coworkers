@@ -1,4 +1,3 @@
-import React from 'react';
 import Modal from '.';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 import { toast } from 'react-toastify';
