@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Modal from '.';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
@@ -64,7 +63,7 @@ export default function DatePicker({ close }: DatePickerProps) {
       title={title}
       showCloseIcon={false}
       description={description}
-      isDatePicker={true}
+      childrenClassName="w-[336px]"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         {inputs.length > 0 && (

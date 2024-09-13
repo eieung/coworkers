@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, memo } from 'react';
+import { useEffect, useState, useCallback, memo } from 'react';
 import ReactDOM from 'react-dom';
 import Image from 'next/image';
 import closeImg from '@/assets/image/icon/x.svg';
@@ -16,7 +16,8 @@ import { twMerge } from 'tailwind-merge';
  * - onClose (required): 필수 요소로 모달을 닫을 때 필요합니다.
  * - className (optional): 커스텀 스타일 때 사용합니다. 모달 스타일;
  * - showCloseIcon (optional): X 닫기 버튼 표시 여부입니다. 기본적으로 true로 보이게 되어 있습니다.
- * - isDatePicker (optional): 할 일 만들기 모달의 크기만 별도로 설정하기 위한 옵션입니다. 다른 모달은 필요없고 기본 false입니다.
+ * - childrenClassName (optional): children을 스타일링 할 수 있는 옵션입니다.
+ * - titleClassName (optional): title을 스타일링 할 수 있는 옵션입니다.
  * - iconSrc (optional): 경고 등 이미지 아이콘을 넣기 위한 옵션입니다. 기본 null입니다.
  *
  * @usage
@@ -40,6 +41,7 @@ import { twMerge } from 'tailwind-merge';
  * - Logout : 로그아웃
  * - DatePicker : 할 일 만들기 데이터 피커 기능용
  * - PasswordReset : 비밀번호 재설정
+ * - TeamForm: 팀 생성하기 / 수정하기 (isEditMode이 true일 때 수정하기 무옵션일 경우 생성하기 기본)
  *
  * [모달 사용 예시]
  *
@@ -62,8 +64,9 @@ interface ModalProps {
   showCloseIcon?: boolean;
   title?: string;
   description?: string;
-  isDatePicker?: boolean;
   iconSrc?: string | null;
+  childrenClassName?: string;
+  titleClassName?: string;
 }
 
 const CloseButton: React.FC<{ onClose: () => void }> = memo(({ onClose }) => (
@@ -79,8 +82,9 @@ function Modal({
   showCloseIcon = true,
   title,
   description,
-  isDatePicker = false,
   iconSrc = null,
+  childrenClassName,
+  titleClassName,
 }: ModalProps) {
   const [isClient, setIsClient] = useState(false);
 
@@ -134,7 +138,9 @@ function Modal({
             height={24}
           />
         )}
-        {title && <h2 className="mb-2 mt-2">{title}</h2>}
+        {title && (
+          <h2 className={clsx('mb-2 mt-2', titleClassName)}>{title}</h2>
+        )}
         {description && (
           <p className="font-medium-14 whitespace-pre-line text-center text-text-secondary">
             {description}
@@ -142,13 +148,11 @@ function Modal({
         )}
         <div
           className={clsx(
-            'max-h-[80vh] overflow-auto p-1',
+            'max-h-[80vh] overflow-auto',
             'scrollbar:w-2 scrollbar:rounded-full scrollbar:bg-bg-primary scrollbar-thumb:rounded-full scrollbar-thumb:bg-bg-tertiary',
           )}
         >
-          <div className={clsx(isDatePicker ? 'w-[336px]' : 'w-[280px]')}>
-            {children}
-          </div>
+          <div className={clsx('w-[280px]', childrenClassName)}>{children}</div>
         </div>
       </div>
     </div>,
