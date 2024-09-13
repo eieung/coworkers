@@ -1,6 +1,7 @@
 import Input from '../common/Input';
 import { useValidation } from '@/utils/InputValidation';
 import Button from '../common/button';
+import Link from 'next/link';
 
 export default function LoginForm() {
   const {
@@ -76,7 +77,10 @@ export default function LoginForm() {
           <span className="font-medium-16 text-text-primary">
             아직 계정이 없으신가요?
           </span>
-          <span className="font-medium-16 text-emerald-500">가입하기</span>
+
+          <Link href="/signup">
+            <span className="font-medium-16 text-emerald-500">가입하기</span>
+          </Link>
         </div>
       </div>
     </form>
