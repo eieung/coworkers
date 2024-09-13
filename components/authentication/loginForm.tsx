@@ -98,7 +98,7 @@ export default function LoginForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="md:mb-49 mb-[25px] flex flex-col gap-10 lg:mb-12"
+      className="md:mb-49 mb-[25px] flex w-full flex-col gap-10 lg:mb-12"
     >
       <div>
         <div className="flex flex-col gap-6">

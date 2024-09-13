@@ -1,15 +1,18 @@
 import type { Config } from 'tailwindcss';
+import { PluginAPI } from 'tailwindcss/types/config';
 
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './constants/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
+      // 모바일 최소 320px, 그 아래는 가로 스크롤 지원
       screens: {
-        sm: { max: '767px' },
+        sm: { min: '320px', max: '767px' },
         md: { min: '768px', max: '1199px' },
         lg: { min: '1200px' },
       },
@@ -78,6 +81,13 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    /* scrollbar custom */
+    function ({ addVariant }: PluginAPI) {
+      addVariant('scrollbar', '&::-webkit-scrollbar');
+      addVariant('scrollbar-thumb', '&::-webkit-scrollbar-thumb');
+      addVariant('scrollbar-track', '&::-webkit-scrollbar-track');
+    },
+  ],
 };
 export default config;
