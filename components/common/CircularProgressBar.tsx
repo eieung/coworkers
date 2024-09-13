@@ -38,7 +38,7 @@ import 'react-circular-progressbar/dist/styles.css';
  *    />
  */
 
-interface ProgressBarProps {
+interface CircularProgressBarProps {
   percentage: number;
   strokeWidth?: number;
   pathColor?: string;
@@ -48,7 +48,7 @@ interface ProgressBarProps {
   useGradient?: boolean;
 }
 
-export default function ProgressBar({
+export default function CircularProgressBar({
   percentage = 0,
   strokeWidth = 16,
   pathColor,
@@ -56,7 +56,7 @@ export default function ProgressBar({
   textColor,
   showText = false,
   useGradient = false,
-}: ProgressBarProps) {
+}: CircularProgressBarProps) {
   return (
     <>
       {useGradient && (
