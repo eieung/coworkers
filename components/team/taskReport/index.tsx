@@ -1,4 +1,4 @@
-import ProgressBar from '@/components/common/progressBar';
+import CircularProgressBar from '@/components/common/CircularProgressBar';
 import Image from 'next/image';
 import todoIcon from '@/assets/image/task/todo.svg';
 import doneIcon from '@/assets/image/task/done.svg';
@@ -30,7 +30,7 @@ export default function TaskReport() {
       <strong className="font-medium-16 text-text-primary">리포트</strong>
       <div className="mt-4 flex flex-row items-center justify-between gap-x-10 rounded-xl bg-bg-secondary p-6">
         <div className="flex w-[168px] min-w-[112px] flex-col items-center gap-y-1">
-          <ProgressBar
+          <CircularProgressBar
             percentage={percentage}
             useGradient
             trailColor="#334155"

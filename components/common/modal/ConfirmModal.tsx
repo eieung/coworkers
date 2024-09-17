@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import { Children } from 'react';
 import Modal from '.';
 import Button from '@/components/common/button';
 import alertImg from '@/assets/image/icon/alert.svg';
@@ -86,7 +86,6 @@ export default function ConfirmModal({
       title={title}
       description={description}
       showCloseIcon={false}
-      isDatePicker={false}
       iconSrc={isAlert ? alertImg : null}
     >
       <div className="flex flex-col">

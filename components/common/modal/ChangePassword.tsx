@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Modal from '.';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
@@ -96,7 +95,10 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
                   {...input}
                   {...field}
                   type="password"
-                  className={clsx('w-full border', input.height)}
+                  className={clsx(
+                    'placeholder:font-regular-14 w-full border',
+                    input.height,
+                  )}
                   invalid={!!errors[input.name as keyof FormData]}
                   validationMessage={
                     errors[input.name as keyof FormData]?.message

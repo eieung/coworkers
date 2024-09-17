@@ -1,4 +1,3 @@
-import React from 'react';
 import InviteMember from './InviteMember';
 import useModalStore from '@/store/useModalStore';
 import CreateTaskList from './CreateTaskList';
@@ -11,6 +10,7 @@ import CreateTask from '@/components/common/modal/CreateTask';
 import ChangePassword from '@/components/common/modal/ChangePassword';
 import DatePicker from '@/components/common/modal/DatePicker';
 import PasswordReset from '@/components/common/modal/PasswordReset';
+import TeamForm from '@/components/common/modal/TeamForm';
 
 export default function ModalVariants() {
   /*  모달 기본 설정 */
@@ -60,7 +60,7 @@ export default function ModalVariants() {
     openModal((close) => <ChangePassword close={close} />);
   };
 
-  // 비밀번호 변경하기
+  // 비밀번호 재설정
   const handleOpenPasswordResetModal = () => {
     openModal((close) => <PasswordReset close={close} />);
   };
@@ -68,6 +68,25 @@ export default function ModalVariants() {
   // 데이트 피커 예시
   const handleDatePickerModal = () => {
     openModal((close) => <DatePicker close={close} />);
+  };
+
+  // 팀 생성하기
+  const handleCreateTeamrModal = () => {
+    openModal((close) => <TeamForm close={close} />);
+  };
+
+  // 팀 수정하기
+  const handleEditTeamrModal = () => {
+    openModal((close) => (
+      <TeamForm
+        close={close}
+        image={
+          'https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg'
+        }
+        name={'팀 초기 네임'}
+        isEditMode={true}
+      />
+    ));
   };
 
   /* 커스텀 컨펌 모달 사용 예시  */
@@ -97,6 +116,8 @@ export default function ModalVariants() {
       <button onClick={handleOpenChangePasswordModal}>비밀번호 변경하기</button>
       <button onClick={handleOpenPasswordResetModal}>비밀번호 재설정</button>
       <button onClick={handleDatePickerModal}>데이트 피커</button>
+      <button onClick={handleCreateTeamrModal}>팀 생성하기</button>
+      <button onClick={handleEditTeamrModal}>팀 수정하기</button>
       <button onClick={handleOpenConfirmModal}>컨펌 모달 예시</button>
     </div>
   );
