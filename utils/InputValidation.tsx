@@ -14,6 +14,10 @@ export const useValidation = () => {
   const [nickname, setNickname] = useState('');
   const [isNicknameValid, setIsNicknameValid] = useState(true);
 
+  //비밀번호 확인 상태 및 유효성 검사 상태
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
+
   /**
    * 이메일 입력 필드의 값이 변경될 때 호출됩니다.
    * @param e - 입력 이벤트 객체
@@ -126,6 +130,41 @@ export const useValidation = () => {
     return '';
   };
 
+  /**
+   * 비밀번호 확인 입력 값이 변경될 때 호출됩니다.
+   * @param e - 입력 이벤트 객체
+   */
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordBlur = () => {
+    if (confirmPassword === '') {
+      setIsConfirmPasswordValid(false);
+      return;
+    } else if (password !== confirmPassword) {
+      setIsConfirmPasswordValid(false);
+      return;
+    }
+    return setIsConfirmPasswordValid(true);
+  };
+
+  /**
+   * 비밀번호 확인 유효성 검사 메시지를 반환합니다.
+   * 비밀번호 확인이 비어있으면 '비밀번호 확인을 입력해 주세요.' 메시지를 반환하고,
+   * 비밀번호화 비밀번호 확인 값이 일치하지 않는 경우 관련된 경고 메시지를 반환합니다.
+   * @returns 비밀번호 확인 유효성 검사 메시지
+   */
+  const getConfirmPasswordValidationMessage = () => {
+    if (confirmPassword === '') {
+      return '비밀번호 확인을 입력해 주세요.';
+    } else if (password !== confirmPassword) {
+      return '비밀번호가 일치하지 않습니다.';
+    }
+  };
+
   return {
     email,
     setEmail,
@@ -145,5 +184,12 @@ export const useValidation = () => {
     handleNicknameChange,
     handleNicknameBlur,
     getNicknameValidationMessage,
+    confirmPassword,
+    setConfirmPassword,
+    isConfirmPasswordValid,
+    setIsConfirmPasswordValid,
+    handleConfirmPasswordChange,
+    handleConfirmPasswordBlur,
+    getConfirmPasswordValidationMessage,
   };
 };
