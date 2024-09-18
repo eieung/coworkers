@@ -4,21 +4,14 @@ import Button from '../common/button';
 import Link from 'next/link';
 
 export default function LoginForm() {
-  const {
-    email,
-    isEmailValid,
-    handleEmailChange,
-    handleEmailBlur,
-    getEmailValidationMessage,
-    password,
-    isPasswordValid,
-    handlePasswordChange,
-    handlePasswordBlur,
-    getPasswordValidationMessage,
-  } = useValidation();
+  const { email, password } = useValidation();
 
   const isFormValid =
-    isEmailValid && isPasswordValid && email !== '' && password !== '';
+    // isEmailValid && isPasswordValid && email !== '' && password !== '';
+    email.isValid &&
+    password.isValid &&
+    email.value !== '' &&
+    password.value !== '';
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     {
@@ -37,22 +30,22 @@ export default function LoginForm() {
           <Input
             label="이메일"
             type="email"
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
-            invalid={!isEmailValid}
-            validationMessage={getEmailValidationMessage()}
+            value={email.value}
+            onChange={email.handleChange}
+            onBlur={email.handleBlur}
+            invalid={!email.isValid}
+            validationMessage={email.getMessage()}
             placeholder="이메일을 입력하세요."
             className="h-11 w-full"
           />
           <Input
             label="비밀번호"
             type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            onBlur={handlePasswordBlur}
-            invalid={!isPasswordValid}
-            validationMessage={getPasswordValidationMessage()}
+            value={password.value}
+            onChange={password.handleChange}
+            onBlur={password.handleBlur}
+            invalid={!password.isValid}
+            validationMessage={password.getMessage()}
             placeholder="비밀번호를 입력해주세요."
             className="h-11 w-full"
           />

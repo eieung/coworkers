@@ -127,23 +127,26 @@ export const useValidation = () => {
   };
 
   return {
-    email,
-    setEmail,
-    isEmailValid,
-    handleEmailChange,
-    handleEmailBlur,
-    getEmailValidationMessage,
-    password,
-    setPassword,
-    isPasswordValid,
-    handlePasswordChange,
-    handlePasswordBlur,
-    getPasswordValidationMessage,
-    nickname,
-    setNickname,
-    isNicknameValid,
-    handleNicknameChange,
-    handleNicknameBlur,
-    getNicknameValidationMessage,
+    email: {
+      value: email,
+      isValid: isEmailValid,
+      handleChange: handleEmailChange,
+      handleBlur: handleEmailBlur,
+      getMessage: getEmailValidationMessage,
+    },
+    password: {
+      value: password,
+      isValid: isPasswordValid,
+      handleChange: handlePasswordChange,
+      handleBlur: handlePasswordBlur,
+      getMessage: getPasswordValidationMessage,
+    },
+    nickname: {
+      value: nickname,
+      isValid: isNicknameValid,
+      handleChange: handleNicknameChange,
+      handleBlur: handleNicknameBlur,
+      getMessage: getNicknameValidationMessage,
+    },
   };
 };
