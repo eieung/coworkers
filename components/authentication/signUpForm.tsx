@@ -4,38 +4,17 @@ import Button from '../common/button';
 import Link from 'next/link';
 
 export default function SignUpForm() {
-  const {
-    email,
-    isEmailValid,
-    handleEmailChange,
-    handleEmailBlur,
-    getEmailValidationMessage,
-    password,
-    isPasswordValid,
-    handlePasswordChange,
-    handlePasswordBlur,
-    getPasswordValidationMessage,
-    nickname,
-    isNicknameValid,
-    handleNicknameChange,
-    handleNicknameBlur,
-    getNicknameValidationMessage,
-    confirmPassword,
-    isConfirmPasswordValid,
-    handleConfirmPasswordChange,
-    handleConfirmPasswordBlur,
-    getConfirmPasswordValidationMessage,
-  } = useValidation();
+  const { email, password, nickname, confirmPassword } = useValidation();
 
   const isFormValid =
-    isEmailValid &&
-    isPasswordValid &&
-    isNicknameValid &&
-    isConfirmPasswordValid &&
-    email !== '' &&
-    password !== '' &&
-    nickname !== '' &&
-    confirmPassword !== '';
+    email.isValid &&
+    password.isValid &&
+    nickname.isValid &&
+    confirmPassword.isValid &&
+    email.value !== '' &&
+    password.value !== '' &&
+    nickname.value !== '' &&
+    confirmPassword.value !== '';
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     {
@@ -54,50 +33,47 @@ export default function SignUpForm() {
           <Input
             label="이름"
             type="text"
-            value={nickname}
-            onChange={handleNicknameChange}
-            onBlur={handleNicknameBlur}
-            invalid={!isNicknameValid}
-            validationMessage={getNicknameValidationMessage()}
+            value={nickname.value}
+            onChange={nickname.handleChange}
+            onBlur={nickname.handleBlur}
+            invalid={!nickname.isValid}
+            validationMessage={nickname.getMessage()}
             placeholder="이름을 입력해 주세요."
             className="h-11 w-full"
           />
           <Input
             label="이메일"
             type="email"
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
-            invalid={!isEmailValid}
-            validationMessage={getEmailValidationMessage()}
+            value={email.value}
+            onChange={email.handleChange}
+            onBlur={email.handleBlur}
+            invalid={!email.isValid}
+            validationMessage={email.getMessage()}
             placeholder="이메일을 입력하세요."
             className="h-11 w-full"
           />
           <Input
             label="비밀번호"
             type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            onBlur={handlePasswordBlur}
-            invalid={!isPasswordValid}
-            validationMessage={getPasswordValidationMessage()}
+            value={password.value}
+            onChange={password.handleChange}
+            onBlur={password.handleBlur}
+            invalid={!password.isValid}
+            validationMessage={password.getMessage()}
             placeholder="비밀번호를 입력해주세요."
             className="h-11 w-full"
           />
           <Input
             label="비밀번호 확인"
             type="password"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            onBlur={handleConfirmPasswordBlur}
-            invalid={!isConfirmPasswordValid}
-            validationMessage={getConfirmPasswordValidationMessage()}
+            value={confirmPassword.value}
+            onChange={confirmPassword.hadleChange}
+            onBlur={confirmPassword.handleBlur}
+            invalid={!confirmPassword.isValid}
+            validationMessage={confirmPassword.getMessage()}
             placeholder="비밀번호를 다시 한 번 입력해 주세요."
             className="h-11 w-full"
           />
-          <div className="flex justify-end text-emerald-500">
-            비밀번호를 잊으셨나요?
-          </div>
         </div>
       </div>
       <div className="flex flex-col gap-6">
@@ -112,15 +88,6 @@ export default function SignUpForm() {
           children="로그인"
           disabled={!isFormValid}
         />
-        <div className="flex-center justify-between gap-3">
-          <span className="font-medium-16 text-text-primary">
-            아직 계정이 없으신가요?
-          </span>
-
-          <Link href="/signup">
-            <span className="font-medium-16 text-emerald-500">가입하기</span>
-          </Link>
-        </div>
       </div>
     </form>
   );
