@@ -120,7 +120,7 @@ export default function SignUpForm() {
           font="font-16-semibold-16"
           appearance="solid"
           fullWidth={true}
-          children="로그인"
+          children="회원가입"
           disabled={!isFormValid}
         />
       </div>
