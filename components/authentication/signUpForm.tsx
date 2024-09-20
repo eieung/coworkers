@@ -3,15 +3,18 @@ import { useValidation } from '@/utils/InputValidation';
 import Button from '../common/button';
 import Link from 'next/link';
 
-export default function LoginForm() {
-  const { email, password } = useValidation();
+export default function SignUpForm() {
+  const { email, password, nickname, confirmPassword } = useValidation();
 
   const isFormValid =
-
     email.isValid &&
     password.isValid &&
+    nickname.isValid &&
+    confirmPassword.isValid &&
     email.value !== '' &&
-    password.value !== '';
+    password.value !== '' &&
+    nickname.value !== '' &&
+    confirmPassword.value !== '';
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     {
@@ -27,6 +30,17 @@ export default function LoginForm() {
     >
       <div>
         <div className="flex flex-col gap-6">
+          <Input
+            label="이름"
+            type="text"
+            value={nickname.value}
+            onChange={nickname.handleChange}
+            onBlur={nickname.handleBlur}
+            invalid={!nickname.isValid}
+            validationMessage={nickname.getMessage()}
+            placeholder="이름을 입력해 주세요."
+            className="h-11 w-full"
+          />
           <Input
             label="이메일"
             type="email"
@@ -49,9 +63,17 @@ export default function LoginForm() {
             placeholder="비밀번호를 입력해주세요."
             className="h-11 w-full"
           />
-          <div className="flex justify-end text-emerald-500">
-            비밀번호를 잊으셨나요?
-          </div>
+          <Input
+            label="비밀번호 확인"
+            type="password"
+            value={confirmPassword.value}
+            onChange={confirmPassword.hadleChange}
+            onBlur={confirmPassword.handleBlur}
+            invalid={!confirmPassword.isValid}
+            validationMessage={confirmPassword.getMessage()}
+            placeholder="비밀번호를 다시 한 번 입력해 주세요."
+            className="h-11 w-full"
+          />
         </div>
       </div>
       <div className="flex flex-col gap-6">
@@ -66,15 +88,6 @@ export default function LoginForm() {
           children="로그인"
           disabled={!isFormValid}
         />
-        <div className="flex-center justify-between gap-3">
-          <span className="font-medium-16 text-text-primary">
-            아직 계정이 없으신가요?
-          </span>
-
-          <Link href="/signup">
-            <span className="font-medium-16 text-emerald-500">가입하기</span>
-          </Link>
-        </div>
       </div>
     </form>
   );

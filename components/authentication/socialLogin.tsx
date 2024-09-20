@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function SocialLogin() {
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="mb-[235px] flex w-full flex-col gap-4 md:mb-[391px] lg:mb-[279px]">
       <div className="relative flex items-center gap-6">
         <div className="flex-grow border-t border-bd-primary"></div>
         <span className="font-medium-16 text-white">OR</span>
