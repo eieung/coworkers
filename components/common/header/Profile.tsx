@@ -5,7 +5,7 @@ import { useUserStore } from '@/store/authStore';
 import { useRouter } from 'next/router';
 
 export default function Profile() {
-  const { clearUser } = useUserStore();
+  const { clearUser, accessToken } = useUserStore();
   const router = useRouter();
 
   const handleLogout = () => {
@@ -13,12 +13,16 @@ export default function Profile() {
     router.push('/login');
   };
 
-  const menuItems = [
+  const loggedInMenuItems = [
     { label: '마이 히스토리', href: '/history' },
     { label: '계정 설정', href: '/settings' },
     { label: '팀 참여', href: '/team' },
     { label: '로그아웃', onClick: handleLogout },
   ];
+
+  const loggedOutMenuItems = [{ label: '로그인', href: '/login' }];
+
+  const menuItems = accessToken ? loggedInMenuItems : loggedOutMenuItems;
 
   return (
     <Dropdown
@@ -32,7 +36,7 @@ export default function Profile() {
             className="md:h-4 md:w-4 lg:h-4 lg:w-4"
           />
           <span className="font-medium-14 text-text-primary lg:block">
-            프로필
+            {accessToken ? '프로필' : '로그인'}
           </span>
         </div>
       }
