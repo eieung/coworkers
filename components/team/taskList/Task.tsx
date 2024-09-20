@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import kebabIcon from '@/assets/image/icon/kebab.svg';
 import CircularProgressBar from '@/components/common/CircularProgressBar';
+import doneTaskIcon from '@/assets/image/icon/progress.svg';
 
 interface TaskProps {
   task: {
@@ -35,17 +36,23 @@ export default function Task({ task }: TaskProps) {
       </div>
       <div className="flex flex-row gap-x-1 pr-2">
         <div className="flex items-center gap-1 rounded-xl bg-bg-primary px-2">
-          <div className="h-3 w-3">
-            <CircularProgressBar
-              percentage={percentage}
-              pathColor="#10b981"
-              trailColor="#f8fafc"
-            />
-          </div>
+          {percentage === 100 ? (
+            <Image src={doneTaskIcon} alt="할 일 완료" width={16} height={16} />
+          ) : (
+            <div className="flex h-4 w-4 items-center">
+              <CircularProgressBar
+                percentage={percentage}
+                pathColor="#10b981"
+                trailColor="#f8fafc"
+                className="h-3 w-3"
+              />
+            </div>
+          )}
           <span className="font-14-regular text-brand-primary">
             {task.doneTasks}/{task.totalTasks}
           </span>
         </div>
+
         <Image src={kebabIcon} alt="케밥 아이콘" width={16} height={16} />
       </div>
     </div>
