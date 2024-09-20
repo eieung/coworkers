@@ -1,5 +1,5 @@
 import Input from '../common/Input';
-import { useValidation } from '@/utils/InputValidation';
+import { useValidation } from '@/hooks/useValidation.ts';
 import Button from '../common/button';
 import Link from 'next/link';
 

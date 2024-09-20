@@ -1,10 +1,21 @@
 import Input from '../common/Input';
-import { useValidation } from '@/utils/InputValidation';
+import { useValidation } from '@/hooks/useValidation.ts';
 import Button from '../common/button';
 import Link from 'next/link';
+import axios from 'axios';
+import instance from '@/libs/axios';
+import { useRouter } from 'next/router';
 
 export default function SignUpForm() {
-  const { email, password, nickname, confirmPassword } = useValidation();
+  const {
+    email,
+    password,
+    nickname,
+    confirmPassword,
+    setServerError,
+    clearServerError,
+  } = useValidation();
+  const router = useRouter();
 
   const isFormValid =
     email.isValid &&
@@ -16,11 +27,35 @@ export default function SignUpForm() {
     nickname.value !== '' &&
     confirmPassword.value !== '';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    {
-      /*TODO: 로그인 폼 제출 구현*/
-    }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    clearServerError();
+    const signupData = {
+      email: email.value,
+      nickname: nickname.value,
+      password: password.value,
+      passwordConfirmation: confirmPassword.value,
+    };
+    try {
+      const response = await instance.post('/auth/signup', signupData);
+      if (response.status === 201) {
+        router.push('/login');
+      } else {
+        console.log('회원가입에 실패했습니다.');
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const { data } = error.response;
+        if (data.details) {
+          if (data.details.email) {
+            setServerError('email', data.details.email.message);
+          }
+          if (data.details.nickname) {
+            setServerError('nickname', data.details.nickname.message);
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -67,7 +102,7 @@ export default function SignUpForm() {
             label="비밀번호 확인"
             type="password"
             value={confirmPassword.value}
-            onChange={confirmPassword.hadleChange}
+            onChange={confirmPassword.handleChange}
             onBlur={confirmPassword.handleBlur}
             invalid={!confirmPassword.isValid}
             validationMessage={confirmPassword.getMessage()}
@@ -85,7 +120,7 @@ export default function SignUpForm() {
           font="font-16-semibold-16"
           appearance="solid"
           fullWidth={true}
-          children="로그인"
+          children="회원가입"
           disabled={!isFormValid}
         />
       </div>
