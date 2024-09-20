@@ -84,6 +84,29 @@ const taskListData: TaskList = {
       name: '유저 기능 개발 및 OAuth 개발 (소셜 로그인)',
       id: 502,
     },
+    {
+      doneBy: {
+        user: {
+          image: 'https://example.com/user-doneby-image2.png',
+          nickname: '서미영',
+          id: 1003,
+        },
+      },
+      writer: {
+        user: {
+          image: 'https://example.com/user-writer-image2.png',
+          nickname: '홍준기',
+          id: 1004,
+        },
+      },
+      displayIndex: 2,
+      commentCount: 8,
+      description: '테스트 코드',
+      doneTasks: 4,
+      totalTasks: 4,
+      name: '테스트 코드 작성',
+      id: 502,
+    },
   ],
 };
 
