@@ -22,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Header />
+
       <main className={mainClassName}>
         <Component {...pageProps} />
       </main>
