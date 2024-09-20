@@ -214,6 +214,7 @@ export const useValidation = () => {
       handleBlur: handleNicknameBlur,
       getMessage: getNicknameValidationMessage,
     },
+
     confirmPassword: {
       value: confirmPassword,
       isValid: isConfirmPasswordValid,
@@ -221,6 +222,7 @@ export const useValidation = () => {
       handleBlur: handleConfirmPasswordBlur,
       getMessage: getConfirmPasswordValidationMessage,
     },
+
     setServerError,
     clearServerError: () => setServerErrors({}),
   };
