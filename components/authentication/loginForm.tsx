@@ -7,7 +7,6 @@ export default function LoginForm() {
   const { email, password } = useValidation();
 
   const isFormValid =
-
     email.isValid &&
     password.isValid &&
     email.value !== '' &&
