@@ -2,9 +2,16 @@ import Input from '../common/Input';
 import { useValidation } from '@/hooks/useValidation.ts';
 import Button from '../common/button';
 import Link from 'next/link';
+import { useUserStore } from '@/store/authStore';
+import { useState } from 'react';
+import axios from 'axios';
+import instance from '@/libs/axios';
+import { useRouter } from 'next/router';
 
 export default function LoginForm() {
   const { email, password } = useValidation();
+  const { setUser, setTokens } = useUserStore();
+  const router = useRouter();
 
   const isFormValid =
     email.isValid &&
@@ -12,11 +19,24 @@ export default function LoginForm() {
     email.value !== '' &&
     password.value !== '';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    {
-      /*TODO: 로그인 폼 제출 구현*/
-    }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const loginData = {
+      email: email.value,
+      password: password.value,
+    };
+
+    try {
+      const response = await instance.post('/auth/signin', loginData);
+      if (response.status === 200) {
+        const { accessToken, refreshToken, user } = response.data;
+        setTokens(accessToken, refreshToken);
+        setUser(user);
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('로그인에 실패했습니다.', error);
+    }
   };
 
   return (
