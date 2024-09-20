@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Button from '@/components/common/button';
 import Image from 'next/image';
 import clsx from 'clsx';
-import defaultUserImg from '@/assets/image/icon/default_user.svg';
+import defaultUserImg from '@/assets/image/icon/member.svg';
 
 interface CopyEmailProps {
   close: () => void;

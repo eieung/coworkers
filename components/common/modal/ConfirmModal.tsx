@@ -74,7 +74,10 @@ export default function ConfirmModal({
     },
     {
       children: confirmText,
-      onClick: onConfirm,
+      onClick: () => {
+        onConfirm();
+        close();
+      },
       appearance:
         buttonType === 'danger' ? ('danger' as const) : ('solid' as const),
     },

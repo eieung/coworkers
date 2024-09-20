@@ -1,6 +1,6 @@
 import InviteMember from './InviteMember';
 import useModalStore from '@/store/useModalStore';
-import CreateTaskList from './CreateTaskList';
+import TaskListForm from '@/components/common/modal/TaskListForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import DeleteAccount from '@/components/common/modal/DeleteAccount';
@@ -25,7 +25,7 @@ export default function ModalVariants() {
 
   // 할일 목록 만들기
   const handleOpenCreateListModal = () => {
-    openModal((close) => <CreateTaskList close={close} />);
+    openModal((close) => <TaskListForm close={close} onAction={() => {}} />);
   };
 
   // 할일 만들기
@@ -98,7 +98,7 @@ export default function ModalVariants() {
         close={close}
         isAlert={true} // true시 경고 icon 표시, 기본적으로 설정 안할시 미표시
         confirmText="삭제하기" // 닫는 버튼 기본 text는 닫기, 설정 필요시 cancelText추가
-        onConfirm={() => toast('삭제되었습니다!')} // 컨펌 될시 작동할 함수 추가
+        onConfirm={() => toast.success('삭제되었습니다!')} // 컨펌 될시 작동할 함수 추가
         buttonType="danger" // 'solid' | 'danger' 두 종류 버튼 타입이 있고 solid가 기본입니다.
       />
     ));

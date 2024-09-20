@@ -139,7 +139,14 @@ function Modal({
           />
         )}
         {title && (
-          <h2 className={clsx('mb-2 mt-2', titleClassName)}>{title}</h2>
+          <h2
+            className={clsx(
+              'mb-2 mt-2 whitespace-pre-line text-center',
+              titleClassName,
+            )}
+          >
+            {title}
+          </h2>
         )}
         {description && (
           <p className="font-medium-14 whitespace-pre-line text-center text-text-secondary">
