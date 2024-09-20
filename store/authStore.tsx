@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface User {
   id: number;
@@ -19,11 +20,20 @@ interface UserState {
   clearUser: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
-  user: null,
-  accessToken: null,
-  refreshToken: null,
-  setUser: (user) => set({ user }),
-  setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
-  clearUser: () => set({ user: null, accessToken: null, refreshToken: null }),
-}));
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      setUser: (user) => set({ user }),
+      setTokens: (accessToken, refreshToken) =>
+        set({ accessToken, refreshToken }),
+      clearUser: () =>
+        set({ user: null, accessToken: null, refreshToken: null }),
+    }),
+    {
+      name: 'user-storage', // localStorage에 저장될 키 이름
+    },
+  ),
+);
