@@ -181,10 +181,8 @@ export default function DatePicker({ close }: DatePickerProps) {
                     <Textarea
                       {...inputs[FORM_FIELD.MEMO]}
                       {...field}
-                      className={clsx(
-                        'w-full border',
-                        inputs[FORM_FIELD.MEMO].height,
-                      )}
+                      className={clsx('w-full border')}
+                      height="75px"
                       invalid={
                         !!errors[inputs[FORM_FIELD.MEMO].name as keyof FormData]
                       }
