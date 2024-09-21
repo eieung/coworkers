@@ -27,17 +27,41 @@ const formatDate = (date: Date) => {
   return `${month} ${day}일 (${weekday})`;
 };
 
-export default function DateManager() {
-  const currentDate = formatDate(new Date());
+interface DateManagerProps {
+  currentDate: string;
+  setCurrentDate: (date: string) => void;
+}
+
+export default function DateManager({
+  currentDate,
+  setCurrentDate,
+}: DateManagerProps) {
+  const handlePrevDate = () => {
+    const prevDate = new Date(currentDate);
+    prevDate.setDate(prevDate.getDate() - 1);
+    setCurrentDate(prevDate.toISOString().split('T')[0]);
+  };
+
+  const handleNextDate = () => {
+    const nextDate = new Date(currentDate);
+    nextDate.setDate(nextDate.getDate() + 1);
+    setCurrentDate(nextDate.toISOString().split('T')[0]);
+  };
 
   return (
     <div className="flex items-center gap-3">
-      <h1 className="text-text-primary">{currentDate}</h1>
+      <h1 className="text-text-primary">{formatDate(new Date(currentDate))}</h1>
       <div className="flex items-center gap-1">
-        <button className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary">
+        <button
+          className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
+          onClick={handlePrevDate}
+        >
           <Image src={leftImg} alt="왼쪽 화살표" width={12} height={12} />
         </button>
-        <button className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary">
+        <button
+          className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
+          onClick={handleNextDate}
+        >
           <Image src={rightImg} alt="오른쪽 화살표" width={12} height={12} />
         </button>
       </div>
