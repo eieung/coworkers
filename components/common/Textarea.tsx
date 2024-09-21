@@ -7,18 +7,22 @@ interface TextareaProps
   invalid?: boolean;
   validationMessage?: string;
   className?: string;
+  height?: string;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, invalid, validationMessage, className, ...props }, ref) => {
+  (
+    { label, invalid, validationMessage, className, height = '48px', ...props },
+    ref,
+  ) => {
     const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
     useEffect(() => {
       if (textAreaRef.current) {
-        textAreaRef.current.style.height = 'auto';
+        textAreaRef.current.style.height = height;
         textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
       }
-    }, [props.value]);
+    }, [props.value, height]);
 
     return (
       <div>
