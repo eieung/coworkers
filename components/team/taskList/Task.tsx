@@ -2,6 +2,7 @@ import Image from 'next/image';
 import kebabIcon from '@/assets/image/icon/kebab.svg';
 import CircularProgressBar from '@/components/common/CircularProgressBar';
 import doneTaskIcon from '@/assets/image/icon/progress.svg';
+import clsx from 'clsx';
 
 interface TaskProps {
   task: {
@@ -22,16 +23,29 @@ interface TaskProps {
     description: string;
     doneTasks: number;
     totalTasks: number;
+    displayIndex: number;
   };
 }
 export default function Task({ task }: TaskProps) {
   // 진행 상황 비율을 계산
   const percentage = Math.round((task.doneTasks / task.totalTasks) * 100);
 
+  const bgColors = [
+    'bg-point-purple',
+    'bg-point-blue',
+    'bg-point-cyan',
+    'bg-point-pink',
+    'bg-point-rose',
+    'bg-point-orange',
+    'bg-point-yellow',
+  ];
+
+  const bgColorClass = bgColors[task.displayIndex % bgColors.length];
+
   return (
     <div className="mb-4 flex flex-row items-center justify-between rounded-xl bg-bg-secondary">
       <div className="flex flex-row items-center gap-x-3">
-        <div className="h-10 w-4 rounded-l-xl bg-yellow-400"></div>
+        <div className={clsx('h-10 w-4 rounded-l-xl', bgColorClass)}></div>
         <b className="font-medium-14 text-text-primary">{task.name}</b>
       </div>
       <div className="flex flex-row gap-x-1 pr-2">
