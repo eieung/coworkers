@@ -6,6 +6,7 @@ import TeamSetting from '@/components/team/TeamSetting';
 import notificationData from '@/data/notificationData';
 
 export default function Team() {
+  // 유저 기능 전 임시로 사용 (관리자는 0, 일반 멤버는 1 혹은 2)
   const currentUser = notificationData.users[0];
 
   return (
