@@ -1,61 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TaskItem from './TaskItem';
 import Button from '@/components/common/button';
 import useModalStore from '@/store/useModalStore';
 import DatePicker from '@/components/common/modal/DatePicker';
+import { TaskListType } from '@/types/taskListType';
 
-interface Task {
-  id: number;
-  text: string;
-  completed: boolean;
+interface TaskListProps {
+  taskList: TaskListType[];
 }
 
-interface Category {
-  name: string;
-  tasks: Task[];
-}
-
-const TaskList: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      name: '법인 설립',
-      tasks: [
-        { id: 1, text: '법인 설립 안내 드리기', completed: false },
-        { id: 2, text: '법인 설립 비용 견적서 작성', completed: false },
-        { id: 3, text: '법인 설립 서류 준비', completed: false },
-      ],
-    },
-    {
-      name: '법인 등기',
-      tasks: [
-        { id: 4, text: '법인 등기 신청서 작성', completed: false },
-        { id: 5, text: '등기 신청서 제출', completed: false },
-        { id: 6, text: '등기 확인서 수령', completed: false },
-      ],
-    },
-    {
-      name: '정기 주총',
-      tasks: [
-        { id: 7, text: '정기 주총 일정 조율', completed: false },
-        { id: 8, text: '정기 주총 안건 준비', completed: false },
-        { id: 9, text: '주총 참석자 명단 작성', completed: false },
-      ],
-    },
-    {
-      name: '기타',
-      tasks: [
-        { id: 10, text: '사내 행사 준비', completed: false },
-        { id: 11, text: '문서 관리 시스템 업데이트', completed: false },
-        { id: 12, text: '팀 빌딩 활동 계획', completed: false },
-      ],
-    },
-  ]);
+const TaskList: React.FC<TaskListProps> = ({ taskList }) => {
+  const [categories, setCategories] = useState<TaskListType[]>(taskList);
+  const [activeCategory, setActiveCategory] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('activeCategory') || taskList[0]?.name || '';
+    }
+    return '';
+  });
 
   const openModal = useModalStore((state) => state.openModal);
 
-  const [activeCategory, setActiveCategory] = useState<string>(
-    categories[0].name,
-  );
+  useEffect(() => {
+    if (taskList) {
+      setCategories(taskList);
+    }
+
+    if (activeCategory) {
+      localStorage.setItem('activeCategory', activeCategory);
+    }
+  }, [taskList, activeCategory]);
 
   const toggleTask = (categoryName: string, id: number) => {
     setCategories(
@@ -64,7 +37,12 @@ const TaskList: React.FC = () => {
           ? {
               ...category,
               tasks: category.tasks.map((task) =>
-                task.id === id ? { ...task, completed: !task.completed } : task,
+                task.id === id
+                  ? {
+                      ...task,
+                      doneAt: task.doneAt ? null : new Date().toISOString(),
+                    }
+                  : task,
               ),
             }
           : category,
@@ -103,6 +81,7 @@ const TaskList: React.FC = () => {
   const handleDatePickerModal = () => {
     openModal((close) => <DatePicker close={close} />);
   };
+
   return (
     <div className="mt-6 w-full sm:mt-4">
       <div className="mb-[22px] flex gap-4">
@@ -131,15 +110,15 @@ const TaskList: React.FC = () => {
           activeCategory === category.name ? (
             <div key={category.name} className="mb-8">
               <div className="flex flex-col gap-4">
-                {category.tasks.map((task) => (
+                {category.tasks.map(({ id, doneAt, ...task }) => (
                   <TaskItem
-                    key={task.id}
-                    id={task.id}
-                    text={task.text}
-                    completed={task.completed}
-                    onToggle={() => toggleTask(category.name, task.id)}
-                    onEdit={(value) => editTask(category.name, value, task.id)}
-                    onDelete={() => deleteTask(category.name, task.id)}
+                    {...task}
+                    id={id}
+                    key={id}
+                    completed={!!doneAt}
+                    onToggle={() => toggleTask(category.name, id)}
+                    onEdit={(value) => editTask(category.name, value, id)}
+                    onDelete={() => deleteTask(category.name, id)}
                   />
                 ))}
               </div>

@@ -9,20 +9,43 @@ import useModalStore from '@/store/useModalStore';
 import TaskListForm from '@/components/common/modal/TaskListForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
+import { Frequency } from '@/types/taskListType';
+
+const frequencyText = {
+  ONCE: '한번',
+  DAILY: '매일 반복',
+  WEEKLY: '매주 반복',
+  MONTHLY: '매월 반복',
+};
 
 interface TaskItemProps {
   id: number;
-  text: string;
+  name: string;
   completed: boolean;
+  commentCount: number;
+  updatedAt: string;
+  frequency: Frequency;
   onToggle: (id: number) => void;
   onEdit: (value: string, id: number) => void;
   onDelete: (id: number) => void;
 }
 
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}년 ${month}월 ${day}일`;
+};
+
 const TaskItem: React.FC<TaskItemProps> = ({
   id,
-  text,
+  name,
   completed,
+  commentCount,
+  updatedAt,
+  frequency,
   onToggle,
   onEdit,
   onDelete,
@@ -42,7 +65,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               onDelete(id);
               toast.success('삭제되었습니다!');
             }}
-            title={`'${text}'\n할 일을 정말 삭제하시겠어요?`}
+            title={`'${name}'\n할 일을 정말 삭제하시겠어요?`}
             description={'삭제 후에는 되돌릴 수 없습니다.'}
             isAlert={true}
             confirmText={'삭제하기'}
@@ -61,7 +84,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         close={close}
         onAction={(value) => onEdit(value, id)}
         isEditMode={true}
-        initialValue={text}
+        initialValue={name}
       />
     ));
   };
@@ -92,7 +115,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <span
             className={`font-regular-14 ${completed ? 'line-through' : ''}`}
           >
-            {text}
+            {name}
           </span>
           <span className="flex-center flex gap-[2px]">
             <Image
@@ -102,7 +125,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
               width={16}
               height={16}
             />
-            <span>3</span>
+            <span className="font-regular-12 text-text-default">
+              {commentCount}
+            </span>
           </span>
         </div>
         <div>
@@ -115,11 +140,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
       <div className="font-regular-12 flex items-center gap-[6px] text-text-default">
         <Image src={calendarImg} alt="달력" width={16} height={16} />
         <div className="flex items-center">
-          <span>{'2024년 7월 29일'}</span>
+          <span>{formatDate(updatedAt)}</span>
           <div className="mx-[10px] h-2 w-[1px] bg-bg-tertiary"></div>
           <Image src={repeatImg} alt="반복" width={16} height={16} />
         </div>
-        <span>{'매일 반복'}</span>
+        <span>{frequencyText[frequency]}</span>
       </div>
     </div>
   );
