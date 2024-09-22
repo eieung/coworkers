@@ -1,23 +1,41 @@
 import Input from '../common/Input';
-import { useValidation } from '@/hooks/useValidation.ts';
+import { useValidation } from '@/hooks/useValidation';
 import Button from '../common/button';
 import Link from 'next/link';
+import { useUserStore } from '@/store/authStore';
+
+import instance from '@/libs/axios';
+import { useRouter } from 'next/router';
 
 export default function LoginForm() {
   const { email, password } = useValidation();
+  const { setUser, setTokens } = useUserStore();
+  const router = useRouter();
 
   const isFormValid =
-
     email.isValid &&
     password.isValid &&
     email.value !== '' &&
     password.value !== '';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    {
-      /*TODO: 로그인 폼 제출 구현*/
-    }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const loginData = {
+      email: email.value,
+      password: password.value,
+    };
+
+    try {
+      const response = await instance.post('/auth/signin', loginData);
+      if (response.status === 200) {
+        const { accessToken, refreshToken, user } = response.data;
+        setTokens(accessToken, refreshToken);
+        setUser(user);
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('로그인에 실패했습니다.', error);
+    }
   };
 
   return (
@@ -55,9 +73,6 @@ export default function LoginForm() {
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        {/* <button className="bg-white" type="submit">
-          로그인
-        </button> */}
         <Button
           size="large"
           font="font-16-semibold-16"
