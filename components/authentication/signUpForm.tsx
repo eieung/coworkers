@@ -1,7 +1,6 @@
 import Input from '../common/Input';
-import { useValidation } from '@/hooks/useValidation.ts';
+import { useValidation } from '@/hooks/useValidation';
 import Button from '../common/button';
-import Link from 'next/link';
 import axios from 'axios';
 import instance from '@/libs/axios';
 import { useRouter } from 'next/router';
@@ -112,9 +111,6 @@ export default function SignUpForm() {
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        {/* <button className="bg-white" type="submit">
-          로그인
-        </button> */}
         <Button
           size="large"
           font="font-16-semibold-16"

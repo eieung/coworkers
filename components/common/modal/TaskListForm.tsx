@@ -38,7 +38,6 @@ export default function TaskListForm({
     ModalUserActions[ACTION_TYPE.CREATE_TASK_LIST];
 
   const onSubmit = ({ value }: FormData) => {
-    toast(`${value} 목록이 ${isEditMode ? '수정' : '생성'}되었습니다!`);
     onAction(value);
     close();
   };

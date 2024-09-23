@@ -42,6 +42,7 @@ import { twMerge } from 'tailwind-merge';
  * - DatePicker : 할 일 만들기 데이터 피커 기능용
  * - PasswordReset : 비밀번호 재설정
  * - TeamForm: 팀 생성하기 / 수정하기 (isEditMode이 true일 때 수정하기 무옵션일 경우 생성하기 기본)
+ * - CustomInputModal: 인풋이 있는 커스텀 모달
  *
  * [모달 사용 예시]
  *
@@ -62,7 +63,7 @@ interface ModalProps {
   onClose: () => void;
   className?: string;
   showCloseIcon?: boolean;
-  title?: string;
+  title?: React.ReactNode;
   description?: string;
   iconSrc?: string | null;
   childrenClassName?: string;
