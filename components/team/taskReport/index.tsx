@@ -28,14 +28,17 @@ export default function TaskReport() {
   return (
     <div className="mt-8">
       <strong className="font-medium-16 text-text-primary">리포트</strong>
-      <div className="mt-4 flex flex-row items-center justify-between gap-x-10 rounded-xl bg-bg-secondary p-6">
-        <div className="flex w-[168px] min-w-[112px] flex-col items-center gap-y-1">
+      <div className="mt-4 flex flex-row items-center gap-x-10 rounded-xl bg-bg-secondary p-6">
+        <div className="flex w-[168px] min-w-[112px] flex-col items-center">
           <CircularProgressBar
             percentage={percentage}
             useGradient
             trailColor="#334155"
             showText={true}
           />
+          <span className="font-medium-14 mt-3 text-text-primary">
+            오늘의 진척도
+          </span>
         </div>
         <div className="flex w-[400px] flex-col gap-y-4">
           <div className="flex w-full flex-row justify-between gap-x-3 rounded-xl bg-bg-tertiary p-4">
