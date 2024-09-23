@@ -6,10 +6,11 @@ import TeamSetting from '@/components/team/TeamSetting';
 import notificationData from '@/data/notificationData';
 
 export default function Team() {
-  const currentUser = notificationData.users[1];
+  // 유저 기능 전 임시로 사용 (관리자는 0, 일반 멤버는 1 혹은 2)
+  const currentUser = notificationData.users[0];
 
   return (
-    <div className="m-auto max-w-[1200px] px-4 py-6 md:px-6 lg:px-0">
+    <div className="py-6">
       <TeamSetting />
       <Notification isAdmin={currentUser.role === 'admin'} />
       <TaskList />
