@@ -11,6 +11,8 @@ import ChangePassword from '@/components/common/modal/ChangePassword';
 import DatePicker from '@/components/common/modal/DatePicker';
 import PasswordReset from '@/components/common/modal/PasswordReset';
 import TeamForm from '@/components/common/modal/TeamForm';
+import CustomInputModal from '@/components/common/modal/CustomInputModal';
+import { useState } from 'react';
 
 export default function ModalVariants() {
   /*  모달 기본 설정 */
@@ -89,6 +91,33 @@ export default function ModalVariants() {
     ));
   };
 
+  // 커스텀 인풋 모달 예시
+  const [inputData, setInputData] = useState<string>('공지 내용입니다');
+  const handleCustomInputModal = () => {
+    openModal((close) => (
+      <CustomInputModal
+        close={close}
+        title={
+          <div className="flex items-center gap-2">
+            {/* fontawesome 이용 */}
+            <i className="fas fa-solid fa-pen-to-square" />
+            <span>공지 수정</span>
+          </div>
+        }
+        buttonText={'수정하기'}
+        // 작동 함수
+        onAction={(data) => {
+          setInputData(data);
+          toast.success(`${data} 수정되었습니다!`);
+        }}
+        // input에 보이게 할 데이터. 설정 안해도 됨
+        initialData={inputData}
+        // 설정 안할시 기본은 "내용을 입력해주세요"
+        placeholder={'공지 내용을 입력해주세요'}
+      />
+    ));
+  };
+
   /* 커스텀 컨펌 모달 사용 예시  */
   const handleOpenConfirmModal = () => {
     openModal((close) => (
@@ -119,6 +148,7 @@ export default function ModalVariants() {
       <button onClick={handleCreateTeamrModal}>팀 생성하기</button>
       <button onClick={handleEditTeamrModal}>팀 수정하기</button>
       <button onClick={handleOpenConfirmModal}>컨펌 모달 예시</button>
+      <button onClick={handleCustomInputModal}>커스텀 인풋 모달 예시</button>
     </div>
   );
 }
