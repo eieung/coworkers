@@ -10,7 +10,7 @@ interface FileInputProps {
   }) => ReactNode;
 }
 
-const FileInput: React.FC<FileInputProps> = ({ value, onChange, children }) => {
+const FileInput = ({ value, onChange, children }: FileInputProps) => {
   const [preview, setPreview] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 

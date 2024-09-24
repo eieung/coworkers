@@ -2,6 +2,7 @@ import leftImg from '@/assets/image/icon/arrow_left.svg';
 import rightImg from '@/assets/image/icon/arrow_right.svg';
 import calendarImg from '@/assets/image/icon/calendar.svg';
 import Image from 'next/image';
+import { memo } from 'react';
 
 const formatDate = (date: Date) => {
   const months = [
@@ -32,7 +33,7 @@ interface DateManagerProps {
   setCurrentDate: (date: string) => void;
 }
 
-export default function DateManager({
+const DateManager = memo(function DateManager({
   currentDate,
   setCurrentDate,
 }: DateManagerProps) {
@@ -70,4 +71,6 @@ export default function DateManager({
       </button>
     </div>
   );
-}
+});
+
+export default DateManager;
