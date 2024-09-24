@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import AddNewCategorie from '@/components/tasks/AddNewCategorie';
+import AddNewCategory from '@/components/tasks/AddNewCategory';
 import DateManager from '@/components/tasks/DateManager';
 import TaskList from '@/components/tasks/TaskList';
 import { getTaskListsRequest } from '@/libs/taskListApi';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import TaskDetail from '@/components/tasks/TaskDetail';
 
 export default function TasksPage() {
   const router = useRouter();
@@ -33,7 +32,7 @@ export default function TasksPage() {
           currentDate={currentDate}
           setCurrentDate={setCurrentDate}
         />
-        <AddNewCategorie groupId={groupId as string} />
+        <AddNewCategory groupId={groupId as string} />
       </div>
       {categories && (
         <TaskList

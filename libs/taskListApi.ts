@@ -89,7 +89,7 @@ export interface AddNewTaskParams {
   };
 }
 
-export const addNewCategorieRequest = async ({
+export const addNewCategoryRequest = async ({
   groupId,
   taskData,
 }: AddNewTaskParams): Promise<void> => {

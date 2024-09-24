@@ -1,6 +1,5 @@
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
-import TaskListForm from '@/components/common/modal/TaskListForm';
-import { addNewCategorieRequest, AddNewTaskParams } from '@/libs/taskListApi';
+import { addNewCategoryRequest, AddNewTaskParams } from '@/libs/taskListApi';
 import useModalStore from '@/store/useModalStore';
 import {
   useMutation,
@@ -9,14 +8,14 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-export default function AddNewCategorie({ groupId }: { groupId: string }) {
+export default function AddNewCategory({ groupId }: { groupId: string }) {
   const openModal = useModalStore((state) => state.openModal);
   const queryClient = useQueryClient();
 
   const uploadPostMutation: UseMutationResult<void, Error, AddNewTaskParams> =
     useMutation({
       mutationFn: ({ groupId, taskData }) =>
-        addNewCategorieRequest({ groupId, taskData }),
+        addNewCategoryRequest({ groupId, taskData }),
       onSuccess: (_, variables) => {
         toast.success(`${variables.taskData.name} 목록이 생성되었습니다!`);
         queryClient.invalidateQueries({ queryKey: ['categories'] });
@@ -29,7 +28,7 @@ export default function AddNewCategorie({ groupId }: { groupId: string }) {
       },
     });
 
-  const handleAddNewCategorieModal = () => {
+  const handleAddNewCategoryModal = () => {
     openModal((close) => (
       <CustomInputModal
         close={close}
@@ -50,7 +49,7 @@ export default function AddNewCategorie({ groupId }: { groupId: string }) {
   return (
     <button
       className="font-regular-14 text-brand-primary"
-      onClick={handleAddNewCategorieModal}
+      onClick={handleAddNewCategoryModal}
     >
       + 새로운 목록 추가하기
     </button>

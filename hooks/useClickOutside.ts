@@ -6,7 +6,6 @@ const useClickOutside = (ref: RefObject<HTMLElement>, handler: () => void) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         handler();
       }
-      console.log(event.target as Node);
     };
 
     const timeoutId = setTimeout(() => {
