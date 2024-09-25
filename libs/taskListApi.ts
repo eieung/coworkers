@@ -1,4 +1,4 @@
-import instance from '@/libs/axios';
+import { authAxiosInstance } from '@/libs/axios';
 import { TaskListType } from '@/types/taskListType';
 
 interface GetTasksParams {
@@ -27,7 +27,7 @@ const fetchData = async (
   const token = getAccessToken();
 
   try {
-    const response = await instance.request({
+    const response = await authAxiosInstance.request({
       url,
       method,
       params,
