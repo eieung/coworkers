@@ -20,7 +20,6 @@ export default function KaKaoAuthCallback() {
           setUser(response.data.user);
           setTokens(response.data.accessToken, response.data.refreshToken);
           router.push('/');
-          console.log(response);
         } catch (error) {
           console.error('소셜 로그인 오류:', error);
         }

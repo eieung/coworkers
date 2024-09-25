@@ -15,8 +15,7 @@ const loginWithSocial = async ({
 }: OauthDataType) => {
   const socialLoginData = { state, redirectUri, token };
   const data = await instance.post(`/auth/signIn/${provider}`, socialLoginData);
-  // localStorage.setItem('accessToken', data.data.accessToken);
-  // localStorage.setItem('refreshToken', data.data.refreshToken);
+
   return data;
 };
 
