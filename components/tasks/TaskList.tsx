@@ -9,13 +9,9 @@ import {
   getTasksRequest,
   deleteTaskRequest,
 } from '@/libs/taskListApi';
-import {
-  useMutation,
-  UseMutationResult,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 interface TaskListProps {
   categories: TaskListType[];
@@ -31,17 +27,29 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     return storedCategory || categories[0] || { id: 0, name: '' };
   });
 
+  const router = useRouter();
+  const { listId } = router.query;
+
   const openModal = useModalStore((state) => state.openModal);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (activeCategory) {
+    if (activeCategory && listId !== String(activeCategory.id)) {
       localStorage.setItem(
         'activeCategory',
         JSON.stringify({ id: activeCategory.id, name: activeCategory.name }),
       );
+
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, listId: activeCategory.id },
+        },
+        undefined,
+        { shallow: false },
+      );
     }
-  }, [activeCategory]);
+  }, [activeCategory, router, listId]);
 
   const {
     data: tasks = [],
@@ -59,20 +67,28 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     select: (data) => data.tasks,
   });
 
-  const toggleTaskMutation: UseMutationResult<
+  const toggleTaskMutation = useMutation<
     void,
     Error,
     { id: number; doneAt: string | null }
-  > = useMutation({
+  >({
     mutationFn: ({ id, doneAt }) => {
       const newDoneAt = !doneAt;
-      return patchTaskRequest({ taskId: id, taskData: { done: newDoneAt } });
+      return patchTaskRequest({
+        taskId: id,
+        taskData: {
+          done: newDoneAt,
+        },
+      });
     },
   });
 
   const toggleTask = (id: number, doneAt: string | null) => {
     toggleTaskMutation.mutate(
-      { id, doneAt },
+      {
+        id,
+        doneAt,
+      },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({
@@ -83,11 +99,11 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     );
   };
 
-  const editTaskMutation: UseMutationResult<
+  const editTaskMutation = useMutation<
     void,
     Error,
     { id: number; data: string }
-  > = useMutation({
+  >({
     mutationFn: ({ id, data }) => {
       return patchTaskRequest({ taskId: id, taskData: { name: data } });
     },
@@ -111,12 +127,11 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     );
   };
 
-  const deleteTaskMutation: UseMutationResult<void, Error, number> =
-    useMutation({
-      mutationFn: (id) => {
-        return deleteTaskRequest({ groupId, taskId: id });
-      },
-    });
+  const deleteTaskMutation = useMutation<void, Error, number>({
+    mutationFn: (id) => {
+      return deleteTaskRequest({ groupId, taskId: id });
+    },
+  });
 
   const deleteTask = (id: number) => {
     deleteTaskMutation.mutate(id, {

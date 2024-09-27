@@ -1,32 +1,27 @@
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
 import { addNewCategoryRequest, AddNewTaskParams } from '@/libs/taskListApi';
 import useModalStore from '@/store/useModalStore';
-import {
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 export default function AddNewCategory({ groupId }: { groupId: string }) {
   const openModal = useModalStore((state) => state.openModal);
   const queryClient = useQueryClient();
 
-  const uploadPostMutation: UseMutationResult<void, Error, AddNewTaskParams> =
-    useMutation({
-      mutationFn: ({ groupId, taskData }) =>
-        addNewCategoryRequest({ groupId, taskData }),
-      onSuccess: (_, variables) => {
-        toast.success(`${variables.taskData.name} 목록이 생성되었습니다!`);
-        queryClient.invalidateQueries({ queryKey: ['categories'] });
-      },
-      onError: (error) => {
-        const errorMessage = error.message || '목록 생성에 실패했습니다!';
+  const uploadPostMutation = useMutation<void, Error, AddNewTaskParams>({
+    mutationFn: ({ groupId, taskData }) =>
+      addNewCategoryRequest({ groupId, taskData }),
+    onSuccess: (_, variables) => {
+      toast.success(`${variables.taskData.name} 목록이 생성되었습니다!`);
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+    onError: (error) => {
+      const errorMessage = error.message || '목록 생성에 실패했습니다!';
 
-        console.error('Error adding task list:', errorMessage);
-        toast.error(errorMessage);
-      },
-    });
+      console.error('Error adding task list:', errorMessage);
+      toast.error(errorMessage);
+    },
+  });
 
   const handleAddNewCategoryModal = () => {
     openModal((close) => (
