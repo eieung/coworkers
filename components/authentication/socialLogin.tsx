@@ -3,12 +3,18 @@ import google from '@/assets/image/social/google.svg';
 import Image from 'next/image';
 
 export default function SocialLogin() {
-  const REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
-  const REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
-  const link = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+  const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+  const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+  const GOOGLE_REST_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
+  const kakaoLink = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
+  const googleLink = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_REST_API_KEY}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
 
   const kakaoHandleSubmit = () => {
-    window.location.href = link;
+    window.location.href = kakaoLink;
+  };
+  const googleHandleSubmit = () => {
+    window.location.href = googleLink;
   };
 
   return (
@@ -24,7 +30,7 @@ export default function SocialLogin() {
           <button onClick={kakaoHandleSubmit}>
             <Image src={kakaotalk} alt="카카오 로그인" />
           </button>
-          <button>
+          <button onClick={googleHandleSubmit}>
             <Image src={google} alt="구글 로그인" />
           </button>
         </div>

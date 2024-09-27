@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 /*
  * @component
@@ -68,7 +68,7 @@ export default function Button({
     <button
       {...rest}
       disabled={disabled}
-      className={clsx(
+      className={twMerge(
         fullWidth && 'w-full',
         !fullWidth &&
           size !== 'floating-large' &&

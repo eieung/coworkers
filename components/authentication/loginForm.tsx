@@ -4,7 +4,7 @@ import Button from '../common/button';
 import Link from 'next/link';
 import { useUserStore } from '@/store/authStore';
 
-import instance from '@/libs/axios';
+import { publicAxiosInstance } from '@/libs/axios';
 import { useRouter } from 'next/router';
 
 export default function LoginForm() {
@@ -26,7 +26,10 @@ export default function LoginForm() {
     };
 
     try {
-      const response = await instance.post('/auth/signin', loginData);
+      const response = await publicAxiosInstance.post(
+        '/auth/signin',
+        loginData,
+      );
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
         setTokens(accessToken, refreshToken);

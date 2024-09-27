@@ -1,4 +1,4 @@
-import instance from '../axios';
+import { publicAxiosInstance } from '../axios';
 
 interface OauthDataType {
   state?: string;
@@ -14,7 +14,10 @@ const loginWithSocial = async ({
   provider,
 }: OauthDataType) => {
   const socialLoginData = { state, redirectUri, token };
-  const data = await instance.post(`/auth/signIn/${provider}`, socialLoginData);
+  const data = await publicAxiosInstance.post(
+    `/auth/signIn/${provider}`,
+    socialLoginData,
+  );
 
   return data;
 };
