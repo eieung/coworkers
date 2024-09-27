@@ -3,79 +3,134 @@ import TaskItem from './TaskItem';
 import Button from '@/components/common/button';
 import useModalStore from '@/store/useModalStore';
 import DatePicker from '@/components/common/modal/DatePicker';
-import { TaskListType } from '@/types/taskListType';
+import { TaskListType, TaskType } from '@/types/taskListType';
+import {
+  patchTaskRequest,
+  getTasksRequest,
+  deleteTaskRequest,
+} from '@/libs/taskListApi';
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 interface TaskListProps {
-  taskList: TaskListType[];
+  categories: TaskListType[];
+  groupId: string;
+  currentDate: string;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ taskList }) => {
-  const [categories, setCategories] = useState<TaskListType[]>(taskList);
-  const [activeCategory, setActiveCategory] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('activeCategory') || taskList[0]?.name || '';
-    }
-    return '';
+const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const storedCategory = JSON.parse(
+      localStorage.getItem('activeCategory') || 'null',
+    );
+    return storedCategory || categories[0] || { id: 0, name: '' };
   });
 
   const openModal = useModalStore((state) => state.openModal);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (taskList) {
-      setCategories(taskList);
-    }
-
     if (activeCategory) {
-      localStorage.setItem('activeCategory', activeCategory);
+      localStorage.setItem(
+        'activeCategory',
+        JSON.stringify({ id: activeCategory.id, name: activeCategory.name }),
+      );
     }
-  }, [taskList, activeCategory]);
+  }, [activeCategory]);
 
-  const toggleTask = (categoryName: string, id: number) => {
-    setCategories(
-      categories.map((category) =>
-        category.name === categoryName
-          ? {
-              ...category,
-              tasks: category.tasks.map((task) =>
-                task.id === id
-                  ? {
-                      ...task,
-                      doneAt: task.doneAt ? null : new Date().toISOString(),
-                    }
-                  : task,
-              ),
-            }
-          : category,
-      ),
+  const {
+    data: tasks = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+    queryFn: () =>
+      getTasksRequest({
+        groupId,
+        taskListId: activeCategory?.id,
+        date: currentDate,
+      }),
+    enabled: !!groupId && !!activeCategory?.id,
+    select: (data) => data.tasks,
+  });
+
+  const toggleTaskMutation: UseMutationResult<
+    void,
+    Error,
+    { id: number; doneAt: string | null }
+  > = useMutation({
+    mutationFn: ({ id, doneAt }) => {
+      const newDoneAt = !doneAt;
+      return patchTaskRequest({ taskId: id, taskData: { done: newDoneAt } });
+    },
+  });
+
+  const toggleTask = (id: number, doneAt: string | null) => {
+    toggleTaskMutation.mutate(
+      { id, doneAt },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+          });
+        },
+      },
     );
   };
 
-  const editTask = (categoryName: string, value: string, id: number) => {
-    setCategories(
-      categories.map((category) =>
-        category.name === categoryName
-          ? {
-              ...category,
-              tasks: category.tasks.map((task) =>
-                task.id === id ? { ...task, text: value } : task,
-              ),
-            }
-          : category,
-      ),
+  const editTaskMutation: UseMutationResult<
+    void,
+    Error,
+    { id: number; data: string }
+  > = useMutation({
+    mutationFn: ({ id, data }) => {
+      return patchTaskRequest({ taskId: id, taskData: { name: data } });
+    },
+  });
+
+  const editTask = (id: number, data: string) => {
+    editTaskMutation.mutate(
+      { id, data },
+      {
+        onSuccess: () => {
+          toast.success(`${data} 수정되었습니다!`);
+          queryClient.invalidateQueries({
+            queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+          });
+        },
+        onError: (error) => {
+          console.error('Error editing task:', error.message);
+          toast.error('작업을 수정하는 도중 오류가 발생했습니다.');
+        },
+      },
     );
   };
 
-  const deleteTask = (categoryName: string, id: number) => {
-    setCategories(
-      categories.map((category) =>
-        category.name === categoryName
-          ? {
-              ...category,
-              tasks: category.tasks.filter((task) => task.id !== id),
-            }
-          : category,
-      ),
-    );
+  const deleteTaskMutation: UseMutationResult<void, Error, number> =
+    useMutation({
+      mutationFn: (id) => {
+        return deleteTaskRequest({ groupId, taskId: id });
+      },
+    });
+
+  const deleteTask = (id: number) => {
+    deleteTaskMutation.mutate(id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+        });
+        toast.success('할 일이 삭제되었습니다!');
+      },
+      onError: (error) => {
+        console.error('Error deleting task:', error.message);
+        toast.error('할 일을 삭제하는 도중 오류가 발생했습니다.');
+      },
+    });
   };
 
   const handleDatePickerModal = () => {
@@ -84,19 +139,19 @@ const TaskList: React.FC<TaskListProps> = ({ taskList }) => {
 
   return (
     <div className="mt-6 w-full sm:mt-4">
-      <div className="mb-[22px] flex gap-4">
+      <div className="mb-[22px] flex flex-wrap gap-4">
         {categories.map((category) => (
           <button
-            key={category.name}
-            onClick={() => setActiveCategory(category.name)}
-            className={`font-medium-16 relative ${
-              activeCategory === category.name
+            key={category.id}
+            onClick={() => setActiveCategory(category)}
+            className={`font-medium-16 relative flex-shrink-0 ${
+              activeCategory.id === category.id
                 ? 'text-text-tertiary'
                 : 'text-text-default'
             }`}
           >
             {category.name}
-            {activeCategory === category.name && (
+            {activeCategory.id === category.id && (
               <span
                 className="absolute bottom-[-5px] left-0 h-[1px] w-full rounded-[1.5px] bg-text-tertiary"
                 style={{ transform: 'translateY(1px)' }}
@@ -105,27 +160,30 @@ const TaskList: React.FC<TaskListProps> = ({ taskList }) => {
           </button>
         ))}
       </div>
-      <div>
-        {categories.map((category) =>
-          activeCategory === category.name ? (
-            <div key={category.name} className="mb-8">
-              <div className="flex flex-col gap-4">
-                {category.tasks.map(({ id, doneAt, ...task }) => (
-                  <TaskItem
-                    {...task}
-                    id={id}
-                    key={id}
-                    completed={!!doneAt}
-                    onToggle={() => toggleTask(category.name, id)}
-                    onEdit={(value) => editTask(category.name, value, id)}
-                    onDelete={() => deleteTask(category.name, id)}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null,
-        )}
-      </div>
+      {tasks.length === 0 ? (
+        <div className="flex-center font-regular-14 my-[250px] flex text-text-default sm:my-[150px] md:my-[250px]">
+          아직 할 일 목록이 없습니다.
+          <br />
+          새로운 목록을 추가해주세요.
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {tasks.map((taskData: TaskType) => {
+            const { id, doneAt } = taskData;
+
+            return (
+              <TaskItem
+                key={id}
+                taskData={taskData}
+                completed={!!doneAt}
+                onToggle={() => toggleTask(id, doneAt)}
+                onEdit={(data) => editTask(id, data)}
+                onDelete={() => deleteTask(id)}
+              />
+            );
+          })}
+        </div>
+      )}
       <div className="fixed bottom-12 right-7 sm:bottom-[38px] md:bottom-6 md:right-6 md:flex md:justify-end lg:right-[calc((100vw-1200px)/2)]">
         <Button
           appearance="floating-solid"

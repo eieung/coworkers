@@ -70,7 +70,7 @@ interface ModalProps {
   titleClassName?: string;
 }
 
-const CloseButton: React.FC<{ onClose: () => void }> = memo(({ onClose }) => (
+const CloseButton = memo(({ onClose }: { onClose: () => void }) => (
   <button className="flex justify-end" onClick={onClose}>
     <Image src={closeImg} alt="Close" width={24} height={24} />
   </button>
