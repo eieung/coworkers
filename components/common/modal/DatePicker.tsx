@@ -63,7 +63,7 @@ export default function DatePicker({ close }: DatePickerProps) {
       title={title}
       showCloseIcon={false}
       description={description}
-      childrenClassName="w-[336px]"
+      childrenClassName="w-[352px]"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         {inputs.length > 0 && (

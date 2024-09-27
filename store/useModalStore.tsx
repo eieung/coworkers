@@ -8,7 +8,7 @@ type Modal = {
 type ModalState = {
   modals: Modal[];
   openModal: (component: (close: () => void) => JSX.Element) => void;
-  closeModal: (id: string) => void;
+  closeModal: () => void;
   isEmpty: () => boolean;
 };
 
@@ -21,14 +21,18 @@ const useModalStore = create<ModalState>((set, get) => ({
         modals: state.modals.filter((modal) => modal.id !== id),
       }));
     };
+
     set((state) => ({
-      modals: [...state.modals, { id, component: (close) => component(close) }],
+      modals: [{ id, component: (close) => component(close) }, ...state.modals],
     }));
   },
-  closeModal: (id: string) =>
-    set((state) => ({
-      modals: state.modals.filter((modal) => modal.id !== id),
-    })),
+  closeModal: () => {
+    set((state) => {
+      const newModals = [...state.modals];
+      newModals.shift();
+      return { modals: newModals };
+    });
+  },
   isEmpty: () => get().modals.length === 0,
 }));
 
