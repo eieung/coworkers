@@ -36,7 +36,10 @@ export default function SignUpForm() {
       passwordConfirmation: confirmPassword.value,
     };
     try {
-      const response = await publicAxiosInstance.post('/auth/signup', signupData);
+      const response = await publicAxiosInstance.post(
+        '/auth/signup',
+        signupData,
+      );
       if (response.status === 201) {
         router.push('/login');
       } else {

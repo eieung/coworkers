@@ -63,8 +63,17 @@ export default function ModalVariants() {
   };
 
   // 비밀번호 재설정
+
   const handleOpenPasswordResetModal = () => {
-    openModal((close) => <PasswordReset close={close} />);
+    openModal((close) => (
+      <PasswordReset
+        close={close}
+        onAction={(value) => {
+          toast(`${value} 해당 이메일로 링크를 보냈습니다!`);
+          // value가 인풋으로 받은 이메일입니다. 이걸로 api 연동해서 처리하시면 됩니다.
+        }}
+      />
+    ));
   };
 
   // 데이트 피커 예시
@@ -135,20 +144,47 @@ export default function ModalVariants() {
 
   return (
     // 버튼과 모달 연동 설정 예시
+    // 연결 태그를 button 태그로 할 시 스페이스바와 엔터시 모달 지속 호출 이슈가 있어 button외 다른 태그 사용 권장
     <div className="flex-center mt-40 flex flex-col gap-4 text-white">
-      <button onClick={handleOpenInviteModal}>회원 초대하기</button>
-      <button onClick={handleOpenCreateListModal}>할일 목록 만들기</button>
-      <button onClick={handleOpenCreateTaskModal}>할일 만들기</button>
-      <button onClick={handleOpenDeleteModal}>회원 탈퇴하기</button>
-      <button onClick={handleOpenLogoutModal}>로그아웃</button>
-      <button onClick={handleOpenCopyEmailModal}>이메일 복사하기</button>
-      <button onClick={handleOpenChangePasswordModal}>비밀번호 변경하기</button>
-      <button onClick={handleOpenPasswordResetModal}>비밀번호 재설정</button>
-      <button onClick={handleDatePickerModal}>데이트 피커</button>
-      <button onClick={handleCreateTeamrModal}>팀 생성하기</button>
-      <button onClick={handleEditTeamrModal}>팀 수정하기</button>
-      <button onClick={handleOpenConfirmModal}>컨펌 모달 예시</button>
-      <button onClick={handleCustomInputModal}>커스텀 인풋 모달 예시</button>
+      <div className="cursor-pointer" onClick={handleOpenInviteModal}>
+        회원 초대하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenCreateListModal}>
+        할일 목록 만들기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenCreateTaskModal}>
+        할일 만들기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenDeleteModal}>
+        회원 탈퇴하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenLogoutModal}>
+        로그아웃
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenCopyEmailModal}>
+        이메일 복사하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenChangePasswordModal}>
+        비밀번호 변경하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenPasswordResetModal}>
+        비밀번호 재설정
+      </div>
+      <div className="cursor-pointer" onClick={handleDatePickerModal}>
+        데이트 피커
+      </div>
+      <div className="cursor-pointer" onClick={handleCreateTeamrModal}>
+        팀 생성하기
+      </div>
+      <div className="cursor-pointer" onClick={handleEditTeamrModal}>
+        팀 수정하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenConfirmModal}>
+        컨펌 모달 예시
+      </div>
+      <div className="cursor-pointer" onClick={handleCustomInputModal}>
+        커스텀 인풋 모달 예시
+      </div>
     </div>
   );
 }
