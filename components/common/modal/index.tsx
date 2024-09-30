@@ -204,7 +204,9 @@ function Modal({
           ref={modalRef}
         >
           {showCloseIcon && (
-            <div className={twMerge('flex w-full px-2', closeButtonClassName)}>
+            <div
+              className={twMerge('mb-4 flex w-full px-2', closeButtonClassName)}
+            >
               <CloseButton onClose={onClose} />
             </div>
           )}

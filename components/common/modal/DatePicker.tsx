@@ -61,9 +61,10 @@ export default function DatePicker({ close }: DatePickerProps) {
     <Modal
       onClose={close}
       title={title}
-      showCloseIcon={false}
+      showCloseIcon={true}
       description={description}
       childrenClassName="w-[352px]"
+      isCloseOnOutsideClick={false}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         {inputs.length > 0 && (
