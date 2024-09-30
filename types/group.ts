@@ -1,3 +1,4 @@
+import { TaskResponse } from '@/types/task';
 export interface GroupResponse {
   id: number;
   name: string;
@@ -18,4 +19,11 @@ export interface Member {
 }
 
 export interface TaskList {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  groupId: number;
+  displayIndex: number;
+  tasks: TaskResponse[];
 }
