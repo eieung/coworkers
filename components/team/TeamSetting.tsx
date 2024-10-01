@@ -6,7 +6,6 @@ import Dropdown from '@/components/common/dropdown/Dropdown';
 import TeamForm from '@/components/common/modal/TeamForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import useModalStore from '@/store/useModalStore';
-import { toast } from 'react-toastify';
 import { useDeleteGroup } from '@/hooks/useDeleteGroup';
 
 interface TeamSettingProps {
