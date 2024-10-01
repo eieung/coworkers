@@ -1,5 +1,5 @@
 // useValidation.ts
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const useValidation = () => {
   // 이메일 상태 및 유효성 검사 상태
@@ -18,12 +18,31 @@ export const useValidation = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
 
+  //서버 에러 메시지 상태
+  const [serverErrors, setServerErrors] = useState<Record<string, string>>({});
+
+  //서버 에러 설정 함수
+  const setServerError = (field: string, message: string) => {
+    setServerErrors((prev) => ({ ...prev, [field]: message }));
+  };
+
+  //서버 에러 초기화 함수
+  const clearServerError = useCallback((field: string) => {
+    setServerErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
+  }, []);
+
   /**
    * 이메일 입력 필드의 값이 변경될 때 호출됩니다.
    * @param e - 입력 이벤트 객체
    */
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    clearServerError('email');
+    setIsEmailValid(true);
   };
 
   /**
@@ -41,6 +60,9 @@ export const useValidation = () => {
   };
 
   const getEmailValidationMessage = () => {
+    if (serverErrors.email) {
+      return serverErrors.email;
+    }
     if (email === '') {
       return '이메일을 입력해 주세요.';
     }
@@ -95,6 +117,8 @@ export const useValidation = () => {
    */
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
+    clearServerError('nickname');
+    setIsNicknameValid(true);
   };
 
   /**
@@ -121,6 +145,9 @@ export const useValidation = () => {
    * @returns 닉네임 유효성 검사 메시지
    */
   const getNicknameValidationMessage = () => {
+    if (serverErrors.nickname) {
+      return serverErrors.nickname;
+    }
     if (nickname === '') {
       return '닉네임을 입력해 주세요.';
     }
@@ -166,30 +193,37 @@ export const useValidation = () => {
   };
 
   return {
-    email,
-    setEmail,
-    isEmailValid,
-    handleEmailChange,
-    handleEmailBlur,
-    getEmailValidationMessage,
-    password,
-    setPassword,
-    isPasswordValid,
-    handlePasswordChange,
-    handlePasswordBlur,
-    getPasswordValidationMessage,
-    nickname,
-    setNickname,
-    isNicknameValid,
-    handleNicknameChange,
-    handleNicknameBlur,
-    getNicknameValidationMessage,
-    confirmPassword,
-    setConfirmPassword,
-    isConfirmPasswordValid,
-    setIsConfirmPasswordValid,
-    handleConfirmPasswordChange,
-    handleConfirmPasswordBlur,
-    getConfirmPasswordValidationMessage,
+    email: {
+      value: email,
+      isValid: isEmailValid && !serverErrors.email,
+      handleChange: handleEmailChange,
+      handleBlur: handleEmailBlur,
+      getMessage: getEmailValidationMessage,
+    },
+    password: {
+      value: password,
+      isValid: isPasswordValid,
+      handleChange: handlePasswordChange,
+      handleBlur: handlePasswordBlur,
+      getMessage: getPasswordValidationMessage,
+    },
+    nickname: {
+      value: nickname,
+      isValid: isNicknameValid && !serverErrors.nickname,
+      handleChange: handleNicknameChange,
+      handleBlur: handleNicknameBlur,
+      getMessage: getNicknameValidationMessage,
+    },
+
+    confirmPassword: {
+      value: confirmPassword,
+      isValid: isConfirmPasswordValid,
+      handleChange: handleConfirmPasswordChange,
+      handleBlur: handleConfirmPasswordBlur,
+      getMessage: getConfirmPasswordValidationMessage,
+    },
+
+    setServerError,
+    clearServerError: () => setServerErrors({}),
   };
 };

@@ -78,6 +78,9 @@ const config: Config = {
         'icon-primary': 'var(--icon-primary)',
         'icon-secondary': 'var(--icon-secondary)',
         'icon-tertiary': 'var(--icon-tertiary)',
+
+        /* Etc colors */
+        'bg-dropdown': 'var(--bg-dropdown)',
       },
     },
   },

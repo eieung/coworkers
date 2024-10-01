@@ -8,7 +8,7 @@ export default function ModalRenderer() {
     <>
       {modals.map((modal) => (
         <React.Fragment key={modal.id}>
-          {modal.component(() => useModalStore.getState().closeModal(modal.id))}
+          {modal.component(() => useModalStore.getState().closeModal())}
         </React.Fragment>
       ))}
     </>

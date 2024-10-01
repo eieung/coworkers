@@ -11,10 +11,13 @@ import closeImg from '@/assets/image/icon/x.svg';
 import Image from 'next/image';
 import FileInput from '@/components/common/FileInput';
 import { useState, useEffect } from 'react';
+import { useReviseTeam } from '@/hooks/useReviseTeam';
+import { useUploadImage } from '@/hooks/useUploadImage';
+import { useCreateGroup } from '@/hooks/useCreateGroup';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const DEFAULT_IMAGE_URL =
-  'https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/537/image2.svg';
+  'https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/701/img.png';
 
 interface FormData {
   name: string;
@@ -25,6 +28,7 @@ interface TeamFormProps {
   name?: string;
   image?: string | null;
   isEditMode?: boolean;
+  groupId: number;
 }
 
 export default function TeamForm({
@@ -32,6 +36,7 @@ export default function TeamForm({
   name,
   image,
   isEditMode = false,
+  groupId,
 }: TeamFormProps) {
   const {
     control,
@@ -47,6 +52,10 @@ export default function TeamForm({
   const [fileValue, setFileValue] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>(image || addImg.src);
 
+  const createGroupMutation = useCreateGroup();
+  const patchTeamMutation = useReviseTeam();
+  const uploadImageMutation = useUploadImage();
+
   useEffect(() => {
     if (fileValue) {
       const newPreview = URL.createObjectURL(fileValue);
@@ -57,38 +66,53 @@ export default function TeamForm({
     }
   }, [fileValue, image]);
 
-  const onSubmit = (data: FormData) => {
-    const updatedData = {
-      ...data,
-      image: imageURL,
-    };
-
-    // 서버에 데이터 전송 로직 추가 필요
-
-    toast(
-      isEditMode
-        ? `${data.name} 수정되었습니다!`
-        : `${data.name} 생성되었습니다!`,
-    );
+  const createGroupHandler = (data: FormData) => {
+    createGroupMutation.mutate({
+      name: data.name.trim(),
+      image: imageURL !== DEFAULT_IMAGE_URL ? imageURL : DEFAULT_IMAGE_URL,
+    });
 
     close();
   };
 
-  const handleFileChange = (file: File | null) => {
+  const editTeamHandler = (data: FormData) => {
+    patchTeamMutation.mutate({
+      id: groupId,
+      data: {
+        name: data.name.trim(),
+        image: imageURL !== DEFAULT_IMAGE_URL ? imageURL : DEFAULT_IMAGE_URL,
+      },
+    });
+
+    close();
+  };
+
+  const onSubmit = (data: FormData) => {
+    if (isEditMode) {
+      editTeamHandler(data);
+    } else {
+      createGroupHandler(data);
+    }
+  };
+
+  const handleFileChange = async (file: File | null) => {
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error('이미지 크기는 5MB 이하로 설정해주세요.');
+        toast.error('이미지 크기는 10MB 이하로 설정해주세요.');
         return;
       }
 
-      // 서버에 이미지 업로드 로직 필요. 업로드 된 이미지 주소를 setImageURL에 할당 필요
-      // setImageURL(url);
+      uploadImageMutation.mutate(file, {
+        onSuccess: (uploadedImageUrl) => {
+          setImageURL(uploadedImageUrl);
+        },
+      });
 
       setFileValue(file);
     }
   };
 
-  const { inputs, buttons } = ModalUserActions[ACTION_TYPE.EDITE_TEAM];
+  const { inputs, buttons } = ModalUserActions[ACTION_TYPE.EDIT_TEAM];
 
   return (
     <Modal
@@ -117,6 +141,7 @@ export default function TeamForm({
               />
               {fileValue && (
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleClearClick();
@@ -173,7 +198,7 @@ export default function TeamForm({
             {isEditMode ? '수정하기' : '생성하기'}
           </Button>
         )}
-        <p className="font-regular-16 mt-6 text-text-primary">
+        <p className="font-regular-14 mt-6 text-center text-text-primary">
           팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.
         </p>
       </form>

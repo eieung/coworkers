@@ -46,6 +46,7 @@ interface CircularProgressBarProps {
   textColor?: string;
   showText?: boolean;
   useGradient?: boolean;
+  className?: string;
 }
 
 export default function CircularProgressBar({
@@ -56,6 +57,7 @@ export default function CircularProgressBar({
   textColor,
   showText = false,
   useGradient = false,
+  className,
 }: CircularProgressBarProps) {
   return (
     <>
@@ -97,6 +99,7 @@ export default function CircularProgressBar({
           },
         }}
         text={showText ? `${percentage}%` : ''}
+        className={className}
       />
     </>
   );
