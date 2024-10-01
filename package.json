@@ -16,6 +16,7 @@
     "@tanstack/react-query-devtools": "^5.52.3",
     "axios": "^1.7.5",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "mongoose": "^8.6.3",
     "next": "14.2.7",
     "react": "^18",

@@ -4,8 +4,8 @@ import Button from '../common/button';
 import Link from 'next/link';
 import { useUserStore } from '@/store/authStore';
 
-import { publicAxiosInstance } from '@/libs/axios';
 import { useRouter } from 'next/router';
+import { publicAxiosInstance } from '@/libs/axios';
 
 export default function LoginForm() {
   const { email, password } = useValidation();
@@ -30,6 +30,7 @@ export default function LoginForm() {
         '/auth/signin',
         loginData,
       );
+      
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
         setTokens(accessToken, refreshToken);
