@@ -57,6 +57,7 @@ export default function TaskReport({ groupId }: TaskReportProps) {
     if (!groupData || isLoading || error) return;
 
     const today = new Date();
+    // 수정 예정
     let totalTasks = 0;
     let completedTasks = 0;
 

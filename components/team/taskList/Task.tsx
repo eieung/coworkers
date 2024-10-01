@@ -54,7 +54,7 @@ export default function Task({
       </Link>
 
       <div className="flex flex-row gap-x-1 pr-2">
-        <div className="flex items-center gap-1 rounded-xl bg-bg-primary px-2">
+        <div className="flex items-center gap-x-1 rounded-xl bg-bg-primary px-2 py-1">
           {percentage === 100 ? (
             <Image src={doneTaskIcon} alt="할 일 완료" width={16} height={16} />
           ) : (
@@ -67,7 +67,7 @@ export default function Task({
               />
             </div>
           )}
-          <span className="font-14-regular text-brand-primary">
+          <span className="font-regular-14 w-[22px] text-brand-primary">
             {completedTasks}/{totalTasks}
           </span>
         </div>
