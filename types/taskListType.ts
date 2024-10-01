@@ -22,6 +22,7 @@ export interface TaskType {
   description: string;
   name: string;
   id: number;
+  user: UserType;
 }
 
 export interface TaskListType {
@@ -32,4 +33,13 @@ export interface TaskListType {
   name: string;
   id: number;
   tasks: TaskType[];
+}
+
+export interface CommentType {
+  id: number;
+  taskId: number;
+  user: UserType;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
 }

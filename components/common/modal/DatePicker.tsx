@@ -6,6 +6,10 @@ import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
 import Textarea from '@/components/common/Textarea';
+import TextDropdown from '@/components/common/dropdown/TextDropdown';
+import CustomCalendar from '@/components/common/CustomCalendar';
+import { useState } from 'react';
+import { formatDate } from '@/utils/common';
 
 interface DatePickerProps {
   close: () => void;
@@ -49,6 +53,10 @@ export default function DatePicker({ close }: DatePickerProps) {
     buttons = [],
   } = ModalUserActions[ACTION_TYPE.DATE_PICKER];
 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
+  console.log(formatDate(String(selectedDate)));
+
   const onSubmit = (data: FormData) => {
     const trimmedTitle = data.title.trim();
     const trimmedMemo = data.memo.trim();
@@ -56,6 +64,27 @@ export default function DatePicker({ close }: DatePickerProps) {
     toast(`${trimmedTitle} 이(가) 생성되었습니다!`);
     close();
   };
+
+  const dropdownItems = [
+    {
+      label: '한 번',
+      onClick: () => {
+        console.log('한번입니다');
+      },
+    },
+    {
+      label: '매일',
+      onClick: () => {},
+    },
+    {
+      label: '주 반복',
+      onClick: () => {},
+    },
+    {
+      label: '월 반복',
+      onClick: () => {},
+    },
+  ];
 
   return (
     <Modal
@@ -92,8 +121,12 @@ export default function DatePicker({ close }: DatePickerProps) {
                         errors[inputs[FORM_FIELD.TITLE].name as keyof FormData]
                           ?.message
                       }
-                      onChange={field.onChange}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setShowCalendar(false);
+                      }}
                       value={field.value}
+                      onFocus={() => setShowCalendar(true)}
                     />
                   )}
                 />
@@ -106,24 +139,49 @@ export default function DatePicker({ close }: DatePickerProps) {
                   control={control}
                   rules={{ required: inputs[FORM_FIELD.DATE].placeholder }}
                   render={({ field }) => (
-                    <Input
-                      {...inputs[FORM_FIELD.DATE]}
-                      {...field}
-                      className={clsx(
-                        'w-[204px]',
-                        inputs[FORM_FIELD.DATE].height,
+                    <div className="w-full">
+                      <Input
+                        {...inputs[FORM_FIELD.DATE]}
+                        {...field}
+                        className={clsx(
+                          'w-[204px]',
+                          inputs[FORM_FIELD.DATE].height,
+                        )}
+                        invalid={
+                          !!errors[
+                            inputs[FORM_FIELD.DATE].name as keyof FormData
+                          ]
+                        }
+                        validationMessage={
+                          errors[inputs[FORM_FIELD.DATE].name as keyof FormData]
+                            ?.message
+                        }
+                        onFocus={() => setShowCalendar(true)}
+                        value={field.value}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value);
+                          setShowCalendar(false);
+                        }}
+                      />
+                      {showCalendar && (
+                        <div className="mt-2 rounded-md shadow-lg">
+                          <CustomCalendar
+                            onDateSelect={(date) => {
+                              if (date) {
+                                const formattedDate = formatDate(date);
+                                field.onChange(formattedDate);
+                                setSelectedDate(date);
+                              } else {
+                                console.error(
+                                  'Selected date is null or undefined.',
+                                );
+                              }
+                            }}
+                          />
+                        </div>
                       )}
-                      invalid={
-                        !!errors[inputs[FORM_FIELD.DATE].name as keyof FormData]
-                      }
-                      validationMessage={
-                        errors[inputs[FORM_FIELD.DATE].name as keyof FormData]
-                          ?.message
-                      }
-                      onChange={field.onChange}
-                      value={field.value}
-                      type="date"
-                    />
+                    </div>
                   )}
                 />
               )}
@@ -137,7 +195,7 @@ export default function DatePicker({ close }: DatePickerProps) {
                       {...inputs[FORM_FIELD.TIME]}
                       {...field}
                       className={clsx(
-                        'w-[124px]',
+                        'hidden w-[124px]',
                         inputs[FORM_FIELD.TIME].height,
                       )}
                       invalid={
@@ -149,7 +207,6 @@ export default function DatePicker({ close }: DatePickerProps) {
                       }
                       onChange={field.onChange}
                       value={field.value}
-                      type="time"
                     />
                   )}
                 />
@@ -166,7 +223,10 @@ export default function DatePicker({ close }: DatePickerProps) {
                       <label className="font-medium-16 mb-3 inline-block text-text-primary">
                         {inputs[FORM_FIELD.REPEAT].label}
                       </label>
-                      {/* 드롭다운 추가예정 */}
+                      <TextDropdown
+                        items={dropdownItems}
+                        defaultSelectedItem={'반복 안함'}
+                      />
                     </>
                   )}
                 />
