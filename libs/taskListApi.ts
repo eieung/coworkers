@@ -2,38 +2,22 @@ import { authAxiosInstance } from '@/libs/axios';
 import { TaskListType } from '@/types/taskListType';
 import { AxiosError } from 'axios';
 
-const getAccessToken = () => {
-  if (typeof window !== 'undefined') {
-    const userStorage = localStorage.getItem('user-storage');
-    if (userStorage) {
-      const parsedStorage = JSON.parse(userStorage);
-      return parsedStorage.state?.accessToken;
-    }
-  }
-  return null;
-};
-
 export interface ErrorResponse {
   message: string;
 }
 
-const fetchData = async (
+export const fetchData = async (
   url: string,
   params?: any,
   method: 'GET' | 'POST' | 'DELETE' | 'PATCH' = 'GET',
   data?: any,
 ) => {
-  const token = getAccessToken();
-
   try {
     const response = await authAxiosInstance.request({
       url,
       method,
       params,
       data,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     return response.data;
