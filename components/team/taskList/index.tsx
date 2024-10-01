@@ -34,7 +34,7 @@ export default function TaskList({ groupId }: TaskListProps) {
       {taskLists.map((taskList) => {
         const totalTasks = taskList.tasks.length;
         const completedTasks = taskList.tasks.filter(
-          (task) => task.doneAt !== null,
+          (task) => task.doneAt,
         ).length;
 
         return (
