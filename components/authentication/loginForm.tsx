@@ -26,7 +26,11 @@ export default function LoginForm() {
     };
 
     try {
-      const response = await publicAxiosInstance.post('/auth/signin', loginData);
+      const response = await publicAxiosInstance.post(
+        '/auth/signin',
+        loginData,
+      );
+      
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
         setTokens(accessToken, refreshToken);

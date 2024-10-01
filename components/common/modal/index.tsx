@@ -1,9 +1,10 @@
-import { useEffect, useState, useCallback, memo } from 'react';
+import { useEffect, useState, useCallback, memo, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import Image from 'next/image';
 import closeImg from '@/assets/image/icon/x.svg';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import useClickOutside from '@/hooks/useClickOutside';
 
 /*
  * @component
@@ -19,6 +20,10 @@ import { twMerge } from 'tailwind-merge';
  * - childrenClassName (optional): children을 스타일링 할 수 있는 옵션입니다.
  * - titleClassName (optional): title을 스타일링 할 수 있는 옵션입니다.
  * - iconSrc (optional): 경고 등 이미지 아이콘을 넣기 위한 옵션입니다. 기본 null입니다.
+ * - closeButtonClassName (optional): X 닫기 버튼 스타일 변경
+ * - isCustom (optional): 현재 기본 형식과 다른 커스텀 모달로 만들 때 사용합니다.
+ * - isCloseOnOutsideClick (optional): 기본적으로 모달 바깥 클릭 시 닫히게 되어있으나 false로 설정시 닫히지 않게 설정 가능합니다.
+ * - backgroundOpacity (optional): 모달의 바깥 영역 투명도를 'opacity-0' | 'opacity-50' | 'opacity-100' 중에 설정합니다.
  *
  * @usage
  *
@@ -68,9 +73,13 @@ interface ModalProps {
   iconSrc?: string | null;
   childrenClassName?: string;
   titleClassName?: string;
+  closeButtonClassName?: string;
+  isCustom?: boolean;
+  isCloseOnOutsideClick?: boolean;
+  backgroundOpacity?: 'opacity-0' | 'opacity-50' | 'opacity-100';
 }
 
-const CloseButton: React.FC<{ onClose: () => void }> = memo(({ onClose }) => (
+const CloseButton = memo(({ onClose }: { onClose: () => void }) => (
   <button className="flex justify-end" onClick={onClose}>
     <Image src={closeImg} alt="Close" width={24} height={24} />
   </button>
@@ -86,6 +95,10 @@ function Modal({
   iconSrc = null,
   childrenClassName,
   titleClassName,
+  isCustom = false,
+  closeButtonClassName,
+  isCloseOnOutsideClick = true,
+  backgroundOpacity = 'opacity-50',
 }: ModalProps) {
   const [isClient, setIsClient] = useState(false);
 
@@ -97,6 +110,14 @@ function Modal({
     },
     [onClose],
   );
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(modalRef, () => {
+    if (isCloseOnOutsideClick) {
+      onClose();
+    }
+  });
 
   useEffect(() => {
     setIsClient(true);
@@ -115,54 +136,90 @@ function Modal({
     <div
       className={clsx('fixed inset-0 z-50 flex items-center justify-center')}
     >
-      <div className="fixed inset-0 bg-black opacity-50" onClick={onClose} />
       <div
         className={twMerge(
-          'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:max-w-[375px]',
-          'font-medium-16 p-[16px_16px_32px] text-text-primary shadow-lg',
-          className,
+          `fixed inset-0 bg-black transition-opacity duration-300`,
+          backgroundOpacity,
         )}
-      >
-        {showCloseIcon ? (
-          <div className="flex w-full justify-end">
-            <CloseButton onClose={onClose} />
-          </div>
-        ) : (
-          <div className="flex h-6 w-full"></div>
-        )}
-        {iconSrc && (
-          <Image
-            className="mb-2"
-            src={iconSrc}
-            alt="Icon"
-            width={24}
-            height={24}
-          />
-        )}
-        {title && (
-          <h2
+      />
+      {!isCustom ? (
+        <div
+          className={twMerge(
+            'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:max-w-[375px]',
+            'font-medium-16 p-[16px_16px_32px] text-text-primary shadow-lg',
+            className,
+          )}
+          ref={modalRef}
+        >
+          {showCloseIcon ? (
+            <div
+              className={twMerge(
+                'flex w-full justify-end',
+                closeButtonClassName,
+              )}
+            >
+              <CloseButton onClose={onClose} />
+            </div>
+          ) : (
+            <div className="flex h-6 w-full"></div>
+          )}
+          {iconSrc && (
+            <Image
+              className="mb-2"
+              src={iconSrc}
+              alt="Icon"
+              width={24}
+              height={24}
+            />
+          )}
+          {title && (
+            <h2
+              className={clsx(
+                'mb-2 mt-2 whitespace-pre-line text-center',
+                titleClassName,
+              )}
+            >
+              {title}
+            </h2>
+          )}
+          {description && (
+            <p className="font-medium-14 whitespace-pre-line text-center text-text-secondary">
+              {description}
+            </p>
+          )}
+          <div
             className={clsx(
-              'mb-2 mt-2 whitespace-pre-line text-center',
-              titleClassName,
+              'max-h-[80vh] overflow-auto',
+              'scrollbar:w-2 scrollbar:rounded-full scrollbar:bg-bg-primary scrollbar-thumb:rounded-full scrollbar-thumb:bg-bg-tertiary',
             )}
           >
-            {title}
-          </h2>
-        )}
-        {description && (
-          <p className="font-medium-14 whitespace-pre-line text-center text-text-secondary">
-            {description}
-          </p>
-        )}
-        <div
-          className={clsx(
-            'max-h-[80vh] overflow-auto',
-            'scrollbar:w-2 scrollbar:rounded-full scrollbar:bg-bg-primary scrollbar-thumb:rounded-full scrollbar-thumb:bg-bg-tertiary',
-          )}
-        >
-          <div className={clsx('w-[280px]', childrenClassName)}>{children}</div>
+            <div className={twMerge('w-[280px] px-2', childrenClassName)}>
+              {children}
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          className={twMerge('fixed bg-bg-secondary shadow-lg', className)}
+          ref={modalRef}
+        >
+          {showCloseIcon && (
+            <div
+              className={twMerge('mb-4 flex w-full px-2', closeButtonClassName)}
+            >
+              <CloseButton onClose={onClose} />
+            </div>
+          )}
+          <div
+            className={clsx(
+              'max-h-[80vh] overflow-auto',
+              'scrollbar:w-2 scrollbar:rounded-full scrollbar:bg-bg-primary scrollbar-thumb:rounded-full scrollbar-thumb:bg-bg-tertiary',
+            )}
+          >
+            <div className={twMerge('px-2', childrenClassName)}>{children}</div>
+          </div>
+        </div>
+      )}
     </div>,
     document.body,
   );

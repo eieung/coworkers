@@ -1,59 +1,54 @@
 import Image from 'next/image';
 import checkImg from '@/assets/image/icon/check.svg';
 import commentImg from '@/assets/image/icon/comment.svg';
-import calendarImg from '@/assets/image/icon/calendar.svg';
-import repeatImg from '@/assets/image/icon/repeat.svg';
-import kebabImg from '@/assets/image/icon/kebab.svg';
+import menuImg from '@/assets/image/icon/kebab.svg';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import useModalStore from '@/store/useModalStore';
-import TaskListForm from '@/components/common/modal/TaskListForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { toast } from 'react-toastify';
-import { Frequency } from '@/types/taskListType';
-
-const frequencyText = {
-  ONCE: '한번',
-  DAILY: '매일 반복',
-  WEEKLY: '매주 반복',
-  MONTHLY: '매월 반복',
-};
+import { TaskType } from '@/types/taskListType';
+import TaskDetail from '@/components/tasks/TaskDetail';
+import CustomInputModal from '@/components/common/modal/CustomInputModal';
+import DateAndFrequency from '@/components/tasks/DateAndFrequency';
 
 interface TaskItemProps {
-  id: number;
-  name: string;
+  taskData: TaskType;
   completed: boolean;
-  commentCount: number;
-  updatedAt: string;
-  frequency: Frequency;
-  onToggle: (id: number) => void;
-  onEdit: (value: string, id: number) => void;
-  onDelete: (id: number) => void;
+  onToggle: () => void;
+  onEdit: (data: string) => void;
+  onDelete: () => void;
 }
 
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  return `${year}년 ${month}월 ${day}일`;
-};
-
-const TaskItem: React.FC<TaskItemProps> = ({
-  id,
-  name,
+const TaskItem = ({
+  taskData,
   completed,
-  commentCount,
-  updatedAt,
-  frequency,
   onToggle,
   onEdit,
   onDelete,
-}) => {
+}: TaskItemProps) => {
+  const { name, date, frequency, commentCount } = taskData;
+  const openModal = useModalStore((state) => state.openModal);
+
+  const handleOpenTaskDetailModal = () => {
+    openModal((close) => <TaskDetail taskData={taskData} onClose={close} />);
+  };
+
   const dropdownItems = [
     {
       label: '수정하기',
-      onClick: () => handleOpenModal(),
+      onClick: () => {
+        openModal((close) => (
+          <CustomInputModal
+            close={close}
+            title={'할 일 수정하기'}
+            buttonText={'수정하기'}
+            onAction={(data) => {
+              onEdit(data);
+            }}
+            initialData={name}
+            placeholder={'수정할 내용을 입력해주세요'}
+          />
+        ));
+      },
     },
     {
       label: '삭제하기',
@@ -62,8 +57,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <ConfirmModal
             close={close}
             onConfirm={() => {
-              onDelete(id);
-              toast.success('삭제되었습니다!');
+              onDelete();
             }}
             title={`'${name}'\n할 일을 정말 삭제하시겠어요?`}
             description={'삭제 후에는 되돌릴 수 없습니다.'}
@@ -76,28 +70,21 @@ const TaskItem: React.FC<TaskItemProps> = ({
     },
   ];
 
-  const openModal = useModalStore((state) => state.openModal);
-
-  const handleOpenModal = () => {
-    openModal((close) => (
-      <TaskListForm
-        close={close}
-        onAction={(value) => onEdit(value, id)}
-        isEditMode={true}
-        initialValue={name}
-      />
-    ));
-  };
-
   return (
-    <div className="flex w-full flex-col gap-[10px] rounded-lg bg-bg-secondary p-[12px_14px] text-text-primary">
+    <div
+      className="flex w-full cursor-pointer flex-col gap-[10px] rounded-lg bg-bg-secondary p-[12px_14px] text-text-primary"
+      onClick={handleOpenTaskDetailModal}
+    >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <label className="flex h-6 w-6 cursor-pointer items-center justify-center">
+          <label
+            className="flex h-6 w-6 cursor-pointer items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <input
               type="checkbox"
               checked={completed}
-              onChange={() => onToggle(id)}
+              onChange={() => onToggle()}
               className="sr-only"
             />
             <div
@@ -130,22 +117,16 @@ const TaskItem: React.FC<TaskItemProps> = ({
             </span>
           </span>
         </div>
-        <div>
+        <div onClick={(e) => e.stopPropagation()}>
           <Dropdown
-            trigger={<Image src={kebabImg} alt="확장" width={16} height={16} />}
+            trigger={
+              <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
+            }
             items={dropdownItems}
           />
         </div>
       </div>
-      <div className="font-regular-12 flex items-center gap-[6px] text-text-default">
-        <Image src={calendarImg} alt="달력" width={16} height={16} />
-        <div className="flex items-center">
-          <span>{formatDate(updatedAt)}</span>
-          <div className="mx-[10px] h-2 w-[1px] bg-bg-tertiary"></div>
-          <Image src={repeatImg} alt="반복" width={16} height={16} />
-        </div>
-        <span>{frequencyText[frequency]}</span>
-      </div>
+      <DateAndFrequency date={date} frequency={frequency} />
     </div>
   );
 };

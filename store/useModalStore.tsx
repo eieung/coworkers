@@ -8,12 +8,15 @@ type Modal = {
 type ModalState = {
   modals: Modal[];
   openModal: (component: (close: () => void) => JSX.Element) => void;
-  closeModal: (id: string) => void;
+  closeModal: () => void;
   isEmpty: () => boolean;
+  initializePopStateListener: () => void;
+  removePopStateListener: () => void;
 };
 
 const useModalStore = create<ModalState>((set, get) => ({
   modals: [],
+
   openModal: (component) => {
     const id = crypto.randomUUID();
     const close = () => {
@@ -21,15 +24,49 @@ const useModalStore = create<ModalState>((set, get) => ({
         modals: state.modals.filter((modal) => modal.id !== id),
       }));
     };
+
     set((state) => ({
-      modals: [...state.modals, { id, component: (close) => component(close) }],
+      modals: [{ id, component: (close) => component(close) }, ...state.modals],
     }));
+
+    get().initializePopStateListener();
+    window.history.pushState({ modalOpen: true }, '');
   },
-  closeModal: (id: string) =>
-    set((state) => ({
-      modals: state.modals.filter((modal) => modal.id !== id),
-    })),
+
+  closeModal: () => {
+    set((state) => {
+      const newModals = [...state.modals];
+      newModals.shift();
+      return { modals: newModals };
+    });
+
+    if (get().isEmpty()) {
+      get().removePopStateListener();
+    }
+
+    if (window.history.state?.modalOpen) {
+      window.history.back();
+    }
+  },
+
   isEmpty: () => get().modals.length === 0,
+
+  initializePopStateListener: () => {
+    const handlePopState = () => {
+      if (!get().isEmpty()) {
+        get().closeModal();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    set({
+      removePopStateListener: () => {
+        window.removeEventListener('popstate', handlePopState);
+      },
+    });
+  },
+
+  removePopStateListener: () => {},
 }));
 
 export default useModalStore;
