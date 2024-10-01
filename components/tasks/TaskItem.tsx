@@ -156,8 +156,7 @@ const TaskItem = ({
               </span>
             }
             items={dropdownItems}
-            className="font-regular-14 w-[120px]"
-            itemClassName="h-10"
+            className="font-regular-14 h-10 w-[120px]"
           />
         </div>
       </div>
