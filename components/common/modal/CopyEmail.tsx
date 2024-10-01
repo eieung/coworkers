@@ -1,11 +1,10 @@
-import React from 'react';
 import Modal from '.';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 import { toast } from 'react-toastify';
 import Button from '@/components/common/button';
 import Image from 'next/image';
 import clsx from 'clsx';
-import defaultUserImg from '@/assets/image/icon/default_user.svg';
+import defaultUserImg from '@/assets/image/icon/member.svg';
 
 interface CopyEmailProps {
   close: () => void;
@@ -44,18 +43,13 @@ export default function CopyEmail({
       className="max-w-[375px] sm:max-w-[344px]"
     >
       <div className="flex-center flex-col">
-        <div
-          className={clsx(
-            'rounded-full border-[1.28px] border-solid border-bd-primary',
-            'flex-center h-[52px] w-[52px] bg-bg-tertiary',
-          )}
-        >
+        <div className={clsx('flex-center')}>
           <Image
             className="rounded-full"
             src={userImageContainer}
             alt="유저 이미지"
-            width={40}
-            height={40}
+            width={52}
+            height={52}
           />
         </div>
         <h1 className="font-medium-14 mt-6">{userName}</h1>

@@ -1,4 +1,3 @@
-import React from 'react';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';

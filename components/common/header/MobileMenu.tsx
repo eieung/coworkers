@@ -11,15 +11,9 @@ export default function MobileMenu() {
   };
 
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center md:hidden lg:hidden">
       <button onClick={toggleMenu}>
-        <Image
-          src={menuIcon}
-          alt="메뉴"
-          width={24}
-          height={24}
-          className="md:hidden lg:hidden"
-        />
+        <Image src={menuIcon} alt="메뉴" width={24} height={24} />
       </button>
 
       {isMenuVisible && <MobileList />}

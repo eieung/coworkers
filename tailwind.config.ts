@@ -10,8 +10,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // 모바일 최소 320px, 그 아래는 가로 스크롤 지원
       screens: {
-        sm: { max: '767px' },
+        sm: { min: '320px', max: '767px' },
         md: { min: '768px', max: '1199px' },
         lg: { min: '1200px' },
       },
@@ -77,6 +78,9 @@ const config: Config = {
         'icon-primary': 'var(--icon-primary)',
         'icon-secondary': 'var(--icon-secondary)',
         'icon-tertiary': 'var(--icon-tertiary)',
+
+        /* Etc colors */
+        'bg-dropdown': 'var(--bg-dropdown)',
       },
     },
   },

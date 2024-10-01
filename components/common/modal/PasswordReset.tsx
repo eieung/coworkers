@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Modal from '.';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
@@ -9,6 +8,7 @@ import clsx from 'clsx';
 
 interface PasswordResetProps {
   close: () => void;
+  onAction: (value: string) => void;
 }
 
 interface FormData {
@@ -17,7 +17,7 @@ interface FormData {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function PasswordReset({ close }: PasswordResetProps) {
+export default function PasswordReset({ close, onAction }: PasswordResetProps) {
   const {
     control,
     handleSubmit,
@@ -35,7 +35,7 @@ export default function PasswordReset({ close }: PasswordResetProps) {
 
   const onSubmit = (data: FormData) => {
     const trimmedInput = data.value.trim();
-    toast(`${trimmedInput} 해당 이메일로 링크를 보냈습니다!`);
+    onAction(trimmedInput);
     close();
   };
 
@@ -46,7 +46,7 @@ export default function PasswordReset({ close }: PasswordResetProps) {
       showCloseIcon={true}
       description={description}
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex flex-col">
         {inputs?.[0] && (
           <Controller
             name="value"
