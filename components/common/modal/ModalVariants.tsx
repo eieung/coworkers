@@ -1,6 +1,6 @@
 import InviteMember from './InviteMember';
 import useModalStore from '@/store/useModalStore';
-import CreateTaskList from './CreateTaskList';
+import TaskListForm from '@/components/common/modal/TaskListForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import DeleteAccount from '@/components/common/modal/DeleteAccount';
@@ -11,6 +11,8 @@ import ChangePassword from '@/components/common/modal/ChangePassword';
 import DatePicker from '@/components/common/modal/DatePicker';
 import PasswordReset from '@/components/common/modal/PasswordReset';
 import TeamForm from '@/components/common/modal/TeamForm';
+import CustomInputModal from '@/components/common/modal/CustomInputModal';
+import { useState } from 'react';
 
 export default function ModalVariants() {
   /*  모달 기본 설정 */
@@ -25,7 +27,7 @@ export default function ModalVariants() {
 
   // 할일 목록 만들기
   const handleOpenCreateListModal = () => {
-    openModal((close) => <CreateTaskList close={close} />);
+    openModal((close) => <TaskListForm close={close} onAction={() => {}} />);
   };
 
   // 할일 만들기
@@ -61,8 +63,17 @@ export default function ModalVariants() {
   };
 
   // 비밀번호 재설정
+
   const handleOpenPasswordResetModal = () => {
-    openModal((close) => <PasswordReset close={close} />);
+    openModal((close) => (
+      <PasswordReset
+        close={close}
+        onAction={(value) => {
+          toast(`${value} 해당 이메일로 링크를 보냈습니다!`);
+          // value가 인풋으로 받은 이메일입니다. 이걸로 api 연동해서 처리하시면 됩니다.
+        }}
+      />
+    ));
   };
 
   // 데이트 피커 예시
@@ -89,6 +100,33 @@ export default function ModalVariants() {
     ));
   };
 
+  // 커스텀 인풋 모달 예시
+  const [inputData, setInputData] = useState<string>('공지 내용입니다');
+  const handleCustomInputModal = () => {
+    openModal((close) => (
+      <CustomInputModal
+        close={close}
+        title={
+          <div className="flex items-center gap-2">
+            {/* fontawesome 이용 */}
+            <i className="fas fa-solid fa-pen-to-square" />
+            <span>공지 수정</span>
+          </div>
+        }
+        buttonText={'수정하기'}
+        // 작동 함수
+        onAction={(data) => {
+          setInputData(data);
+          toast.success(`${data} 수정되었습니다!`);
+        }}
+        // input에 보이게 할 데이터. 설정 안해도 됨
+        initialData={inputData}
+        // 설정 안할시 기본은 "내용을 입력해주세요"
+        placeholder={'공지 내용을 입력해주세요'}
+      />
+    ));
+  };
+
   /* 커스텀 컨펌 모달 사용 예시  */
   const handleOpenConfirmModal = () => {
     openModal((close) => (
@@ -98,7 +136,7 @@ export default function ModalVariants() {
         close={close}
         isAlert={true} // true시 경고 icon 표시, 기본적으로 설정 안할시 미표시
         confirmText="삭제하기" // 닫는 버튼 기본 text는 닫기, 설정 필요시 cancelText추가
-        onConfirm={() => toast('삭제되었습니다!')} // 컨펌 될시 작동할 함수 추가
+        onConfirm={() => toast.success('삭제되었습니다!')} // 컨펌 될시 작동할 함수 추가
         buttonType="danger" // 'solid' | 'danger' 두 종류 버튼 타입이 있고 solid가 기본입니다.
       />
     ));
@@ -106,19 +144,47 @@ export default function ModalVariants() {
 
   return (
     // 버튼과 모달 연동 설정 예시
+    // 연결 태그를 button 태그로 할 시 스페이스바와 엔터시 모달 지속 호출 이슈가 있어 button외 다른 태그 사용 권장
     <div className="flex-center mt-40 flex flex-col gap-4 text-white">
-      <button onClick={handleOpenInviteModal}>회원 초대하기</button>
-      <button onClick={handleOpenCreateListModal}>할일 목록 만들기</button>
-      <button onClick={handleOpenCreateTaskModal}>할일 만들기</button>
-      <button onClick={handleOpenDeleteModal}>회원 탈퇴하기</button>
-      <button onClick={handleOpenLogoutModal}>로그아웃</button>
-      <button onClick={handleOpenCopyEmailModal}>이메일 복사하기</button>
-      <button onClick={handleOpenChangePasswordModal}>비밀번호 변경하기</button>
-      <button onClick={handleOpenPasswordResetModal}>비밀번호 재설정</button>
-      <button onClick={handleDatePickerModal}>데이트 피커</button>
-      <button onClick={handleCreateTeamrModal}>팀 생성하기</button>
-      <button onClick={handleEditTeamrModal}>팀 수정하기</button>
-      <button onClick={handleOpenConfirmModal}>컨펌 모달 예시</button>
+      <div className="cursor-pointer" onClick={handleOpenInviteModal}>
+        회원 초대하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenCreateListModal}>
+        할일 목록 만들기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenCreateTaskModal}>
+        할일 만들기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenDeleteModal}>
+        회원 탈퇴하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenLogoutModal}>
+        로그아웃
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenCopyEmailModal}>
+        이메일 복사하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenChangePasswordModal}>
+        비밀번호 변경하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenPasswordResetModal}>
+        비밀번호 재설정
+      </div>
+      <div className="cursor-pointer" onClick={handleDatePickerModal}>
+        데이트 피커
+      </div>
+      <div className="cursor-pointer" onClick={handleCreateTeamrModal}>
+        팀 생성하기
+      </div>
+      <div className="cursor-pointer" onClick={handleEditTeamrModal}>
+        팀 수정하기
+      </div>
+      <div className="cursor-pointer" onClick={handleOpenConfirmModal}>
+        컨펌 모달 예시
+      </div>
+      <div className="cursor-pointer" onClick={handleCustomInputModal}>
+        커스텀 인풋 모달 예시
+      </div>
     </div>
   );
 }

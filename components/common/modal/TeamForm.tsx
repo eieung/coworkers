@@ -83,12 +83,11 @@ export default function TeamForm({
 
       // 서버에 이미지 업로드 로직 필요. 업로드 된 이미지 주소를 setImageURL에 할당 필요
       // setImageURL(url);
-
-      setFileValue(file);
     }
+    setFileValue(file);
   };
 
-  const { inputs, buttons } = ModalUserActions[ACTION_TYPE.EDITE_TEAM];
+  const { inputs, buttons } = ModalUserActions[ACTION_TYPE.EDIT_TEAM];
 
   return (
     <Modal
@@ -117,6 +116,7 @@ export default function TeamForm({
               />
               {fileValue && (
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleClearClick();

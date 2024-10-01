@@ -8,13 +8,21 @@ import clsx from 'clsx';
 
 interface CreateTaskListProps {
   close: () => void;
+  onAction: (value: string) => void;
+  isEditMode?: boolean;
+  initialValue?: string;
 }
 
 interface FormData {
   value: string;
 }
 
-export default function CreateTaskList({ close }: CreateTaskListProps) {
+export default function TaskListForm({
+  close,
+  onAction,
+  isEditMode = false,
+  initialValue = '',
+}: CreateTaskListProps) {
   const {
     control,
     handleSubmit,
@@ -22,16 +30,15 @@ export default function CreateTaskList({ close }: CreateTaskListProps) {
   } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
-      value: '',
+      value: initialValue,
     },
   });
 
   const { title, description, inputs, buttons } =
     ModalUserActions[ACTION_TYPE.CREATE_TASK_LIST];
 
-  const onSubmit = (data: FormData) => {
-    const trimmedInput = data.value.trim();
-    toast(`${trimmedInput} 목록이 생성되었습니다!`);
+  const onSubmit = ({ value }: FormData) => {
+    onAction(value);
     close();
   };
 
@@ -56,13 +63,18 @@ export default function CreateTaskList({ close }: CreateTaskListProps) {
                 invalid={!!errors.value}
                 validationMessage={errors.value?.message}
                 onChange={field.onChange}
+                onBlur={(e) => {
+                  field.onChange(e.target.value.trim());
+                }}
                 value={field.value}
               />
             )}
           />
         )}
         {buttons && (
-          <Button className="mt-6" {...buttons[0]} disabled={!isValid} />
+          <Button className="mt-6" {...buttons[0]} disabled={!isValid}>
+            {isEditMode ? '수정하기' : '만들기'}
+          </Button>
         )}
       </form>
     </Modal>

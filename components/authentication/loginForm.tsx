@@ -1,30 +1,78 @@
 import Input from '../common/Input';
-import { useValidation } from '@/utils/InputValidation';
+import { useValidation } from '@/hooks/useValidation';
 import Button from '../common/button';
 import Link from 'next/link';
+import { useUserStore } from '@/store/authStore';
+
+import useModalStore from '@/store/useModalStore';
+import { publicAxiosInstance } from '@/libs/axios';
+import { useRouter } from 'next/router';
+import PasswordReset from '../common/modal/PasswordReset';
+import { toast } from 'react-toastify';
+
+
+
 
 export default function LoginForm() {
-  const {
-    email,
-    isEmailValid,
-    handleEmailChange,
-    handleEmailBlur,
-    getEmailValidationMessage,
-    password,
-    isPasswordValid,
-    handlePasswordChange,
-    handlePasswordBlur,
-    getPasswordValidationMessage,
-  } = useValidation();
+  const { email, password } = useValidation();
+  const { setUser, setTokens } = useUserStore();
+  const router = useRouter();
+  const openModal = useModalStore((state) => state.openModal);
 
   const isFormValid =
-    isEmailValid && isPasswordValid && email !== '' && password !== '';
+    email.isValid &&
+    password.isValid &&
+    email.value !== '' &&
+    password.value !== '';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    {
-      /*TODO: 로그인 폼 제출 구현*/
-    }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const loginData = {
+      email: email.value,
+      password: password.value,
+    };
+
+    try {
+      const response = await publicAxiosInstance.post(
+        '/auth/signin',
+        loginData,
+      );
+      
+      if (response.status === 200) {
+        const { accessToken, refreshToken, user } = response.data;
+        setTokens(accessToken, refreshToken);
+        setUser(user);
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('로그인에 실패했습니다.', error);
+    }
+  };
+
+  const handleOpenPasswordResetModal = async () => {
+    const redirectUrl = 'http://localhost:3000/auth/resetPasswordCallback';
+    openModal((close) => (
+      <PasswordReset
+        close={close}
+        onAction={async (email) => {
+          // 여기에 비밀번호 재설정 로직을 구현하세요
+          try {
+            const response = await publicAxiosInstance.post(
+              '/user/send-reset-password-email',
+              { email, redirectUrl },
+            );
+            if (response.status === 200) {
+              console.log('성공!');
+              toast.success('해당 이메일로 링크를 보냈습니다!');
+              close();
+            }
+          } catch (error) {
+            toast.error('이메일 발송에 실패했습니다.');
+          }
+          // 예: API 호출을 통해 비밀번호 재설정 이메일 전송
+        }}
+      />
+    ));
   };
 
   return (
@@ -37,34 +85,34 @@ export default function LoginForm() {
           <Input
             label="이메일"
             type="email"
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleEmailBlur}
-            invalid={!isEmailValid}
-            validationMessage={getEmailValidationMessage()}
+            value={email.value}
+            onChange={email.handleChange}
+            onBlur={email.handleBlur}
+            invalid={!email.isValid}
+            validationMessage={email.getMessage()}
             placeholder="이메일을 입력하세요."
             className="h-11 w-full"
           />
           <Input
             label="비밀번호"
             type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            onBlur={handlePasswordBlur}
-            invalid={!isPasswordValid}
-            validationMessage={getPasswordValidationMessage()}
+            value={password.value}
+            onChange={password.handleChange}
+            onBlur={password.handleBlur}
+            invalid={!password.isValid}
+            validationMessage={password.getMessage()}
             placeholder="비밀번호를 입력해주세요."
             className="h-11 w-full"
           />
-          <div className="flex justify-end text-emerald-500">
+          <div
+            className="flex cursor-pointer justify-end text-emerald-500"
+            onClick={handleOpenPasswordResetModal}
+          >
             비밀번호를 잊으셨나요?
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        {/* <button className="bg-white" type="submit">
-          로그인
-        </button> */}
         <Button
           size="large"
           font="font-16-semibold-16"
