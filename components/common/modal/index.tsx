@@ -175,7 +175,7 @@ function Modal({
           {title && (
             <h2
               className={clsx(
-                'mb-2 mt-2 whitespace-pre-line text-center',
+                'mb-2 mt-2 whitespace-pre-line font-bold text-center',
                 titleClassName,
               )}
             >

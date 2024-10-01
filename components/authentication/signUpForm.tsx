@@ -40,6 +40,7 @@ export default function SignUpForm() {
         '/auth/signup',
         signupData,
       );
+
       if (response.status === 201) {
         router.push('/login');
       } else {

@@ -1,24 +1,15 @@
 import Image from 'next/image';
 import checkImg from '@/assets/image/icon/check.svg';
 import commentImg from '@/assets/image/icon/comment.svg';
-import calendarImg from '@/assets/image/icon/calendar.svg';
-import repeatImg from '@/assets/image/icon/repeat.svg';
-import kebabImg from '@/assets/image/icon/kebab.svg';
+import menuImg from '@/assets/image/icon/kebab.svg';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { TaskType } from '@/types/taskListType';
-import { useState } from 'react';
 import TaskDetail from '@/components/tasks/TaskDetail';
-
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
-
-const frequencyText = {
-  ONCE: '한번',
-  DAILY: '매일 반복',
-  WEEKLY: '매주 반복',
-  MONTHLY: '매월 반복',
-};
+import DateAndFrequency from '@/components/tasks/DateAndFrequency';
+import { useRouter } from 'next/router';
 
 interface TaskItemProps {
   taskData: TaskType;
@@ -28,15 +19,6 @@ interface TaskItemProps {
   onDelete: () => void;
 }
 
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  return `${year}년 ${month}월 ${day}일`;
-};
-
 const TaskItem = ({
   taskData,
   completed,
@@ -44,17 +26,41 @@ const TaskItem = ({
   onEdit,
   onDelete,
 }: TaskItemProps) => {
-  const { name, updatedAt, frequency, commentCount } = taskData;
-  const openModal = useModalStore((state) => state.openModal);
+  const { name, date, frequency, commentCount } = taskData;
+  const { openModal } = useModalStore((state) => ({
+    openModal: state.openModal,
+  }));
+  const router = useRouter();
 
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const handleOpenTaskDetailModal = () => {
+    openModal((close) => {
+      const handleModalClose = () => {
+        close();
 
-  const openDetail = () => {
-    setIsDetailOpen(true);
-  };
+        const newQuery = { ...router.query };
+        delete newQuery.task;
 
-  const closeDetail = () => {
-    setIsDetailOpen(false);
+        router.replace(
+          {
+            pathname: router.pathname,
+            query: newQuery,
+          },
+          undefined,
+          { shallow: true },
+        );
+      };
+
+      return <TaskDetail taskData={taskData} onClose={handleModalClose} />;
+    });
+    // 모달용 쿼리 추가
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, task: taskData.id },
+      },
+      undefined,
+      { shallow: true },
+    );
   };
 
   const dropdownItems = [
@@ -98,7 +104,7 @@ const TaskItem = ({
   return (
     <div
       className="flex w-full cursor-pointer flex-col gap-[10px] rounded-lg bg-bg-secondary p-[12px_14px] text-text-primary"
-      onClick={openDetail}
+      onClick={handleOpenTaskDetailModal}
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
@@ -144,21 +150,18 @@ const TaskItem = ({
         </div>
         <div onClick={(e) => e.stopPropagation()}>
           <Dropdown
-            trigger={<Image src={kebabImg} alt="확장" width={16} height={16} />}
+            trigger={
+              <span className="flex-center flex h-6 w-6">
+                <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
+              </span>
+            }
             items={dropdownItems}
+            className="font-regular-14 w-[120px]"
+            itemClassName="h-10"
           />
         </div>
       </div>
-      <div className="font-regular-12 flex items-center gap-[6px] text-text-default">
-        <Image src={calendarImg} alt="달력" width={16} height={16} />
-        <div className="flex items-center">
-          <span>{formatDate(updatedAt)}</span>
-          <div className="mx-[10px] h-2 w-[1px] bg-bg-tertiary"></div>
-          <Image src={repeatImg} alt="반복" width={16} height={16} />
-        </div>
-        <span>{frequencyText[frequency]}</span>
-      </div>
-      {isDetailOpen && <TaskDetail taskData={taskData} onClose={closeDetail} />}
+      <DateAndFrequency date={date} frequency={frequency} />
     </div>
   );
 };

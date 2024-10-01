@@ -81,24 +81,24 @@ export default function ModalVariants() {
     openModal((close) => <DatePicker close={close} />);
   };
 
-  // 팀 생성하기
-  const handleCreateTeamrModal = () => {
-    openModal((close) => <TeamForm close={close} />);
-  };
+  // // 팀 생성하기
+  // const handleCreateTeamrModal = () => {
+  //   openModal((close) => <TeamForm close={close} />);
+  // };
 
-  // 팀 수정하기
-  const handleEditTeamrModal = () => {
-    openModal((close) => (
-      <TeamForm
-        close={close}
-        image={
-          'https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg'
-        }
-        name={'팀 초기 네임'}
-        isEditMode={true}
-      />
-    ));
-  };
+  // // 팀 수정하기
+  // const handleEditTeamrModal = () => {
+  //   openModal((close) => (
+  //     <TeamForm
+  //       close={close}
+  //       image={
+  //         'https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg'
+  //       }
+  //       name={'팀 초기 네임'}
+  //       isEditMode={true}
+  //     />
+  //   ));
+  // };
 
   // 커스텀 인풋 모달 예시
   const [inputData, setInputData] = useState<string>('공지 내용입니다');
@@ -173,12 +173,12 @@ export default function ModalVariants() {
       <div className="cursor-pointer" onClick={handleDatePickerModal}>
         데이트 피커
       </div>
-      <div className="cursor-pointer" onClick={handleCreateTeamrModal}>
+      {/* <div className="cursor-pointer" onClick={handleCreateTeamrModal}>
         팀 생성하기
-      </div>
-      <div className="cursor-pointer" onClick={handleEditTeamrModal}>
+      </div> */}
+      {/* <div className="cursor-pointer" onClick={handleEditTeamrModal}>
         팀 수정하기
-      </div>
+      </div> */}
       <div className="cursor-pointer" onClick={handleOpenConfirmModal}>
         컨펌 모달 예시
       </div>

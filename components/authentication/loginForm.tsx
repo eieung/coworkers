@@ -3,14 +3,17 @@ import { useValidation } from '@/hooks/useValidation';
 import Button from '../common/button';
 import Link from 'next/link';
 import { useUserStore } from '@/store/authStore';
-
-import { useRouter } from 'next/router';
+import useModalStore from '@/store/useModalStore';
 import { publicAxiosInstance } from '@/libs/axios';
+import { useRouter } from 'next/router';
+import PasswordReset from '../common/modal/PasswordReset';
+import { toast } from 'react-toastify'
 
 export default function LoginForm() {
   const { email, password } = useValidation();
   const { setUser, setTokens } = useUserStore();
   const router = useRouter();
+  const openModal = useModalStore((state) => state.openModal);
 
   const isFormValid =
     email.isValid &&
@@ -30,6 +33,7 @@ export default function LoginForm() {
         '/auth/signin',
         loginData,
       );
+
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
         setTokens(accessToken, refreshToken);
@@ -39,6 +43,32 @@ export default function LoginForm() {
     } catch (error) {
       console.error('로그인에 실패했습니다.', error);
     }
+  };
+
+  const handleOpenPasswordResetModal = async () => {
+    const redirectUrl = 'http://localhost:3000/auth/resetPasswordCallback';
+    openModal((close) => (
+      <PasswordReset
+        close={close}
+        onAction={async (email) => {
+          // 여기에 비밀번호 재설정 로직을 구현하세요
+          try {
+            const response = await publicAxiosInstance.post(
+              '/user/send-reset-password-email',
+              { email, redirectUrl },
+            );
+            if (response.status === 200) {
+              console.log('성공!');
+              toast.success('해당 이메일로 링크를 보냈습니다!');
+              close();
+            }
+          } catch (error) {
+            toast.error('이메일 발송에 실패했습니다.');
+          }
+          // 예: API 호출을 통해 비밀번호 재설정 이메일 전송
+        }}
+      />
+    ));
   };
 
   return (
@@ -70,7 +100,10 @@ export default function LoginForm() {
             placeholder="비밀번호를 입력해주세요."
             className="h-11 w-full"
           />
-          <div className="flex justify-end text-emerald-500">
+          <div
+            className="flex cursor-pointer justify-end text-emerald-500"
+            onClick={handleOpenPasswordResetModal}
+          >
             비밀번호를 잊으셨나요?
           </div>
         </div>
