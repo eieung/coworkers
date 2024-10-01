@@ -21,7 +21,6 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
     writer,
     updatedAt,
     frequency,
-    date,
     doneAt,
   } = taskData;
   const isComplete = !!doneAt;
@@ -40,7 +39,7 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
       isCustom={true}
       backgroundOpacity={'opacity-0'}
     >
-      <div className="mt-4 flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
             {isComplete && (
@@ -73,7 +72,7 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
           </div>
         </span>
         <DateAndFrequency
-          date={date}
+          date={updatedAt}
           frequency={frequency}
           isTaskDetail={true}
         />

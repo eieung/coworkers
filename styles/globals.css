@@ -56,6 +56,9 @@
   --icon-primary: #64748b;
   --icon-secondary: #f8fafc;
   --icon-tertiary: #10b981;
+
+  /* Etc colors */
+  --bg-dropdown: #18212f;
 }
 
 body {
@@ -307,7 +310,6 @@ th {
   .animate-marquee {
     animation: marquee 30s linear infinite;
   }
-
 }
 
 /* 공통 Toastify 설정 */

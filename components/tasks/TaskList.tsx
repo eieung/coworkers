@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import TaskItem from './TaskItem';
-import Button from '@/components/common/button';
 import useModalStore from '@/store/useModalStore';
 import DatePicker from '@/components/common/modal/DatePicker';
 import { TaskListType, TaskType } from '@/types/taskListType';
 import {
   patchTaskRequest,
-  getTasksRequest,
   deleteTaskRequest,
+  getTasksRequest,
 } from '@/libs/taskListApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
 
 interface TaskListProps {
   categories: TaskListType[];
@@ -20,50 +19,33 @@ interface TaskListProps {
 }
 
 const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
-  const [activeCategory, setActiveCategory] = useState(() => {
-    const storedCategory = JSON.parse(
-      localStorage.getItem('activeCategory') || 'null',
-    );
-    return storedCategory || categories[0] || { id: 0, name: '' };
-  });
-
   const router = useRouter();
-  const { listId } = router.query;
+  const { listid: listId } = router.query;
+
+  const currentCategory = categories.find(
+    (category) => String(category.id) === listId,
+  );
 
   const openModal = useModalStore((state) => state.openModal);
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (activeCategory && listId !== String(activeCategory.id)) {
-      localStorage.setItem(
-        'activeCategory',
-        JSON.stringify({ id: activeCategory.id, name: activeCategory.name }),
-      );
-
-      router.push(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, listId: activeCategory.id },
-        },
-        undefined,
-        { shallow: false },
-      );
-    }
-  }, [activeCategory, router, listId]);
 
   const {
     data: tasks = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
-    queryFn: () =>
-      getTasksRequest({
-        groupId,
-        taskListId: activeCategory?.id,
-        date: currentDate,
-      }),
-    enabled: !!groupId && !!activeCategory?.id,
+    queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
+    queryFn: () => {
+      if (currentCategory?.id) {
+        return getTasksRequest({
+          groupId,
+          taskListId: currentCategory.id,
+          date: currentDate,
+        });
+      }
+      return Promise.resolve({ tasks: [] });
+    },
+    enabled: !!groupId && !!currentCategory?.id,
     select: (data) => data.tasks,
   });
 
@@ -85,14 +67,11 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
 
   const toggleTask = (id: number, doneAt: string | null) => {
     toggleTaskMutation.mutate(
-      {
-        id,
-        doneAt,
-      },
+      { id, doneAt },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({
-            queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+            queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
           });
         },
       },
@@ -116,7 +95,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
         onSuccess: () => {
           toast.success(`${data} 수정되었습니다!`);
           queryClient.invalidateQueries({
-            queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+            queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
           });
         },
         onError: (error) => {
@@ -137,7 +116,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     deleteTaskMutation.mutate(id, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ['tasks', groupId, activeCategory?.id, currentDate],
+          queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
         });
         toast.success('할 일이 삭제되었습니다!');
       },
@@ -156,26 +135,30 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     <div className="mt-6 w-full sm:mt-4">
       <div className="mb-[22px] flex flex-wrap gap-4">
         {categories.map((category) => (
-          <button
+          <Link
             key={category.id}
-            onClick={() => setActiveCategory(category)}
-            className={`font-medium-16 relative flex-shrink-0 ${
-              activeCategory.id === category.id
-                ? 'text-text-tertiary'
-                : 'text-text-default'
-            }`}
+            href={`/groups/${groupId}/task-lists/${category.id}`}
+            shallow={false}
           >
-            {category.name}
-            {activeCategory.id === category.id && (
-              <span
-                className="absolute bottom-[-5px] left-0 h-[1px] w-full rounded-[1.5px] bg-text-tertiary"
-                style={{ transform: 'translateY(1px)' }}
-              />
-            )}
-          </button>
+            <span
+              className={`font-medium-16 relative flex-shrink-0 ${
+                String(category.id) === listId
+                  ? 'text-text-tertiary'
+                  : 'text-text-default'
+              }`}
+            >
+              {category.name}
+              {String(category.id) === listId && (
+                <span
+                  className="absolute bottom-[-5px] left-0 h-[1px] w-full rounded-[1.5px] bg-text-tertiary"
+                  style={{ transform: 'translateY(1px)' }}
+                />
+              )}
+            </span>
+          </Link>
         ))}
       </div>
-      {tasks.length === 0 ? (
+      {currentCategory && tasks?.length === 0 ? (
         <div className="flex-center font-regular-14 my-[250px] flex text-text-default sm:my-[150px] md:my-[250px]">
           아직 할 일 목록이 없습니다.
           <br />
@@ -200,13 +183,12 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
         </div>
       )}
       <div className="fixed bottom-12 right-7 sm:bottom-[38px] md:bottom-6 md:right-6 md:flex md:justify-end lg:right-[calc((100vw-1200px)/2)]">
-        <Button
-          appearance="floating-solid"
-          className="w-[125px]"
+        <div
+          className="flex-center flex h-12 w-[125px] cursor-pointer rounded-[40px] bg-brand-primary text-white shadow-floating hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive"
           onClick={handleDatePickerModal}
         >
           + 할 일 추가
-        </Button>
+        </div>
       </div>
     </div>
   );
