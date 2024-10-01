@@ -9,6 +9,7 @@ import { TaskType } from '@/types/taskListType';
 import TaskDetail from '@/components/tasks/TaskDetail';
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
 import DateAndFrequency from '@/components/tasks/DateAndFrequency';
+import { useRouter } from 'next/router';
 
 interface TaskItemProps {
   taskData: TaskType;
@@ -26,10 +27,40 @@ const TaskItem = ({
   onDelete,
 }: TaskItemProps) => {
   const { name, date, frequency, commentCount } = taskData;
-  const openModal = useModalStore((state) => state.openModal);
+  const { openModal } = useModalStore((state) => ({
+    openModal: state.openModal,
+  }));
+  const router = useRouter();
 
   const handleOpenTaskDetailModal = () => {
-    openModal((close) => <TaskDetail taskData={taskData} onClose={close} />);
+    openModal((close) => {
+      const handleModalClose = () => {
+        close();
+
+        const newQuery = { ...router.query };
+        delete newQuery.task;
+
+        router.replace(
+          {
+            pathname: router.pathname,
+            query: newQuery,
+          },
+          undefined,
+          { shallow: true },
+        );
+      };
+
+      return <TaskDetail taskData={taskData} onClose={handleModalClose} />;
+    });
+    // 모달용 쿼리 추가
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, task: taskData.id },
+      },
+      undefined,
+      { shallow: true },
+    );
   };
 
   const dropdownItems = [
@@ -120,9 +151,13 @@ const TaskItem = ({
         <div onClick={(e) => e.stopPropagation()}>
           <Dropdown
             trigger={
-              <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
+              <span className="flex-center flex h-6 w-6">
+                <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
+              </span>
             }
             items={dropdownItems}
+            className="font-regular-14 w-[120px]"
+            itemClassName="h-10"
           />
         </div>
       </div>

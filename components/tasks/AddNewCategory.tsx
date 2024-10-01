@@ -42,11 +42,11 @@ export default function AddNewCategory({ groupId }: { groupId: string }) {
   };
 
   return (
-    <button
-      className="font-regular-14 text-brand-primary"
+    <div
+      className="font-regular-14 cursor-pointer text-brand-primary"
       onClick={handleAddNewCategoryModal}
     >
       + 새로운 목록 추가하기
-    </button>
+    </div>
   );
 }

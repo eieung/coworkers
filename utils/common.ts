@@ -1,5 +1,5 @@
 export function formatDate(
-  dateString: string,
+  dateString: string | Date,
   format: 'dot' | 'korean' = 'korean',
 ) {
   const date = new Date(dateString);
