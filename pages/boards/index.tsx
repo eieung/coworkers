@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link'; // Link 컴포넌트 추가
 import medal from '@/assets/image/icon/medal.svg'; // medal 아이콘 import
 import search from '@/assets/image/icon/search.svg'; // user 아이콘 import
 import member from '@/assets/image/icon/member.svg'; // member 아이콘 import
@@ -29,18 +30,21 @@ export default function BoardPage() {
 
   const posts = [
     {
+      id: 1,  // 게시물 ID 추가
       title: "자유게시판에 질문을 올릴 수 있어요",
       date: "2024.07.25",
       user: "우지은",
       views: "4444+",
     },
     {
+      id: 2,
       title: "자유게시판에 질문을 올릴 수 있어요",
       date: "2024.07.26",
       user: "우지은",
       views: "2222+",
     },
     {
+      id: 3,
       title: "자유게시판에 질문을 올릴 수 있어요",
       date: "2024.07.27",
       user: "우지은",
@@ -84,23 +88,27 @@ export default function BoardPage() {
               const cardClasses = `flex-col justify-between items-center w-full p-[12px_16px] bg-bg-secondary rounded-lg border border-[1px] border-[var(--Background-Tertiary,#334155)] ${isHidden}`;
 
               return (
-                <div key={index} className={cardClasses}>
-                  <div className="flex items-center gap-1.5">
-                    <Image src={medal} alt="medal" width={16} height={16} />
-                    <span className="text-white font-medium-16">Best</span>
-                  </div>
-                  <div className="flex flex-col mt-3.5">
-                    <h3 className="font-medium-18">{post.title}</h3>
-                    <p className="text-text-secondary mt-3">{post.date}</p>
-                  </div>
-                  <div className="flex items-center gap-3 mt-9"> {/* flex와 간격 추가 */}
-                    <Image src={member} alt="member" width={32} height={32} />
-                    <span className="text-text-secondary">{post.user}</span> {/* 12px 간격 */}
-                    <div className="ml-auto flex items-center gap-1"> {/* Heart와 Views를 하나로 묶음 */}
-                      <Image src={heart} alt="heart" width={16} height={16} />
-                      <span className="text-text-secondary">{post.views}</span> {/* 4px 간격 */}
-                    </div>
-                  </div>
+                <div key={post.id} className={cardClasses}>
+                  <Link href={`/board/${post.id}`}> {/* 게시물 클릭 시 동적 라우트로 이동 */}
+                    <a>
+                      <div className="flex items-center gap-1.5">
+                        <Image src={medal} alt="medal" width={16} height={16} />
+                        <span className="text-white font-medium-16">Best</span>
+                      </div>
+                      <div className="flex flex-col mt-3.5">
+                        <h3 className="font-medium-18">{post.title}</h3>
+                        <p className="text-text-secondary mt-3">{post.date}</p>
+                      </div>
+                      <div className="flex items-center gap-3 mt-9"> {/* flex와 간격 추가 */}
+                        <Image src={member} alt="member" width={32} height={32} />
+                        <span className="text-text-secondary">{post.user}</span> {/* 12px 간격 */}
+                        <div className="ml-auto flex items-center gap-1"> {/* Heart와 Views를 하나로 묶음 */}
+                          <Image src={heart} alt="heart" width={16} height={16} />
+                          <span className="text-text-secondary">{post.views}</span> {/* 4px 간격 */}
+                        </div>
+                      </div>
+                    </a>
+                  </Link>
                 </div>
               );
             })}
