@@ -9,7 +9,7 @@ import { getUser } from '@/utils/auth';
 
 export default function TasksPage() {
   const router = useRouter();
-  const { teamid: groupId } = router.query;
+  const { groupId } = router.query;
   const initialDate = new Date().toISOString().split('T')[0];
   const [currentDate, setCurrentDate] = useState(initialDate);
 
