@@ -37,7 +37,7 @@ export const useCreateGroup = () => {
 
       toast.success('새 그룹이 성공적으로 생성되었습니다.');
 
-      const newGroupId = data.id; // 서버에서 반환된 그룹 ID 사용
+      const newGroupId = data.id;
       router.push(`/groups/${newGroupId}`);
     },
     onError: (error) => {
