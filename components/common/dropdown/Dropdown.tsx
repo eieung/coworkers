@@ -53,7 +53,7 @@ export default function Dropdown({
       {isOpen && (
         <ul
           className={twMerge(
-            'absolute right-0 z-20 mt-2 w-48 rounded-xl border border-bd-primary bg-bg-secondary text-white',
+            'absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-xl border border-bd-primary bg-bg-secondary text-white',
             className,
           )}
         >
@@ -62,8 +62,6 @@ export default function Dropdown({
               key={index}
               className={twMerge(
                 'flex-center bg-bg-secondary p-3 hover:bg-gray-600',
-                index === 0 ? 'rounded-t-lg' : '',
-                index === items.length - 1 ? 'rounded-b-lg' : '',
                 itemClassName,
               )}
               onClick={() => handleItemClick(item.label, item.onClick)} // 메뉴 클릭 시 드롭다운 닫기
