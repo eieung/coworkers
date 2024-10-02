@@ -48,7 +48,7 @@ export interface ButtonProps
   fullWidth?: boolean;
   size?: 'large' | 'xsmall' | 'floating-large' | 'floating-medium';
   disabled?: boolean;
-  children: string;
+  children: React.ReactNode;
   className?: string;
   font?: string;
 }
