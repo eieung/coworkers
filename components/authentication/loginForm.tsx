@@ -58,8 +58,8 @@ export default function LoginForm() {
               { email, redirectUrl },
             );
             if (response.status === 200) {
-              toast.success('해당 이메일로 링크를 보냈습니다!');
               close();
+              toast.success('해당 이메일로 링크를 보냈습니다!');
             }
           } catch (error) {
             toast.error('이메일 발송에 실패했습니다.');
