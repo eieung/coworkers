@@ -7,6 +7,9 @@ import DateAndFrequency from '@/components/tasks/DateAndFrequency';
 import checkImg from '@/assets/image/icon/check-light-green.svg';
 import CommentSection from '@/components/tasks/CommentSection';
 import { formatDate } from '@/utils/common';
+import Button from '@/components/common/button';
+import whiteCheckImg from '@/assets/image/icon/check.svg';
+import clsx from 'clsx';
 
 interface TaskDetailProps {
   taskData: TaskType;
@@ -24,8 +27,9 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
     doneAt,
   } = taskData;
   const isComplete = !!doneAt;
-  const { id = 0, image = null, nickname = 'Anonymous' } = writer || {};
+  const { id = 0, image, nickname = 'Anonymous' } = writer || {};
   const userImageContainer = image || defaultUserImg;
+  const buttonType = isComplete ? 'floating-outlined' : 'floating-solid';
 
   return (
     <Modal
@@ -56,15 +60,15 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
         </div>
         <span>
           <div className={'flex items-center justify-between'}>
-            <span className={'flex items-center gap-3'}>
-              <Image
+            <span className={'flex h-[32px] w-[32px] items-center gap-3'}>
+              <img
                 className="rounded-full"
                 src={userImageContainer}
                 alt="유저 이미지"
-                width={32}
-                height={32}
               />
-              <span className="font-medium-14">{nickname}</span>
+              <span className="font-medium-14 whitespace-nowrap">
+                {nickname}
+              </span>
             </span>
             <span className="font-regular-14 text-text-secondary">
               {formatDate(updatedAt, 'dot')}
@@ -80,6 +84,22 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
       <div className="font-regular-14 mt-6">{description}</div>
       <div className="mt-28">
         <CommentSection taskId={taskId} />
+      </div>
+      <div className="fixed bottom-[64px] right-10 flex justify-end">
+        <Button
+          appearance={buttonType}
+          className={clsx('h-[40px]', isComplete ? 'w-[138px]' : 'w-[111px]')}
+        >
+          <div className="flex-center flex gap-1">
+            <Image
+              src={isComplete ? checkImg : whiteCheckImg}
+              alt={'체크'}
+              width={16}
+              height={16}
+            />
+            {isComplete ? '완료 취소하기' : '완료하기'}
+          </div>
+        </Button>
       </div>
     </Modal>
   );

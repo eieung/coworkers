@@ -25,7 +25,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     }, [props.value, height]);
 
     return (
-      <div>
+      <>
         {label && (
           <label
             htmlFor={props.id}
@@ -65,7 +65,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             {validationMessage}
           </span>
         )}
-      </div>
+      </>
     );
   },
 );

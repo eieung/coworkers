@@ -1,4 +1,4 @@
-import { fetchData } from '@/libs/taskListApi';
+import { fetchData } from '@/libs/task/taskListApi';
 
 interface GetCommentsParams {
   taskId: number;
