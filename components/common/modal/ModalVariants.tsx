@@ -100,29 +100,26 @@ export default function ModalVariants() {
   //   ));
   // };
 
-  // 커스텀 인풋 모달 예시
-  const [inputData, setInputData] = useState<string>('공지 내용입니다');
+  // 커스텀 인풋 모달 팀 참여하기 예시
   const handleCustomInputModal = () => {
     openModal((close) => (
       <CustomInputModal
         close={close}
-        title={
-          <div className="flex items-center gap-2">
-            {/* fontawesome 이용 */}
-            <i className="fas fa-solid fa-pen-to-square" />
-            <span>공지 수정</span>
-          </div>
-        }
-        buttonText={'수정하기'}
+        title={<div className="font-medium-24 mb-10">팀 참여하기</div>}
+        buttonText={'참여하기'}
         // 작동 함수
         onAction={(data) => {
-          setInputData(data);
-          toast.success(`${data} 수정되었습니다!`);
+          toast.success(`${data} 팀에 참여되었습니다!`);
         }}
-        // input에 보이게 할 데이터. 설정 안해도 됨
-        initialData={inputData}
         // 설정 안할시 기본은 "내용을 입력해주세요"
-        placeholder={'공지 내용을 입력해주세요'}
+        placeholder={'팀 링크를 입력해주세요.'}
+        label={'팀 링크'}
+        // 모달 전체 넓이 수정 원할 시 사용. 모달 기본적으로 모바일은 max-w-full
+        className={'max-w-[400px] md:max-w-[350px]'}
+        // 모달 안의 컨텐츠의 넓이 수정시 사용.
+        childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
+        /*  텍스트말고 <div className="">내용</div> 이런 형태로 하면 스타일 변경 가능 */
+        bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
       />
     ));
   };

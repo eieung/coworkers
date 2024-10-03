@@ -145,7 +145,7 @@ function Modal({
       {!isCustom ? (
         <div
           className={twMerge(
-            'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:max-w-[375px]',
+            'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:absolute sm:bottom-0 sm:max-w-full',
             'font-medium-16 p-[16px_16px_32px] text-text-primary shadow-lg',
             className,
           )}
@@ -175,7 +175,7 @@ function Modal({
           {title && (
             <h2
               className={clsx(
-                'mb-2 mt-2 whitespace-pre-line font-bold text-center',
+                'mb-2 mt-2 whitespace-pre-line text-center font-bold',
                 titleClassName,
               )}
             >

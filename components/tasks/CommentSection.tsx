@@ -7,7 +7,7 @@ import {
   AddCommentParams,
   addCommentRequest,
   getCommentsRequest,
-} from '@/libs/taskCommentApi';
+} from '@/libs/task/taskCommentApi';
 import { toast } from 'react-toastify';
 import { CommentType } from '@/types/taskListType';
 import Comment from '@/components/tasks/Comment';

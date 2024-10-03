@@ -32,6 +32,8 @@ enum FORM_FIELD {
 }
 
 export default function DatePicker({ close }: DatePickerProps) {
+  const today = formatDate(new Date());
+
   const {
     control,
     handleSubmit,
@@ -39,7 +41,7 @@ export default function DatePicker({ close }: DatePickerProps) {
   } = useForm<FormData>({
     defaultValues: {
       title: '',
-      date: '',
+      date: today,
       time: '',
       repeat: '',
       memo: '',
@@ -55,11 +57,9 @@ export default function DatePicker({ close }: DatePickerProps) {
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
-  console.log(formatDate(String(selectedDate)));
 
   const onSubmit = (data: FormData) => {
     const trimmedTitle = data.title.trim();
-    const trimmedMemo = data.memo.trim();
 
     toast(`${trimmedTitle} 이(가) 생성되었습니다!`);
     close();
@@ -68,9 +68,7 @@ export default function DatePicker({ close }: DatePickerProps) {
   const dropdownItems = [
     {
       label: '한 번',
-      onClick: () => {
-        console.log('한번입니다');
-      },
+      onClick: () => {},
     },
     {
       label: '매일',
@@ -92,7 +90,7 @@ export default function DatePicker({ close }: DatePickerProps) {
       title={title}
       showCloseIcon={true}
       description={description}
-      childrenClassName="w-[352px]"
+      childrenClassName="w-[352px] sm:w-[300px]"
       isCloseOnOutsideClick={false}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -121,12 +119,7 @@ export default function DatePicker({ close }: DatePickerProps) {
                         errors[inputs[FORM_FIELD.TITLE].name as keyof FormData]
                           ?.message
                       }
-                      onChange={(value) => {
-                        field.onChange(value);
-                        setShowCalendar(false);
-                      }}
                       value={field.value}
-                      onFocus={() => setShowCalendar(true)}
                     />
                   )}
                 />
@@ -139,12 +132,15 @@ export default function DatePicker({ close }: DatePickerProps) {
                   control={control}
                   rules={{ required: inputs[FORM_FIELD.DATE].placeholder }}
                   render={({ field }) => (
-                    <div className="w-full">
+                    <div className="flex w-full flex-col">
                       <Input
                         {...inputs[FORM_FIELD.DATE]}
                         {...field}
                         className={clsx(
-                          'w-[204px]',
+                          'font-regular-16 w-full',
+                          selectedDate
+                            ? 'text-text-primary'
+                            : 'text-text-default',
                           inputs[FORM_FIELD.DATE].height,
                         )}
                         invalid={
@@ -165,7 +161,7 @@ export default function DatePicker({ close }: DatePickerProps) {
                         }}
                       />
                       {showCalendar && (
-                        <div className="mt-2 rounded-md shadow-lg">
+                        <div className="mt-2 rounded-xl border border-bd-primary shadow-lg hover:border-it-hover">
                           <CustomCalendar
                             onDateSelect={(date) => {
                               if (date) {
@@ -182,32 +178,6 @@ export default function DatePicker({ close }: DatePickerProps) {
                         </div>
                       )}
                     </div>
-                  )}
-                />
-              )}
-              {inputs[FORM_FIELD.TIME] && (
-                <Controller
-                  name={inputs[FORM_FIELD.TIME].name as keyof FormData}
-                  control={control}
-                  rules={{ required: inputs[FORM_FIELD.TIME].placeholder }}
-                  render={({ field }) => (
-                    <Input
-                      {...inputs[FORM_FIELD.TIME]}
-                      {...field}
-                      className={clsx(
-                        'hidden w-[124px]',
-                        inputs[FORM_FIELD.TIME].height,
-                      )}
-                      invalid={
-                        !!errors[inputs[FORM_FIELD.TIME].name as keyof FormData]
-                      }
-                      validationMessage={
-                        errors[inputs[FORM_FIELD.TIME].name as keyof FormData]
-                          ?.message
-                      }
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
                   )}
                 />
               )}

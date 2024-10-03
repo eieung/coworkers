@@ -239,7 +239,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
       {
         name: 'date',
         height: 'h-12',
-        label: '시작 날짜 및 시간',
+        label: '시작 날짜',
       },
       {
         name: 'time',
