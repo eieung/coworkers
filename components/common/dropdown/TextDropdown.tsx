@@ -51,8 +51,6 @@ export default function TextDropdown({
   const router = useRouter();
   const isBoardsPage = router.pathname === '/boards';
 
-  console.log(isBoardsPage);
-
   return (
     <div className="flex items-center">
       <Dropdown

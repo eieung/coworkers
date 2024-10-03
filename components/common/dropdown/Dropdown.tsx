@@ -39,6 +39,7 @@ export default function Dropdown({
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        type="button"
         onClick={() => {
           setIsOpen(!isOpen);
           onToggle(!isOpen);
