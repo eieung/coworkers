@@ -56,6 +56,8 @@ export default function Profile() {
         </div>
       }
       items={menuItems}
+      className='w-[135px]'
+      itemClassName='w-[135px] h-[45px]'
     />
   );
 }
