@@ -5,8 +5,7 @@ import { twMerge } from 'tailwind-merge';
 interface DropdownProps {
   trigger: React.ReactNode; // 트리거를 React 컴포넌트로 받음 (버튼, 이미지 등)
   items: { label: string; href?: string; onClick?: () => void }[]; // 드롭다운 항목 리스트
-  className?: string; // 메뉴 전체 스타일
-  itemClassName?: string; // 각 메뉴의 스타일
+  className?: string; // 메뉴 스타일
   onSelect?: (label: string) => void; // trigger에 선택된 text 보이게 할 때
   onToggle?: (isOpen: boolean) => void; // 열린 상태인지 부모에서 상태 확인용
 }
@@ -15,7 +14,6 @@ export default function Dropdown({
   trigger,
   items,
   className,
-  itemClassName,
   onSelect,
   onToggle = () => {},
 }: DropdownProps) {
@@ -41,6 +39,7 @@ export default function Dropdown({
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        type="button"
         onClick={() => {
           setIsOpen(!isOpen);
           onToggle(!isOpen);
@@ -49,27 +48,32 @@ export default function Dropdown({
       >
         {trigger}
       </button>
-
       {isOpen && (
         <ul
           className={twMerge(
-            'absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-xl border border-bd-primary bg-bg-secondary text-white',
-            className,
+            'absolute right-0 z-20 mt-2 overflow-hidden rounded-xl border border-bd-primary bg-bg-secondary text-white',
           )}
         >
           {items.map((item, index) => (
             <li
               key={index}
               className={twMerge(
-                'flex-center bg-bg-secondary p-3 hover:bg-gray-600',
-                itemClassName,
+                'w-[135px] cursor-pointer bg-bg-secondary hover:bg-gray-600',
+                className,
               )}
               onClick={() => handleItemClick(item.label, item.onClick)} // 메뉴 클릭 시 드롭다운 닫기
             >
               {item.href ? (
-                <a href={item.href}>{item.label}</a>
+                <a className="flex-center flex py-3" href={item.href}>
+                  {item.label}
+                </a>
               ) : (
-                <span className={item.onClick ? 'cursor-pointer' : ''}>
+                <span
+                  className={twMerge(
+                    'flex-center flex py-3',
+                    item.onClick ? 'cursor-pointer' : '',
+                  )}
+                >
                   {item.label}
                 </span>
               )}

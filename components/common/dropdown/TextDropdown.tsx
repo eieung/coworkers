@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Dropdown from './Dropdown';
 import toggleImg from '@/assets/image/icon/toggle.svg';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { twMerge } from 'tailwind-merge';
 
 /*
  * @component
@@ -45,12 +47,23 @@ export default function TextDropdown({
   // 드롭다운 열린 상태 관리
   const [isOpen, setIsOpen] = useState(false);
 
+  // boards 페이지 일때
+  const router = useRouter();
+  const isBoardsPage = router.pathname === '/boards';
+
   return (
     <div className="flex items-center">
       <Dropdown
         trigger={
           <>
-            <div className="font-medium-14 flex h-11 w-[109px] items-center justify-between gap-2 rounded-xl bg-bg-dropdown p-[10px_12.5px] text-text-default">
+            <div
+              className={twMerge(
+                'font-medium-14 flex h-11 items-center justify-between gap-2 rounded-xl p-[10px_12.5px]',
+                !isBoardsPage
+                  ? 'font-medium-14 w-[109px] bg-bg-dropdown text-text-default'
+                  : 'font-regular-14 w-[120px] bg-bg-tertiary text-text-primary', // /boards 페이지일 때 색상 변경
+              )}
+            >
               {selectedItem} {/* 현재 선택된 항목 표시 */}
               <Image
                 className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} // 드롭다운이 열리면 아이콘 회전
@@ -64,8 +77,10 @@ export default function TextDropdown({
         }
         items={items} // 드롭다운에 표시할 항목 리스트
         onSelect={handleSelect}
-        className="w-[109px]"
-        itemClassName="h-10 font-medium-14"
+        className={twMerge(
+          'font-medium-14 h-10',
+          !isBoardsPage ? 'w-[109px]' : 'w-[120px]',
+        )}
         onToggle={setIsOpen} // 드롭다운 열림 상태
       />
     </div>

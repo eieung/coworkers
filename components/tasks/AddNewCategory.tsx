@@ -1,5 +1,8 @@
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
-import { addNewCategoryRequest, AddNewTaskParams } from '@/libs/taskListApi';
+import {
+  addNewCategoryRequest,
+  AddNewTaskParams,
+} from '@/libs/task/taskListApi';
 import useModalStore from '@/store/useModalStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';

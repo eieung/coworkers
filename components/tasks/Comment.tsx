@@ -15,7 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
   deleteCommentRequest,
   editCommentRequest,
-} from '@/libs/taskCommentApi';
+} from '@/libs/task/taskCommentApi';
 import { useForm } from 'react-hook-form';
 
 interface CommentProps {
@@ -181,15 +181,13 @@ export default function Comment({
       </span>
       {!isEditing && (
         <div className={'mt-4 flex items-center justify-between'}>
-          <span className={'flex items-center gap-3'}>
-            <Image
+          <span className={'flex h-[32px] w-[32px] items-center gap-3'}>
+            <img
               className="rounded-full"
               src={userImageContainer}
               alt="유저 이미지"
-              width={32}
-              height={32}
             />
-            <span className="font-medium-14">{nickname}</span>
+            <span className="font-medium-14 whitespace-nowrap">{nickname}</span>
           </span>
           <span
             className="font-regular-14 text-text-secondary"
