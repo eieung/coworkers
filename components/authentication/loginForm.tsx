@@ -8,10 +8,8 @@ import { publicAxiosInstance } from '@/libs/axios';
 import { useRouter } from 'next/router';
 import PasswordReset from '../common/modal/PasswordReset';
 import { toast } from 'react-toastify';
-<<<<<<< HEAD
+
 import axios from 'axios';
-=======
->>>>>>> 47c482a32cff3ea9364e3cf61ab23780f33cbb5f
 
 export default function LoginForm() {
   const { email, password, clearServerError, setServerError } = useValidation();
