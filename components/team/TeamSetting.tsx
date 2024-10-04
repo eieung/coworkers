@@ -10,9 +10,10 @@ import { useDeleteGroup } from '@/hooks/useDeleteGroup';
 
 interface TeamSettingProps {
   groupId: number;
+  isAdmin: boolean;
 }
 
-export default function TeamSetting({ groupId }: TeamSettingProps) {
+export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
   const { data: groupData, isLoading, error } = useGroup(groupId);
   const openModal = useModalStore((state) => state.openModal);
   const deleteGroupMutation = useDeleteGroup();
@@ -60,15 +61,28 @@ export default function TeamSetting({ groupId }: TeamSettingProps) {
         height={64}
         className="absolute right-20 top-0"
       />
-      <Dropdown
-        trigger={
-          <Image src={settingIcon} alt="설정" width={24} height={24} />
-        }
-        items={[
-          { label: '수정하기', onClick: handleEditTeam },
-          { label: '삭제하기', onClick: handleDeleteTeam },
-        ]}
-      />
+
+      {isAdmin ? (
+        <Dropdown
+          trigger={
+            <Image src={settingIcon} alt="설정" width={24} height={24} />
+          }
+          items={[
+            { label: '수정하기', onClick: handleEditTeam },
+            { label: '삭제하기', onClick: handleDeleteTeam },
+          ]}
+          className="w-[120px]"
+          itemClassName="w-full h-10"
+        />
+      ) : (
+        <img
+          src={groupData.image}
+          alt={`${groupData.name} 이미지`}
+          width={32}
+          height={32}
+          className="rounded-xl object-contain"
+        />
+      )}
     </div>
   );
 }
