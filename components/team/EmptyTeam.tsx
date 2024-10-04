@@ -4,6 +4,7 @@ import Button from '../common/button';
 import useModalStore from '@/store/useModalStore';
 import TeamForm from '../common/modal/TeamForm';
 import CustomInputModal from '../common/modal/CustomInputModal';
+import { toast } from 'react-toastify';
 
 export default function EmptyTeam() {
   const openModal = useModalStore((state) => state.openModal);
@@ -14,7 +15,23 @@ export default function EmptyTeam() {
     ));
   };
 
-  // TODO: 팀 참여하기 모달 연동
+  const handleCustomInputModal = () => {
+    openModal((close) => (
+      <CustomInputModal
+        close={close}
+        title={<div className="font-medium-24 mb-10">팀 참여하기</div>}
+        buttonText={'참여하기'}
+        onAction={(data) => {
+          toast.success(`${data} 팀에 참여되었습니다!`);
+        }}
+        placeholder={'팀 링크를 입력해주세요.'}
+        label={'팀 링크'}
+        className={'max-w-[400px] md:max-w-[350px]'}
+        childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
+        bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
+      />
+    ));
+  };
 
   return (
     <div className="m-auto mt-[186px] flex flex-col items-center justify-center md:mt-[272px] lg:mt-[212px]">
@@ -49,6 +66,7 @@ export default function EmptyTeam() {
           children="팀 참여하기"
           fullWidth={true}
           className="bg-transparent"
+          onClick={handleCustomInputModal}
         />
       </div>
     </div>

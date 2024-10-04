@@ -3,11 +3,34 @@ import Dropdown from '@/components/common/dropdown/Dropdown';
 import userIcon from '@/assets/image/icon/user.svg';
 import { useUserStore } from '@/store/authStore';
 import { useUser } from '@/hooks/useUser';
+import useModalStore from '@/store/useModalStore';
+import CustomInputModal from '../modal/CustomInputModal';
+import { toast } from 'react-toastify';
 
 export default function Profile() {
   const { clearUser, accessToken } = useUserStore();
   const router = useRouter();
   const { data: user } = useUser(accessToken);
+  const openModal = useModalStore((state) => state.openModal);
+
+  // api 연동 필요
+  const handleCustomInputModal = () => {
+    openModal((close) => (
+      <CustomInputModal
+        close={close}
+        title={<div className="font-medium-24 mb-10">팀 참여하기</div>}
+        buttonText={'참여하기'}
+        onAction={(data) => {
+          toast.success(`${data} 팀에 참여되었습니다!`);
+        }}
+        placeholder={'팀 링크를 입력해주세요.'}
+        label={'팀 링크'}
+        className={'max-w-[400px] md:max-w-[350px]'}
+        childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
+        bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
+      />
+    ));
+  };
 
   const handleLogout = () => {
     clearUser();
@@ -17,7 +40,7 @@ export default function Profile() {
   const loggedInMenuItems = [
     { label: '마이 히스토리', href: '/history' },
     { label: '계정 설정', href: '/settings' },
-    { label: '팀 참여', href: '/team' },
+    { label: '팀 참여', onClick: handleCustomInputModal },
     { label: '로그아웃', onClick: handleLogout },
   ];
 
@@ -56,8 +79,7 @@ export default function Profile() {
         </div>
       }
       items={menuItems}
-      className='w-[135px]'
-      itemClassName='w-[135px] h-[45px]'
+      className="w-[135px]"
     />
   );
 }
