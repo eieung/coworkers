@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import AddNewCategory from '@/components/tasks/AddNewCategory';
 import DateManager from '@/components/tasks/DateManager';
 import TaskList from '@/components/tasks/TaskList';
-import { getTaskListsRequest } from '@/libs/taskListApi';
+import { getTaskListsRequest } from '@/libs/task/taskListApi';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { getUser } from '@/utils/auth';
@@ -12,13 +12,6 @@ export default function TasksPage() {
   const { groupId } = router.query;
   const initialDate = new Date().toISOString().split('T')[0];
   const [currentDate, setCurrentDate] = useState(initialDate);
-
-  useEffect(() => {
-    const user = getUser();
-    if (!user) {
-      router.push('/login');
-    }
-  }, [router]);
 
   const {
     data: categories,
@@ -30,6 +23,24 @@ export default function TasksPage() {
     queryFn: () => getTaskListsRequest({ groupId }),
     enabled: !!groupId,
   });
+
+  useEffect(() => {
+    const user = getUser();
+
+    if (!user) {
+      router.push('/login');
+    } else if (isTaskListError) {
+      const statusCode = (taskListError as any).response?.status;
+
+      // Unauthorized (401)일 때 로그인 페이지로 이동
+      if (statusCode === 401) {
+        console.error('Unauthorized - Redirecting to login');
+        router.push('/login');
+      } else {
+        console.error('Error fetching task list:', taskListError);
+      }
+    }
+  }, [router, isTaskListError, taskListError]);
 
   return (
     <section className="mt-10 sm:mt-6 md:mt-6">

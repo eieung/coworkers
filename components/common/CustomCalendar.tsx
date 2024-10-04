@@ -78,7 +78,7 @@ const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
   };
 
   return (
-    <div className="w-full rounded-xl border border-bd-primary p-4 hover:border-it-hover">
+    <div className="w-full p-4">
       <header className="flex items-center justify-between py-[5px]">
         <button onClick={handlePrevMonth}>
           <Image
@@ -109,13 +109,13 @@ const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
           <div
             key={index}
             onClick={() => handleDateClick(date)}
-            className={`font-medium-14 cursor-pointer p-2 ${
+            className={`font-medium-14 p-2 ${
               date.getMonth() !== currentMonth.getMonth()
-                ? 'text-text-default'
-                : ''
+                ? 'cursor-default text-text-default'
+                : 'cursor-pointer hover:rounded-lg hover:bg-brand-primary hover:text-bg-secondary'
             } ${
               selectedDate?.toDateString() === date.toDateString()
-                ? 'rounded-lg bg-brand-primary text-bg-secondary'
+                ? 'rounded-lg bg-point-blue text-bg-secondary'
                 : ''
             }`}
           >

@@ -28,7 +28,7 @@ export const fetchData = async (
       const errorMessage =
         axiosError.response.data?.message || '알 수 없는 오류가 발생했습니다.';
       console.error(`Failed to ${method} data:`, errorMessage);
-      throw new Error(errorMessage);
+      throw axiosError;
     } else {
       console.error(`Failed to ${method} data:`, error);
       throw error;

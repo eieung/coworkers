@@ -8,7 +8,7 @@ import {
   patchTaskRequest,
   deleteTaskRequest,
   getTasksRequest,
-} from '@/libs/taskListApi';
+} from '@/libs/task/taskListApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
