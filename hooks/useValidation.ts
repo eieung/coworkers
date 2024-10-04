@@ -78,6 +78,8 @@ export const useValidation = () => {
    */
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    clearServerError('password');
+    setIsPasswordValid(true);
   };
 
   /**
@@ -102,6 +104,9 @@ export const useValidation = () => {
    * @returns 비밀번호 유효성 검사 메시지
    */
   const getPasswordValidationMessage = () => {
+    if (serverErrors.password) {
+      return serverErrors.password;
+    }
     if (password === '') {
       return '비밀번호를 입력해주세요.';
     }
@@ -202,7 +207,7 @@ export const useValidation = () => {
     },
     password: {
       value: password,
-      isValid: isPasswordValid,
+      isValid: isPasswordValid && !serverErrors.password,
       handleChange: handlePasswordChange,
       handleBlur: handlePasswordBlur,
       getMessage: getPasswordValidationMessage,

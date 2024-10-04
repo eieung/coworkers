@@ -7,10 +7,11 @@ import useModalStore from '@/store/useModalStore';
 import { publicAxiosInstance } from '@/libs/axios';
 import { useRouter } from 'next/router';
 import PasswordReset from '../common/modal/PasswordReset';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export default function LoginForm() {
-  const { email, password } = useValidation();
+  const { email, password, clearServerError, setServerError } = useValidation();
   const { setUser, setTokens } = useUserStore();
   const router = useRouter();
   const openModal = useModalStore((state) => state.openModal);
@@ -23,6 +24,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    clearServerError();
     const loginData = {
       email: email.value,
       password: password.value,
@@ -33,7 +35,7 @@ export default function LoginForm() {
         '/auth/signin',
         loginData,
       );
-      
+
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
         setTokens(accessToken, refreshToken);
@@ -41,7 +43,17 @@ export default function LoginForm() {
         router.push('/');
       }
     } catch (error) {
-      console.error('로그인에 실패했습니다.', error);
+      if (axios.isAxiosError(error) && error.response) {
+        const { data } = error.response;
+        if (data.details) {
+          if (data.details.email) {
+            setServerError('email', data.details.email.message);
+          }
+          if (data.details.password) {
+            setServerError('password', data.details.password.message);
+          }
+        }
+      }
     }
   };
 
@@ -100,11 +112,13 @@ export default function LoginForm() {
             placeholder="비밀번호를 입력해주세요."
             className="h-11 w-full"
           />
-          <div
-            className="flex cursor-pointer justify-end text-emerald-500"
-            onClick={handleOpenPasswordResetModal}
-          >
-            비밀번호를 잊으셨나요?
+          <div className="flex justify-end text-emerald-500">
+            <span
+              className="cursor-pointer"
+              onClick={handleOpenPasswordResetModal}
+            >
+              비밀번호를 잊으셨나요?
+            </span>
           </div>
         </div>
       </div>
