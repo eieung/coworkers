@@ -57,8 +57,8 @@ export default function List() {
     setIsTeamListVisible(false);
   };
 
-  const handleCloseTeamList = () => {
-    setIsTeamListVisible(false);
+  const handleGetStarted = () => {
+    router.push('/get-started-team');
   };
 
   // 로그인하지 않은 상태
@@ -77,16 +77,24 @@ export default function List() {
   const selectedTeamName =
     hasTeams && selectedGroupId
       ? user.memberships.find((m) => m.group.id === selectedGroupId)?.group.name
-      : '팀 생성하기';
+      : '팀 시작하기';
 
   return (
     <div className="relative flex gap-x-8 sm:hidden">
       <div className="flex gap-x-[11px]">
-        <Link href={selectedGroupId ? `/groups/${selectedGroupId}` : '/'}>
-          <span className="font-medium-16 text-text-primary">
-            {selectedTeamName}
-          </span>
-        </Link>
+        {selectedTeamName === '팀 시작하기' ? (
+          <button onClick={handleGetStarted}>
+            <span className="font-medium-16 text-text-primary">
+              {selectedTeamName}
+            </span>
+          </button>
+        ) : (
+          <Link href={selectedGroupId ? `/groups/${selectedGroupId}` : '/'}>
+            <span className="font-medium-16 text-text-primary">
+              {selectedTeamName}
+            </span>
+          </Link>
+        )}
         {hasTeams && (
           <button onClick={toggleTeamListVisibility}>
             <Image src={toggleIcon} alt="토글" width={16} height={16} />
@@ -103,7 +111,6 @@ export default function List() {
           <TeamList
             teams={user.memberships.map((m) => m.group)}
             onTeamSelect={handleTeamSelect}
-            onClose={handleCloseTeamList}
           />
         </div>
       )}

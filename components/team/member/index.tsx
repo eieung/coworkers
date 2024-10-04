@@ -1,11 +1,20 @@
 import { useGroup } from '@/hooks/useGroup';
 import MemberList from './MemberList';
+import useModalStore from '@/store/useModalStore';
+import InviteMember from '@/components/common/modal/InviteMember';
 
 interface MemberProps {
   groupId: number;
+  isAdmin: boolean;
 }
 
-export default function Member({ groupId }: MemberProps) {
+export default function Member({ groupId, isAdmin }: MemberProps) {
+  const openModal = useModalStore((state) => state.openModal);
+
+  const handleOpenInviteModal = () => {
+    openModal((close) => <InviteMember close={close} />);
+  };
+
   const { data: groupData, isLoading, error } = useGroup(groupId);
 
   if (isLoading) return <div>로딩 중...</div>;
@@ -36,13 +45,18 @@ export default function Member({ groupId }: MemberProps) {
             ({groupData.members.length}명)
           </span>
         </div>
-        <button className="font-regular-14 text-brand-primary">
-          + 새로운 멤버 초대하기
-        </button>
+        {isAdmin && (
+          <button
+            className="font-regular-14 text-brand-primary"
+            onClick={handleOpenInviteModal}
+          >
+            + 새로운 멤버 초대하기
+          </button>
+        )}
       </div>
       <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-3">
         {sortedMembers.map((member) => (
-          <MemberList key={member.userId} member={member} />
+          <MemberList key={member.userId} member={member} isAdmin={isAdmin} />
         ))}
       </div>
     </div>

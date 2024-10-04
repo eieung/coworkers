@@ -3,9 +3,12 @@ import { useNotificationAPI } from '@/hooks/useNotificationAPI';
 
 interface NotificationProps {
   isAdmin: boolean;
+  groupId: number;
 }
-
-export default function Notification({ isAdmin }: NotificationProps) {
+/**
+ * UI 개선 필요
+ */
+export default function Notification({ isAdmin, groupId }: NotificationProps) {
   const {
     state,
     fetchNotification,
@@ -13,11 +16,11 @@ export default function Notification({ isAdmin }: NotificationProps) {
     updateNotice,
     deleteNotice,
     updateState,
-  } = useNotificationAPI();
+  } = useNotificationAPI(groupId);
 
   useEffect(() => {
     fetchNotification();
-  }, []);
+  }, [groupId]);
 
   if (state.loading) {
     return <span>공지를 불러오는 중입니다.</span>;

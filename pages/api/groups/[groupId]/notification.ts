@@ -16,14 +16,27 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { method } = req;
+  const { method, body } = req;
 
   await dbConnect();
 
   switch (method) {
     case 'GET':
       try {
-        const notifications: NotificationModel[] = await Notification.find({});
+        const { groupId } = req.query;
+
+        if (!groupId) {
+          return res.status(400).json({
+            success: false,
+            message: 'groupId가 필요합니다.',
+          });
+        }
+
+        // groupId를 기반으로 필터링하여 해당 그룹의 공지만 가져옴
+        const notifications: NotificationModel[] = await Notification.find({
+          groupId,
+        });
+
         res.status(200).json({ success: true, data: notifications });
       } catch (error) {
         if (error instanceof Error) {
@@ -38,7 +51,10 @@ export default async function handler(
 
     case 'POST':
       try {
-        const notification: NotificationModel = await Notification.create(req.body);
+        const notification: NotificationModel = await Notification.create({
+          content: body.content,
+          groupId: body.groupId,
+        });
         res.status(201).json({ success: true, data: notification });
       } catch (error) {
         res.status(400).json({ success: false });
