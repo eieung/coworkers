@@ -35,8 +35,11 @@ export const useReviseTeam = () => {
       data: { name: string; image: string | null };
     }) => patchTeam(id, data),
     onSuccess: async (_, { id }) => {
-      await queryClient.invalidateQueries({ queryKey: ['groups', id] });
-      await queryClient.invalidateQueries({ queryKey: ['user'] });
+      // Promise.all이 좋은 선택지는 아님. 추후에 수정 예정
+      await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['groups', id] }),
+          queryClient.invalidateQueries({ queryKey: ['user'] }),
+        ]);
 
       toast.success('팀 정보가 성공적으로 수정되었습니다.');
     },
