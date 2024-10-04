@@ -291,7 +291,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
         appearance: 'solid',
         size: 'floating-large',
         disabled: false,
-        children: '링크보내기',
+        children: '링크 보내기',
         font: DEFAULT_BUTTON_FONT,
         fullWidth: true,
       },

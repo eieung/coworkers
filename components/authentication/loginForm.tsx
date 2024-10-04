@@ -7,7 +7,7 @@ import useModalStore from '@/store/useModalStore';
 import { publicAxiosInstance } from '@/libs/axios';
 import { useRouter } from 'next/router';
 import PasswordReset from '../common/modal/PasswordReset';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 export default function LoginForm() {
   const { email, password } = useValidation();
@@ -33,7 +33,7 @@ export default function LoginForm() {
         '/auth/signin',
         loginData,
       );
-      
+
       if (response.status === 200) {
         const { accessToken, refreshToken, user } = response.data;
         setTokens(accessToken, refreshToken);
@@ -46,7 +46,7 @@ export default function LoginForm() {
   };
 
   const handleOpenPasswordResetModal = async () => {
-    const redirectUrl = 'http://localhost:3000/auth/resetPasswordCallback';
+    const redirectUrl = 'https://coworkers-gamma.vercel.app/'; //최종 배포 후 배포사이트 주소로 변경해야함.
     openModal((close) => (
       <PasswordReset
         close={close}
@@ -58,14 +58,12 @@ export default function LoginForm() {
               { email, redirectUrl },
             );
             if (response.status === 200) {
-              console.log('성공!');
-              toast.success('해당 이메일로 링크를 보냈습니다!');
               close();
+              toast.success('해당 이메일로 링크를 보냈습니다!');
             }
           } catch (error) {
             toast.error('이메일 발송에 실패했습니다.');
           }
-          // 예: API 호출을 통해 비밀번호 재설정 이메일 전송
         }}
       />
     ));
