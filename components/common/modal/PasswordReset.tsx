@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 interface PasswordResetProps {
   close: () => void;
-  onAction: (value: string) => Promise<void>;
+  onAction: (value: string) => void;
 }
 
 interface FormData {
