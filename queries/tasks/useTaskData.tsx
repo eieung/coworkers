@@ -85,6 +85,7 @@ export const useCreateTask = () => {
       queryClient.invalidateQueries({
         queryKey: ['tasks', variables.groupId],
       });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
     onError: (error) => {
       console.error('할 일 생성 중 오류 발생:', error);
@@ -131,6 +132,7 @@ export const useDeleteTask = (groupId: string) => {
     onSuccess: () => {
       toast.success('할 일이 삭제되었습니다!');
       queryClient.invalidateQueries({ queryKey: ['tasks', groupId] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
     onError: (error) => {
       const errorMessage =
