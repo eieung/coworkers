@@ -46,7 +46,7 @@ export default function EmptyTeam() {
         <p className="font-medium-14 text-text-default">
           아직 소속된 팀이 없습니다.
         </p>
-        <p className="-14 font-medium text-text-default">
+        <p className="font-medium-14 text-text-default">
           팀을 생성하거나 팀에 참여해보세요.
         </p>
       </div>
