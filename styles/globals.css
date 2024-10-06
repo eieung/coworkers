@@ -314,6 +314,7 @@ th {
 
 /* 공통 Toastify 설정 */
 .toast-container .Toastify__toast {
+  font-family: inherit;
   color: var(--text-primary);
   background: var(--bg-secondary);
 }
