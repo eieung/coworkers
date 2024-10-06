@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import AddNewCategory from '@/components/tasks/AddNewCategory';
 import DateManager from '@/components/tasks/DateManager';
 import TaskList from '@/components/tasks/TaskList';
-import { getTaskListsRequest } from '@/libs/task/taskListApi';
-import { useQuery } from '@tanstack/react-query';
+
 import { useRouter } from 'next/router';
 import { getUser } from '@/utils/auth';
+import { useGetCategories } from '@/queries/tasks/useTaskData';
 
 export default function TasksPage() {
   const router = useRouter();
@@ -18,11 +18,7 @@ export default function TasksPage() {
     isLoading: isTaskListLoading,
     isError: isTaskListError,
     error: taskListError,
-  } = useQuery({
-    queryKey: ['categories', groupId],
-    queryFn: () => getTaskListsRequest({ groupId }),
-    enabled: !!groupId,
-  });
+  } = useGetCategories(groupId as string);
 
   useEffect(() => {
     const user = getUser();

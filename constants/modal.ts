@@ -241,27 +241,23 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
     ],
     inputs: [
       {
-        name: 'title',
+        name: 'name',
         height: 'h-12',
         label: '할 일 제목',
         placeholder: '할 일 제목을 입력해주세요.',
       },
       {
-        name: 'date',
+        name: 'startDate',
         height: 'h-12',
         label: '시작 날짜',
       },
       {
-        name: 'time',
-        height: 'h-12',
-      },
-      {
-        name: 'repeat',
+        name: 'frequencyType',
         height: 'h-11',
         label: '반복 설정',
       },
       {
-        name: 'memo',
+        name: 'description',
         height: 'h-[75px]',
         label: '할 일 메모',
         placeholder: '메모를 입력해주세요.',

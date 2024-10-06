@@ -4,24 +4,22 @@ interface GetCommentsParams {
   taskId: number;
 }
 
-export const getCommentsRequest = async ({ taskId }: GetCommentsParams) => {
-  const url = `/tasks/${taskId}/comments`;
-  return await fetchData(url, undefined, 'GET');
+export const getCommentsRequest = ({ taskId }: GetCommentsParams) => {
+  return fetchData(`/tasks/${taskId}/comments`, undefined, 'GET');
 };
 
-export interface AddCommentParams {
+export interface createCommentParams {
   taskId: number;
   commentData: {
     content: string;
   };
 }
 
-export const addCommentRequest = async ({
+export const createCommentRequest = ({
   taskId,
   commentData,
-}: AddCommentParams): Promise<void> => {
-  const url = `/tasks/${taskId}/comments`;
-  return await fetchData(url, undefined, 'POST', commentData);
+}: createCommentParams) => {
+  return fetchData(`/tasks/${taskId}/comments`, undefined, 'POST', commentData);
 };
 
 export interface EditCommentParams {
@@ -32,13 +30,17 @@ export interface EditCommentParams {
   };
 }
 
-export const editCommentRequest = async ({
+export const editCommentRequest = ({
   taskId,
   commentId,
   commentData,
-}: EditCommentParams): Promise<void> => {
-  const url = `/tasks/${taskId}/comments/${commentId}`;
-  return await fetchData(url, undefined, 'PATCH', commentData);
+}: EditCommentParams) => {
+  return fetchData(
+    `/tasks/${taskId}/comments/${commentId}`,
+    undefined,
+    'PATCH',
+    commentData,
+  );
 };
 
 export interface DeleteCommentParams {
@@ -46,10 +48,13 @@ export interface DeleteCommentParams {
   commentId: number;
 }
 
-export const deleteCommentRequest = async ({
+export const deleteCommentRequest = ({
   taskId,
   commentId,
-}: DeleteCommentParams): Promise<void> => {
-  const url = `/tasks/${taskId}/comments/${commentId}`;
-  return await fetchData(url, undefined, 'DELETE');
+}: DeleteCommentParams) => {
+  return fetchData(
+    `/tasks/${taskId}/comments/${commentId}`,
+    undefined,
+    'DELETE',
+  );
 };

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { authAxiosInstance } from '@/libs/axios';
-import { TaskListType } from '@/types/taskListType';
+import { TaskListType } from '@/types/taskList';
 
 /**
  * TaskList 데이터를 가져오는 함수

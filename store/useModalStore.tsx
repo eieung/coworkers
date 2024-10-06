@@ -9,6 +9,7 @@ type ModalState = {
   modals: Modal[];
   openModal: (component: (close: () => void) => JSX.Element) => void;
   closeModal: () => void;
+  updateModal: (component: (close: () => void) => JSX.Element) => void; // ID 없이 수정
   isEmpty: () => boolean;
   initializePopStateListener: () => void;
   removePopStateListener: () => void;
@@ -26,7 +27,7 @@ const useModalStore = create<ModalState>((set, get) => ({
     };
 
     set((state) => ({
-      modals: [{ id, component: (close) => component(close) }, ...state.modals],
+      modals: [...state.modals, { id, component: (close) => component(close) }],
     }));
 
     get().initializePopStateListener();
@@ -35,18 +36,24 @@ const useModalStore = create<ModalState>((set, get) => ({
 
   closeModal: () => {
     set((state) => {
-      const newModals = [...state.modals];
-      newModals.shift();
+      const newModals = state.modals.slice(0, -1);
       return { modals: newModals };
     });
+  },
 
-    if (get().isEmpty()) {
-      get().removePopStateListener();
-    }
+  updateModal: (component) => {
+    set((state) => {
+      const lastModalIndex = state.modals.length - 1;
+      if (lastModalIndex < 0) return state;
 
-    if (window.history.state?.modalOpen) {
-      window.history.back();
-    }
+      const lastModal = state.modals[lastModalIndex];
+      return {
+        modals: [
+          ...state.modals.slice(0, lastModalIndex),
+          { ...lastModal, component: (close) => component(close) },
+        ],
+      };
+    });
   },
 
   isEmpty: () => get().modals.length === 0,

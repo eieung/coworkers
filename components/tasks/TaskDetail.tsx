@@ -1,4 +1,4 @@
-import { TaskType } from '@/types/taskListType';
+import { TaskType } from '@/types/taskList';
 import menuImg from '@/assets/image/icon/kebab.svg';
 import Image from 'next/image';
 import Modal from '@/components/common/modal';
@@ -10,26 +10,48 @@ import { formatDate } from '@/utils/common';
 import Button from '@/components/common/button';
 import whiteCheckImg from '@/assets/image/icon/check.svg';
 import clsx from 'clsx';
+import { useToggleTask } from '@/queries/tasks/useTaskData';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
+import Dropdown from '@/components/common/dropdown/Dropdown';
 
 interface TaskDetailProps {
-  taskData: TaskType;
   onClose: () => void;
+  taskdetailData: TaskType;
 }
 
-export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
-  const {
-    id: taskId,
-    name,
-    description,
-    writer,
-    updatedAt,
-    frequency,
-    doneAt,
-  } = taskData;
+export default function TaskDetail({
+  taskdetailData,
+  onClose,
+}: TaskDetailProps) {
+  const { name, description, writer, updatedAt, frequency, doneAt } =
+    taskdetailData;
+
+  const { groupId } = useParams();
+  const router = useRouter();
+  const { task: taskId } = router.query;
+
   const isComplete = !!doneAt;
   const { id = 0, image, nickname = 'Anonymous' } = writer || {};
   const userImageContainer = image || defaultUserImg;
   const buttonType = isComplete ? 'floating-outlined' : 'floating-solid';
+
+  const toggleTaskMutation = useToggleTask(groupId as string, Number(taskId));
+
+  const handleToggleTask = () => {
+    toggleTaskMutation.mutate({ id: Number(taskId), doneAt: isComplete });
+  };
+
+  const dropdownItems = [
+    {
+      label: '수정하기',
+      onClick: () => {},
+    },
+    {
+      label: '삭제하기',
+      onClick: () => {},
+    },
+  ];
 
   return (
     <Modal
@@ -56,7 +78,14 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
               {name}
             </h1>
           </div>
-          <Image src={menuImg} alt="메뉴" width={24} height={24} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <Dropdown
+              trigger={
+                <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
+              }
+              items={dropdownItems}
+            />
+          </div>
         </div>
         <span>
           <div className={'flex items-center justify-between'}>
@@ -83,14 +112,15 @@ export default function TaskDetail({ taskData, onClose }: TaskDetailProps) {
       </div>
       <div className="font-regular-14 mt-6">{description}</div>
       <div className="mt-28">
-        <CommentSection taskId={taskId} />
+        <CommentSection taskId={Number(taskId)} />
       </div>
       <div className="fixed bottom-[64px] right-10 flex justify-end">
         <Button
           appearance={buttonType}
           className={clsx('h-[40px]', isComplete ? 'w-[138px]' : 'w-[111px]')}
+          onClick={handleToggleTask}
         >
-          <div className="flex-center flex gap-1">
+          <div className="flex-center flex gap-1 whitespace-nowrap">
             <Image
               src={isComplete ? checkImg : whiteCheckImg}
               alt={'체크'}
