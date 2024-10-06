@@ -1,7 +1,7 @@
 import calendarImg from '@/assets/image/icon/calendar.svg';
 import repeatImg from '@/assets/image/icon/repeat.svg';
 import timeImg from '@/assets/image/icon/time.svg';
-import { Frequency } from '@/types/taskListType';
+import { Frequency } from '@/types/taskList';
 import { formatDate, formatTime } from '@/utils/common';
 import Image from 'next/image';
 

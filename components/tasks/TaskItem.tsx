@@ -5,11 +5,13 @@ import menuImg from '@/assets/image/icon/kebab.svg';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { TaskType } from '@/types/taskListType';
+import { TaskType } from '@/types/taskList';
 import TaskDetail from '@/components/tasks/TaskDetail';
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
 import DateAndFrequency from '@/components/tasks/DateAndFrequency';
 import { useRouter } from 'next/router';
+import { useGetTaskItem } from '@/queries/tasks/useTaskData';
+import { useEffect } from 'react';
 
 interface TaskItemProps {
   taskData: TaskType;
@@ -26,11 +28,27 @@ const TaskItem = ({
   onEdit,
   onDelete,
 }: TaskItemProps) => {
-  const { name, date, frequency, commentCount } = taskData;
-  const { openModal } = useModalStore((state) => ({
+  const { id: taskId, name, date, frequency, commentCount } = taskData;
+  const { openModal, updateModal } = useModalStore((state) => ({
     openModal: state.openModal,
+    updateModal: state.updateModal,
   }));
+
   const router = useRouter();
+
+  const {
+    data: taskdetailData = [],
+    isLoading,
+    error,
+  } = useGetTaskItem(String(taskId));
+
+  useEffect(() => {
+    if (taskdetailData) {
+      updateModal((close) => (
+        <TaskDetail taskdetailData={taskdetailData} onClose={close} />
+      ));
+    }
+  }, [taskdetailData, updateModal]);
 
   const handleOpenTaskDetailModal = () => {
     openModal((close) => {
@@ -50,7 +68,16 @@ const TaskItem = ({
         );
       };
 
-      return <TaskDetail taskData={taskData} onClose={handleModalClose} />;
+      return (
+        <>
+          {taskdetailData && (
+            <TaskDetail
+              taskdetailData={taskdetailData}
+              onClose={handleModalClose}
+            />
+          )}
+        </>
+      );
     });
     // 모달용 쿼리 추가
     router.push(

@@ -1,5 +1,5 @@
 import { authAxiosInstance } from '@/libs/axios';
-import { TaskListType } from '@/types/taskListType';
+import { TaskDataType, TaskListType } from '@/types/taskList';
 import { AxiosError } from 'axios';
 
 export interface ErrorResponse {
@@ -16,8 +16,8 @@ export const fetchData = async (
     const response = await authAxiosInstance.request({
       url,
       method,
-      params,
       data,
+      params,
     });
 
     return response.data;
@@ -36,73 +36,113 @@ export const fetchData = async (
   }
 };
 
-interface GetTasksParams {
+export interface GetTasksParams {
   groupId: string | string[] | undefined;
   taskListId: number;
   date?: string;
 }
 
-export const getTasksRequest = async ({
+export const getTasksRequest = ({
   groupId,
   taskListId,
   date,
 }: GetTasksParams) => {
-  const url = `/groups/${groupId}/task-lists/${taskListId}`;
-  const params = date ? { date } : {};
-  return await fetchData(url, params, 'GET');
+  return fetchData(
+    `/groups/${groupId}/task-lists/${taskListId}`,
+    date ? { date } : {},
+    'GET',
+  );
 };
 
-export const getTaskListsRequest = async ({
-  groupId,
-}: {
-  groupId: string | string[] | undefined;
-}) => {
-  const url = `/groups/${groupId}`;
-  const data = await fetchData(url, undefined, 'GET');
+export interface GetTaskItemRequestParams {
+  taskId: string | string[] | undefined;
+}
 
+export const getTaskItemRequest = ({ taskId }: GetTaskItemRequestParams) => {
+  return fetchData(
+    `/groups/{groupId}/task-lists/{taskListId}/tasks/${taskId}`,
+    undefined,
+    'GET',
+  );
+};
+
+export interface GetTaskListsParams {
+  groupId: string | string[] | undefined;
+}
+
+export const getTaskListsRequest = async ({ groupId }: GetTaskListsParams) => {
+  const data = await fetchData(`/groups/${groupId}`, undefined, 'GET');
   return data.taskLists.map((taskList: TaskListType) => ({
     id: taskList.id,
     name: taskList.name,
   }));
 };
 
-export interface AddNewTaskParams {
+export interface createNewTaskParams {
   groupId: string | string[] | undefined;
   taskData: {
     name: string;
   };
 }
 
-export const addNewCategoryRequest = async ({
+export const createNewCategoryRequest = ({
   groupId,
   taskData,
-}: AddNewTaskParams): Promise<void> => {
-  const url = `/groups/${groupId}/task-lists`;
-  return await fetchData(url, undefined, 'POST', taskData);
+}: createNewTaskParams) => {
+  return fetchData(
+    `/groups/${groupId}/task-lists`,
+    undefined,
+    'POST',
+    taskData,
+  );
 };
 
-export const deleteTaskRequest = async ({
+export interface CreateTaskParams {
+  groupId: string | string[] | undefined;
+  listId: string | string[] | undefined;
+  taskData: TaskDataType;
+}
+
+export const createTaskRequest = ({
   groupId,
-  taskId,
-}: {
+  listId,
+  taskData,
+}: CreateTaskParams) => {
+  return fetchData(
+    `/groups/${groupId}/task-lists/${listId}/recurring`,
+    undefined,
+    'POST',
+    taskData,
+  );
+};
+
+export interface DeleteTaskParams {
   groupId: string | string[] | undefined;
   taskId: number;
-}) => {
-  const url = `/groups/${groupId}/task-lists/{taskListId}/tasks/${taskId}`;
-  return await fetchData(url, undefined, 'DELETE');
+}
+
+export const deleteTaskRequest = ({ groupId, taskId }: DeleteTaskParams) => {
+  return fetchData(
+    `/groups/${groupId}/task-lists/{taskListId}/tasks/${taskId}`,
+    undefined,
+    'DELETE',
+  );
 };
 
-export const patchTaskRequest = async ({
-  taskId,
-  taskData,
-}: {
+export interface PatchTaskParams {
   taskId: number;
   taskData: {
     name?: string;
     description?: string;
     done?: boolean;
   };
-}) => {
-  const url = `/groups/{groupId}/task-lists/{taskListId}/tasks/${taskId}`;
-  return await fetchData(url, undefined, 'PATCH', taskData);
+}
+
+export const editTaskRequest = ({ taskId, taskData }: PatchTaskParams) => {
+  return fetchData(
+    `/groups/groupId/task-lists/taskListId/tasks/${taskId}`,
+    undefined,
+    'PATCH',
+    taskData,
+  );
 };
