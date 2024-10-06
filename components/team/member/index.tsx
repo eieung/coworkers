@@ -12,7 +12,7 @@ export default function Member({ groupId, isAdmin }: MemberProps) {
   const openModal = useModalStore((state) => state.openModal);
 
   const handleOpenInviteModal = () => {
-    openModal((close) => <InviteMember close={close} />);
+    openModal((close) => <InviteMember close={close} groupId={groupId}/>);
   };
 
   const { data: groupData, isLoading, error } = useGroup(groupId);

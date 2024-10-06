@@ -21,9 +21,9 @@ export default function ModalVariants() {
   /* 모달 사용 예시 */
 
   // 회원 초대하기
-  const handleOpenInviteModal = () => {
-    openModal((close) => <InviteMember close={close} />); // 각 컴포넌트 별로 전달할 props은 modal 폴더안의 해당 컴포넌트에서 각자 추가하시면 됩니다.
-  };
+  // const handleOpenInviteModal = () => {
+  //   openModal((close) => <InviteMember close={close} />); // 각 컴포넌트 별로 전달할 props은 modal 폴더안의 해당 컴포넌트에서 각자 추가하시면 됩니다.
+  // };
 
   // 할일 목록 만들기
   const handleOpenCreateListModal = () => {
@@ -143,9 +143,9 @@ export default function ModalVariants() {
     // 버튼과 모달 연동 설정 예시
     // 연결 태그를 button 태그로 할 시 스페이스바와 엔터시 모달 지속 호출 이슈가 있어 button외 다른 태그 사용 권장
     <div className="flex-center mt-40 flex flex-col gap-4 text-white">
-      <div className="cursor-pointer" onClick={handleOpenInviteModal}>
+      {/* <div className="cursor-pointer" onClick={handleOpenInviteModal}>
         회원 초대하기
-      </div>
+      </div> */}
       <div className="cursor-pointer" onClick={handleOpenCreateListModal}>
         할일 목록 만들기
       </div>

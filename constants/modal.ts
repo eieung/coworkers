@@ -34,11 +34,11 @@ const DEFAULT_BUTTON_FONT = 'font-medium-16';
 export const ModalUserActions: Record<ACTION_TYPE, Action> = {
   [ACTION_TYPE.INVITE_MEMBER]: {
     title: '멤버 초대',
-    description: '그룹에 참여할 수 있는 링크를 복사하고 초대합니다.',
+    description: '그룹에 참여할 수 있는 코드를 복사하고 초대합니다.',
     buttons: [
       {
         type: 'button',
-        children: '초대 링크 복사하기',
+        children: '초대 코드 복사하기',
         appearance: 'outlined',
         size: 'floating-large',
         disabled: false,
