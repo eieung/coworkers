@@ -63,25 +63,31 @@ export default function TaskList({ groupId, isAdmin }: TaskListProps) {
           </button>
         )}
       </div>
-      {taskLists.map((taskList) => {
-        const totalTasks = taskList.tasks.length;
-        const completedTasks = taskList.tasks.filter(
-          (task) => task.doneAt,
-        ).length;
+      {taskLists.length === 0 ? (
+        <div className="font-medium-14 py-6 text-center text-text-default">
+          아직 할 일 목록이 없습니다.
+        </div>
+      ) : (
+        taskLists.map((taskList) => {
+          const totalTasks = taskList.tasks.length;
+          const completedTasks = taskList.tasks.filter(
+            (task) => task.doneAt,
+          ).length;
 
-        return (
-          <Task
-            key={taskList.id}
-            name={taskList.name}
-            totalTasks={totalTasks}
-            completedTasks={completedTasks}
-            displayIndex={taskList.displayIndex}
-            groupId={groupId}
-            taskListId={taskList.id}
-            isAdmin={isAdmin}
-          />
-        );
-      })}
+          return (
+            <Task
+              key={taskList.id}
+              name={taskList.name}
+              totalTasks={totalTasks}
+              completedTasks={completedTasks}
+              displayIndex={taskList.displayIndex}
+              groupId={groupId}
+              taskListId={taskList.id}
+              isAdmin={isAdmin}
+            />
+          );
+        })
+      )}
     </div>
   );
 }
