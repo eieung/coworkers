@@ -64,9 +64,9 @@ export default function TaskList({ groupId, isAdmin }: TaskListProps) {
         )}
       </div>
       {taskLists.length === 0 ? (
-        <div className="font-medium-14 py-6 text-center text-text-default">
+        <p className="font-medium-14 py-6 text-center text-text-default">
           아직 할 일 목록이 없습니다.
-        </div>
+        </p>
       ) : (
         taskLists.map((taskList) => {
           const totalTasks = taskList.tasks.length;
