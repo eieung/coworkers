@@ -65,7 +65,6 @@ export default function MemberList({ member, isAdmin }: MemberProps) {
     ));
   };
 
-  // 바깥 여백 클릭 시 메뉴 닫히는 거 자주 쓰이는 데 훅으로 빼도 될 듯
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
