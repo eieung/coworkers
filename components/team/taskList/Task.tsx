@@ -7,8 +7,8 @@ import deleteIcon from '@/assets/image/icon/delete.svg';
 import CircularProgressBar from '@/components/common/CircularProgressBar';
 import { useEffect, useRef, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
-import { useDeleteTaskList } from '@/hooks/useDeleteTaskList';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
+import { useDeleteTaskListQuery } from '@/queries/task-list/task-list';
 
 interface TaskProps {
   name: string;
@@ -33,7 +33,7 @@ export default function Task({
   const menuRef = useRef<HTMLDivElement>(null);
   const openModal = useModalStore((state) => state.openModal);
 
-  const deleteTaskListMutation = useDeleteTaskList(groupId);
+  const deleteTaskListMutation = useDeleteTaskListQuery(groupId);
 
   const percentage =
     totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;

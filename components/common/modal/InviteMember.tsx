@@ -5,8 +5,7 @@ import Button from '@/components/common/button';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '@/components/common/Input';
 import clsx from 'clsx';
-import { useInvitation } from '@/hooks/useInvitation';
-import { useInviteMemberQuery } from '@/queries/group/invitaion';
+import { useInvitationQuery, useInviteMemberQuery } from '@/queries/group/invitaion';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -35,7 +34,7 @@ export default function InviteMember({ close, groupId }: InviteMemberProps) {
   });
 
   const { data: invitationData, isLoading: isInvitationLoading } =
-    useInvitation(groupId);
+    useInvitationQuery(groupId);
 
   // loading 처리 시 이상함
   const { mutate: inviteMember } = useInviteMemberQuery(groupId);

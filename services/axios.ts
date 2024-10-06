@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 import { BASE_URL } from '@/constants/baseUrl';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import { useAuthQuery } from '@/queries/user/user';
 
 // 인증이 필요한 요청에 사용
 const authAxiosInstance: AxiosInstance = axios.create({
@@ -55,7 +55,7 @@ authAxiosInstance.interceptors.request.use(
 authAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { logout } = useAuth();
+    const { logout } = useAuthQuery();
     const router = useRouter();
 
     if (error.response && error.response.status === 401) {

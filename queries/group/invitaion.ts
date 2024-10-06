@@ -1,6 +1,30 @@
-import { authAxiosInstance } from '@/libs/axios';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { authAxiosInstance } from '@/services/axios';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+
+/**
+ * 그룹 초대 링크용 토큰을 생성하는 함수
+ * @param id - 초대할 그룹의 ID
+ */
+export const getInvitation = async (groupId: number) => {
+  const response = await authAxiosInstance.get(`groups/${groupId}/invitation`);
+  return response.data;
+};
+
+/**
+ * @useInvitationQuery
+ * 그룹 초대 링크용 토큰을 가져오는 훅
+ * 그룹 ID를 받아서 해당 그룹의 초대 토큰을 반환
+ */
+export const useInvitationQuery = (groupId: number) => {
+  return useQuery({
+    queryKey: ['invitation', groupId],
+    queryFn: () => getInvitation(groupId),
+    enabled: !!groupId,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
+  });
+};
 
 /**
  * 그룹에 초대 토큰 없이 유저를 추가하는 함수

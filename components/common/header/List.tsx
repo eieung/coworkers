@@ -4,15 +4,15 @@ import Link from 'next/link';
 import toggleIcon from '@/assets/image/icon/header-toggle.svg';
 import TeamList from './TeamList';
 import { useUserStore } from '@/store/authStore';
-import { useUser } from '@/hooks/useUser';
 import { useGroupStore } from '@/store/useGroupStore';
 import { useState, useEffect } from 'react';
+import { useUsersQuery } from '@/queries/user/user';
 
 export default function List() {
   const [isTeamListVisible, setIsTeamListVisible] = useState(false);
 
   const { accessToken } = useUserStore();
-  const { data: user } = useUser(accessToken);
+  const { data: user } = useUsersQuery(accessToken);
   const {
     selectedGroupId,
     setSelectedGroupId,

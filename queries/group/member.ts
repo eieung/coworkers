@@ -1,15 +1,27 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { deleteMember } from '@/libs/deleteMember';
 import { useRouter } from 'next/router';
+import { authAxiosInstance } from '@/services/axios';
 
-/*
- * @useDeleteMember
+/**
+ * 그룹 멤버를 삭제하는 함수
+ * @param groupId - 그룹 ID
+ * @param memberUserId - 삭제할 멤버의 사용자 ID
+ */
+export const deleteMember = async (groupId: number, memberUserId: number) => {
+  const response = await authAxiosInstance.delete(
+    `groups/${groupId}/member/${memberUserId}`,
+  );
+  return response.data;
+};
+
+/**
+ * @useDeleteMemberQuery
  * 그룹 멤버를 삭제하는 mutation 훅
  * 서버에 그룹 멤버 삭제 DELETE 요청을 전송하고,
  * 성공 시 그룹 데이터를 무효화하고 다시 가져옴
  */
-export const useDeleteMember = (groupId: number) => {
+export const useDeleteMemberQuery = (groupId: number) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 

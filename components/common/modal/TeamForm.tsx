@@ -11,9 +11,8 @@ import closeImg from '@/assets/image/icon/x.svg';
 import Image from 'next/image';
 import FileInput from '@/components/common/FileInput';
 import { useState, useEffect } from 'react';
-import { useReviseTeam } from '@/hooks/useReviseTeam';
-import { useUploadImage } from '@/hooks/useUploadImage';
-import { useCreateGroup } from '@/hooks/useCreateGroup';
+import { useCreateGroupQuery, usereviseGroupQuery } from '@/queries/group/group';
+import { useUploadImageQuery } from '@/queries/image/upload-images';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const DEFAULT_IMAGE_URL =
@@ -52,9 +51,9 @@ export default function TeamForm({
   const [fileValue, setFileValue] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>(image || addImg.src);
 
-  const createGroupMutation = useCreateGroup();
-  const patchTeamMutation = useReviseTeam();
-  const uploadImageMutation = useUploadImage();
+  const createGroupMutation = useCreateGroupQuery();
+  const patchTeamMutation = usereviseGroupQuery();
+  const uploadImageMutation = useUploadImageQuery();
 
   useEffect(() => {
     if (fileValue) {

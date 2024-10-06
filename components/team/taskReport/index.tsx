@@ -4,14 +4,14 @@ import Image from 'next/image';
 import CircularProgressBar from '@/components/common/CircularProgressBar';
 import todoIcon from '@/assets/image/task/todo.svg';
 import doneIcon from '@/assets/image/task/done.svg';
-import { useGroup } from '@/hooks/useGroup';
+import { useGroupsQuery } from '@/queries/group/group';
 
 interface TaskReportProps {
   groupId: number;
 }
 
 export default function TaskReport({ groupId }: TaskReportProps) {
-  const { data: groupData, isLoading, error } = useGroup(groupId);
+  const { data: groupData, isLoading, error } = useGroupsQuery(groupId);
   const [todayTasksCount, setTodayTasksCount] = useState(0);
   const [doneTasksCount, setDoneTasksCount] = useState(0);
   const [percentage, setPercentage] = useState(0);

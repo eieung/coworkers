@@ -1,12 +1,11 @@
 import Image from 'next/image';
 import settingIcon from '@/assets/image/icon/gear.svg';
 import thumbnailTeam from '@/assets/image/task/thumbnail-team.svg';
-import { useGroup } from '@/hooks/useGroup';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import TeamForm from '@/components/common/modal/TeamForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import useModalStore from '@/store/useModalStore';
-import { useDeleteGroup } from '@/hooks/useDeleteGroup';
+import { useDeleteGroupQuery, useGroupsQuery } from '@/queries/group/group';
 
 interface TeamSettingProps {
   groupId: number;
@@ -14,9 +13,9 @@ interface TeamSettingProps {
 }
 
 export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
-  const { data: groupData, isLoading, error } = useGroup(groupId);
+  const { data: groupData, isLoading, error } = useGroupsQuery(groupId);
   const openModal = useModalStore((state) => state.openModal);
-  const deleteGroupMutation = useDeleteGroup();
+  const deleteGroupMutation = useDeleteGroupQuery();
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;

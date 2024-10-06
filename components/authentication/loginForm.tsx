@@ -4,12 +4,12 @@ import Button from '../common/button';
 import Link from 'next/link';
 import { useUserStore } from '@/store/authStore';
 import useModalStore from '@/store/useModalStore';
-import { publicAxiosInstance } from '@/libs/axios';
 import { useRouter } from 'next/router';
 import PasswordReset from '../common/modal/PasswordReset';
 import { toast } from 'react-toastify';
 
 import axios from 'axios';
+import { publicAxiosInstance } from '@/services/axios';
 
 export default function LoginForm() {
   const { email, password, clearServerError, setServerError } = useValidation();

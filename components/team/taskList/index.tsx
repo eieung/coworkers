@@ -1,8 +1,8 @@
 import useModalStore from '@/store/useModalStore';
 import Task from './Task';
-import { useGroup } from '@/hooks/useGroup';
 import TaskListForm from '@/components/common/modal/TaskListForm';
-import { useCreateTaskList } from '@/hooks/useCreateTaskList';
+import { useGroupsQuery } from '@/queries/group/group';
+import { useCreateTaskListQuery } from '@/queries/task-list/task-list';
 
 interface TaskListProps {
   groupId: number;
@@ -10,9 +10,9 @@ interface TaskListProps {
 }
 
 export default function TaskList({ groupId, isAdmin }: TaskListProps) {
-  const { data, isLoading, error } = useGroup(groupId);
+  const { data, isLoading, error } = useGroupsQuery(groupId);
   const openModal = useModalStore((state) => state.openModal);
-  const createTaskListMutation = useCreateTaskList(groupId);
+  const createTaskListMutation = useCreateTaskListQuery(groupId);
 
   if (isLoading) {
     return <div>스켈레톤 구현 해야 함</div>;

@@ -1,7 +1,7 @@
-import { useGroup } from '@/hooks/useGroup';
 import MemberList from './MemberList';
 import useModalStore from '@/store/useModalStore';
 import InviteMember from '@/components/common/modal/InviteMember';
+import { useGroupsQuery } from '@/queries/group/group';
 
 interface MemberProps {
   groupId: number;
@@ -15,7 +15,7 @@ export default function Member({ groupId, isAdmin }: MemberProps) {
     openModal((close) => <InviteMember close={close} groupId={groupId}/>);
   };
 
-  const { data: groupData, isLoading, error } = useGroup(groupId);
+  const { data: groupData, isLoading, error } = useGroupsQuery(groupId);
 
   if (isLoading) return <div>로딩 중...</div>;
 

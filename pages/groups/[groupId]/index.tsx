@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
-import { useUser } from '@/hooks/useUser';
-import { useGroup } from '@/hooks/useGroup';
 import TeamSetting from '@/components/team/TeamSetting';
 import Notification from '@/components/team/notification';
 import TaskList from '@/components/team/taskList';
 import TaskReport from '@/components/team/taskReport';
 import Member from '@/components/team/member';
+import { useUsersQuery } from '@/queries/user/user';
+import { useGroupsQuery } from '@/queries/group/group';
 
 export default function Team() {
   const router = useRouter();
@@ -25,13 +25,13 @@ export default function Team() {
     data: groupData,
     isLoading: groupLoading,
     error: groupError,
-  } = useGroup(numericGroupId);
+  } = useGroupsQuery(numericGroupId);
 
   const {
     data: userData,
     isLoading: userLoading,
     error: userError,
-  } = useUser(accessToken);
+  } = useUsersQuery(accessToken);
 
   const isAdmin =
     groupData && userData

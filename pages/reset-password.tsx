@@ -1,7 +1,7 @@
 import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import { useValidation } from '@/hooks/useValidation';
-import { publicAxiosInstance } from '@/libs/axios';
+import { publicAxiosInstance } from '@/services/axios';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 

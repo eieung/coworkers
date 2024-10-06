@@ -2,19 +2,18 @@ import { useRouter } from 'next/router';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import userIcon from '@/assets/image/icon/user.svg';
 import { useUserStore } from '@/store/authStore';
-import { useUser } from '@/hooks/useUser';
 import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
 import { useJoinTeamQuery } from '@/queries/group/invitaion';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
 
 export default function Profile() {
   const { accessToken } = useUserStore();
-  const { logout } = useAuth();
+  const { logout } = useAuthQuery();
 
   const router = useRouter();
-  const { data: user } = useUser(accessToken);
+  const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
   const { mutate: joinTeam } = useJoinTeamQuery(user?.id || 0);
