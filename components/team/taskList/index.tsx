@@ -1,22 +1,49 @@
+import useModalStore from '@/store/useModalStore';
 import Task from './Task';
 import { useGroup } from '@/hooks/useGroup';
+import TaskListForm from '@/components/common/modal/TaskListForm';
+import { useCreateTaskList } from '@/hooks/useCreateTaskList';
 
 interface TaskListProps {
   groupId: number;
+  isAdmin: boolean;
 }
 
-export default function TaskList({ groupId }: TaskListProps) {
+export default function TaskList({ groupId, isAdmin }: TaskListProps) {
   const { data, isLoading, error } = useGroup(groupId);
+  const openModal = useModalStore((state) => state.openModal);
+  const createTaskListMutation = useCreateTaskList(groupId);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>스켈레톤 구현 해야 함</div>;
   }
 
   if (error) {
-    return <div>Error loading group data</div>;
+    return <div>에러 처리 해야 함</div>;
   }
 
   const taskLists = data?.taskLists || [];
+
+  const handleCreateTaskList = () => {
+    openModal((close) => (
+      <TaskListForm
+        close={close}
+        onAction={(value) => {
+          createTaskListMutation.mutate(
+            { name: value },
+            {
+              onSuccess: () => {
+                console.log('새로운 목록 생성됨:', value);
+              },
+              onError: (error) => {
+                console.error('목록 생성 중 오류 발생:', error);
+              },
+            },
+          );
+        }}
+      />
+    ));
+  };
 
   return (
     <div className="flex flex-col">
@@ -27,9 +54,14 @@ export default function TaskList({ groupId }: TaskListProps) {
             ({taskLists.length}개)
           </span>
         </div>
-        <button className="font-regular-14 text-brand-primary">
-          + 새로운 목록 추가하기
-        </button>
+        {isAdmin && (
+          <button
+            className="font-regular-14 text-brand-primary"
+            onClick={handleCreateTaskList}
+          >
+            + 새로운 목록 추가하기
+          </button>
+        )}
       </div>
       {taskLists.map((taskList) => {
         const totalTasks = taskList.tasks.length;
@@ -46,6 +78,7 @@ export default function TaskList({ groupId }: TaskListProps) {
             displayIndex={taskList.displayIndex}
             groupId={groupId}
             taskListId={taskList.id}
+            isAdmin={isAdmin}
           />
         );
       })}
