@@ -89,7 +89,7 @@ export default function DatePicker({ close }: DatePickerProps) {
       .replace(/월\s+/g, '-')
       .replace(/일/g, '')
       .trim();
-
+    const dayPart = parsedDate.slice(-2);
     const formattedStartDate = new Date(parsedDate)?.toISOString();
 
     const taskData: TaskDataType = {
@@ -102,7 +102,7 @@ export default function DatePicker({ close }: DatePickerProps) {
     if (data.frequencyType === 'WEEKLY') {
       taskData.weekDays = data.weekDays;
     } else if (data.frequencyType === 'MONTHLY') {
-      taskData.monthDay = new Date().getDate();
+      taskData.monthDay = Number(dayPart);
     }
 
     createTaskMutation.mutate({
