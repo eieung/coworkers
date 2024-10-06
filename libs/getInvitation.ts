@@ -6,5 +6,5 @@ import { authAxiosInstance } from '@/libs/axios';
  */
 export const getInvitation = async (groupId: number) => {
   const response = await authAxiosInstance.get(`groups/${groupId}/invitation`);
-  return response;
+  return response.data;
 };

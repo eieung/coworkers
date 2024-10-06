@@ -72,7 +72,6 @@ export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
             { label: '삭제하기', onClick: handleDeleteTeam },
           ]}
           className="w-[120px]"
-          itemClassName="w-full h-10"
         />
       ) : (
         <img
