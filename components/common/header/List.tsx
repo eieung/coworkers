@@ -24,10 +24,10 @@ export default function List() {
   const { groupId } = router.query;
 
   useEffect(() => {
-    if (user?.memberships && user.memberships.length > 0) {
+    if (user?.data.memberships && user.data.memberships.length > 0) {
       if (initialGroupId === null) {
         // 초기 그룹 ID 설정 (첫 로드 시에만)
-        setInitialGroupId(user.memberships[0].group.id);
+        setInitialGroupId(user.data.memberships[0].group.id);
       }
 
       if (groupId) {
@@ -72,11 +72,12 @@ export default function List() {
     );
   }
 
-  const hasTeams = user?.memberships && user.memberships.length > 0;
+  const hasTeams = user?.data.memberships && user.data.memberships.length > 0;
 
   const selectedTeamName =
     hasTeams && selectedGroupId
-      ? user.memberships.find((m) => m.group.id === selectedGroupId)?.group.name
+      ? user.data.memberships.find((m) => m.group.id === selectedGroupId)?.group
+          .name
       : '팀 시작하기';
 
   return (
@@ -109,7 +110,7 @@ export default function List() {
       {isTeamListVisible && hasTeams && (
         <div className="team-list-translate">
           <TeamList
-            teams={user.memberships.map((m) => m.group)}
+            teams={user.data.memberships.map((m) => m.group)}
             onTeamSelect={handleTeamSelect}
           />
         </div>

@@ -5,8 +5,8 @@ import { useUserStore } from '@/store/authStore';
 import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
-import { useJoinTeamQuery } from '@/queries/group/invitaion';
 import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
+import { useJoinTeamMutation } from '@/queries/group/invitaion';
 
 export default function Profile() {
   const { accessToken } = useUserStore();
@@ -16,7 +16,7 @@ export default function Profile() {
   const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
-  const { mutate: joinTeam } = useJoinTeamQuery(user?.id || 0);
+  const { mutate: joinTeam } = useJoinTeamMutation(user?.data.id || 0);
 
   const handleCustomInputModal = () => {
     openModal((close) => (
@@ -25,9 +25,9 @@ export default function Profile() {
         title={<div className="font-medium-24 mb-10">팀 참여하기</div>}
         buttonText={'참여하기'}
         onAction={(teamToken) => {
-          if (user?.email) {
+          if (user?.data.email) {
             joinTeam(
-              { userEmail: user.email, token: teamToken },
+              { userEmail: user.data.email, token: teamToken },
               {
                 onSuccess: () => {
                   toast.success('팀에 성공적으로 참여되었습니다!');
@@ -87,14 +87,14 @@ export default function Profile() {
       trigger={
         <div className="flex items-center gap-x-2">
           <img
-            src={user?.image || userIcon.src}
+            src={user?.data.image || userIcon.src}
             alt="프로필"
             width={24}
             height={24}
             className="rounded-full object-contain md:h-4 md:w-4 lg:h-4 lg:w-4"
           />
           <span className="font-medium-14 hidden text-text-primary lg:block">
-            {user?.nickname}
+            {user?.data.nickname}
           </span>
         </div>
       }

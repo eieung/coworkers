@@ -11,7 +11,8 @@ export default function MobileList() {
   const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
-  const teams = user?.memberships.map((membership) => membership.group) || [];
+  const teams =
+    user?.data.memberships.map((membership) => membership.group) || [];
 
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function MobileList() {
 
   if (!isVisible) return null;
 
-  const hasTeams = user?.memberships && user.memberships.length > 0;
+  const hasTeams = user?.data.memberships && user.data.memberships.length > 0;
 
   const handleCreateTeamModal = () => {
     openModal((close) => (
