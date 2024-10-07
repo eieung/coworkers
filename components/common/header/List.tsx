@@ -5,12 +5,12 @@ import toggleIcon from '@/assets/image/icon/header-toggle.svg';
 import TeamList from './TeamList';
 import { useUserStore } from '@/store/authStore';
 import { useGroupStore } from '@/store/useGroupStore';
-import { useState, useEffect } from 'react';
 import { useUsersQuery } from '@/queries/user/user';
+import { useState, useEffect, useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
 
 export default function List() {
   const [isTeamListVisible, setIsTeamListVisible] = useState(false);
-
   const { accessToken } = useUserStore();
   const { data: user } = useUsersQuery(accessToken);
   const {
@@ -22,6 +22,9 @@ export default function List() {
 
   const router = useRouter();
   const { groupId } = router.query;
+
+  const teamListRef = useRef<HTMLDivElement>(null);
+  useClickOutside(teamListRef, () => setIsTeamListVisible(false));
 
   useEffect(() => {
     if (user?.data.memberships && user.data.memberships.length > 0) {
@@ -81,7 +84,7 @@ export default function List() {
       : '팀 시작하기';
 
   return (
-    <div className="relative flex gap-x-8 sm:hidden">
+    <div className="relative flex gap-x-8 sm:hidden" ref={teamListRef}>
       <div className="flex gap-x-[11px]">
         {selectedTeamName === '팀 시작하기' ? (
           <button onClick={handleGetStarted}>

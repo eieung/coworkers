@@ -129,7 +129,7 @@ export const deleteTaskRequest = ({ groupId, taskId }: DeleteTaskParams) => {
   );
 };
 
-export interface PatchTaskParams {
+export interface EditTaskParams {
   taskId: number;
   taskData: {
     name?: string;
@@ -138,9 +138,30 @@ export interface PatchTaskParams {
   };
 }
 
-export const editTaskRequest = ({ taskId, taskData }: PatchTaskParams) => {
+export const editTaskRequest = ({ taskId, taskData }: EditTaskParams) => {
   return fetchData(
     `/groups/groupId/task-lists/taskListId/tasks/${taskId}`,
+    undefined,
+    'PATCH',
+    taskData,
+  );
+};
+
+export interface EditTaskIndexParams {
+  taskListId: number;
+  taskId: number;
+  taskData: {
+    displayIndex: number;
+  };
+}
+
+export const editTaskIndexRequest = ({
+  taskListId,
+  taskId,
+  taskData,
+}: EditTaskIndexParams) => {
+  return fetchData(
+    `/groups/groupId/task-lists/${taskListId}/tasks/${taskId}/order`,
     undefined,
     'PATCH',
     taskData,
