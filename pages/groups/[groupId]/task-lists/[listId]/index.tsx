@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import AddNewCategory from '@/components/tasks/AddNewCategory';
 import DateManager from '@/components/tasks/DateManager';
 import TaskList from '@/components/tasks/TaskList';
-
 import { useRouter } from 'next/router';
 import { getUser } from '@/utils/auth';
 import { useGetCategories } from '@/queries/tasks/useTaskData';

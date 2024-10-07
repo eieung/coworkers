@@ -8,7 +8,9 @@ import {
   createTaskRequest,
   CreateTaskParams,
   getTaskItemRequest,
+  editTaskIndexRequest,
 } from '@/libs/task/taskListApi';
+import { FormDescription } from '@ariakit/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
@@ -97,24 +99,26 @@ export const useCreateTask = () => {
 export const useEditTask = (
   groupId: string,
   currentCategoryId: number | undefined,
-  currentDate: string,
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation<
     void,
     Error,
-    { id: number; data: string; doneAt: string | null }
+    { id: number; name: string; description?: string; doneAt: string | null }
   >({
-    mutationFn: ({ id, data, doneAt }) =>
+    mutationFn: ({ id, name, description, doneAt }) =>
       editTaskRequest({
         taskId: id,
-        taskData: { name: data, done: !!doneAt },
+        taskData: { name, description, done: !!doneAt },
       }),
-    onSuccess: (_, { data }) => {
-      toast.success(`${data} 수정되었습니다!`);
+    onSuccess: (_, { name }) => {
+      toast.success(`${name} 수정되었습니다!`);
       queryClient.invalidateQueries({
-        queryKey: ['tasks', groupId, currentCategoryId, currentDate],
+        queryKey: ['tasks', groupId, currentCategoryId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['taskItem'],
       });
     },
     onError: (error) => {
@@ -143,10 +147,7 @@ export const useDeleteTask = (groupId: string) => {
   });
 };
 
-export const useToggleTask = (
-  groupId: string,
-  currentCategoryId: number | undefined,
-) => {
+export const useToggleTask = (groupId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation<
@@ -170,6 +171,36 @@ export const useToggleTask = (
       queryClient.invalidateQueries({
         queryKey: ['taskItem'],
       });
+    },
+  });
+};
+
+export const useEditTaskIndex = (
+  groupId: string,
+  currentCategoryId: number | undefined,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    void,
+    Error,
+    { taskListId: number; taskId: number; displayIndex: number }
+  >({
+    mutationFn: ({ taskListId, taskId, displayIndex }) =>
+      editTaskIndexRequest({
+        taskListId,
+        taskId,
+        taskData: { displayIndex },
+      }),
+    onSuccess: () => {
+      toast.success('할 일의 순서가 수정되었습니다!');
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', groupId, currentCategoryId],
+      });
+    },
+    onError: (error) => {
+      console.error('Error editing task index:', error.message);
+      toast.error('할 일의 순서를 수정하는 도중 오류가 발생했습니다.');
     },
   });
 };
