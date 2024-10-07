@@ -6,12 +6,11 @@ import { authAxiosInstance } from '@/services/axios';
 
 /**
  * 그룹 데이터를 가져오는 함수
- * @param id - 가져올 그룹의 ID
+ * @param groupId - 가져올 그룹의 ID
  * @returns 그룹 데이터
  */
-const getGroups = async (id: number): Promise<GroupResponse> => {
-  const { data } = await authAxiosInstance.get(`groups/${id}`);
-  return data;
+export const getGroups = (groupId: number) => {
+  return authAxiosInstance.get<GroupResponse>(`groups/${groupId}`);
 };
 
 /**
@@ -54,21 +53,17 @@ export const useGroupsQuery = (id: number) => {
  * @param id - 추가할 그룹의 ID
  * @param data - 추가할 그룹의 데이터 (이름, 이미지)
  */
-export const createGroup = async (data: {
-  name: string;
-  image: string | null;
-}) => {
-  const response = await authAxiosInstance.post(`groups`, data);
-  return response.data;
+export const createGroup = (data: { name: string; image: string | null }) => {
+  return authAxiosInstance.post('groups', data);
 };
 
 /**
- * @useCreateGroupQuery
+ * @useCreateGroupMutation
  * 새 그룹을 생성하는 mutation 훅
  * 서버에 새 그룹 정보를 POST 요청으로 전송하고,
  * 성공 시 그룹 및 사용자 데이터를 무효화하고 다시 가져옴
  */
-export const useCreateGroupQuery = () => {
+export const useCreateGroupMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -96,7 +91,7 @@ export const useCreateGroupQuery = () => {
 
       toast.success('새 그룹이 성공적으로 생성되었습니다.');
 
-      const newGroupId = data.id;
+      const newGroupId = data.data.id;
       router.push(`/groups/${newGroupId}`);
     },
     onError: (error) => {
@@ -108,21 +103,20 @@ export const useCreateGroupQuery = () => {
 
 /**
  * 팀 정보를 삭제하는 함수
- * @param id - 삭제할 그룹의 ID
+ * @param groupId - 삭제할 그룹의 ID
  */
-export const deleteGroup = async (id: number) => {
-  const response = await authAxiosInstance.delete(`/groups/${id}`);
-  return response;
+export const deleteGroup = (groupId: number) => {
+  return authAxiosInstance.delete(`groups/${groupId}`);
 };
 
 // TODO: 그룹 삭제 시 Header/List에 빈 값 들어가는 거 해결 필요
 /**
- * @useDeleteGroupQuery
+ * @useDeleteGroupMutation
  * 그룹을 삭제하는 mutation 훅
  * 서버에 그룹을 DELETE 요청으로 삭제하고,
  * 성공 시 그룹 데이터를 무효화하고 다시 가져옴
  */
-export const useDeleteGroupQuery = () => {
+export const useDeleteGroupMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -147,21 +141,20 @@ export const useDeleteGroupQuery = () => {
  * @param id - 수정할 그룹의 ID
  * @param data - 수정할 팀 데이터 (이름, 이미지)
  */
-export const reviseGroup = async (
-  id: number,
+export const reviseGroup = (
+  groupId: number,
   data: { name: string; image: string | null },
 ) => {
-  const response = await authAxiosInstance.patch(`groups/${id}`, data);
-  return response.data;
+  return authAxiosInstance.patch(`groups/${groupId}`, data);
 };
 
 /**
- * @usereviseGroupQuery
+ * @usereviseGroupMutation
  * 팀 정보를 수정하는 mutation 훅
  * 서버에 팀 정보를 PATCH 요청으로 업데이트하고,
  * 성공 시 그룹 및 사용자 데이터를 무효화하고 다시 가져옴
  */
-export const usereviseGroupQuery = () => {
+export const usereviseGroupMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -187,4 +180,3 @@ export const usereviseGroupQuery = () => {
     },
   });
 };
-

@@ -1,22 +1,20 @@
-import { authAxiosInstance } from "@/services/axios";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { authAxiosInstance } from '@/services/axios';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 /**
  * 이미지를 업로드하는 함수
  * @param file - 업로드할 이미지 파일
  * @returns 업로드된 이미지의 URL
  */
-export const uploadImage = async (file: File): Promise<string> => {
+export const uploadImage = (file: File) => {
   const formData = new FormData();
   formData.append('image', file);
 
-  const response = await authAxiosInstance.post('images/upload', formData);
-
-  return response.data.url;
+  return authAxiosInstance.post<{ url: string }>('images/upload', formData);
 };
 
-export const useUploadImageQuery = () => {
+export const useUploadImageMutation = () => {
   return useMutation({
     mutationFn: (file: File) => uploadImage(file),
     onSuccess: () => {

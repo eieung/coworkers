@@ -2,14 +2,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from '@/types/user';
 import { useUserStore } from '@/store/authStore';
 import { authAxiosInstance } from '@/services/axios';
+import { useRouter } from 'next/router';
 
 /**
  * 사용자 데이터를 가져오는 함수
  * @returns 사용자 데이터
  */
-const getUsers = async (): Promise<User> => {
-  const { data } = await authAxiosInstance.get('user');
-  return data;
+export const getUsers = () => {
+  return authAxiosInstance.get<User>('user');
 };
 
 /**
@@ -35,7 +35,6 @@ export const useAuthQuery = () => {
 
   const logout = () => {
     clearUser();
-
     queryClient.invalidateQueries({ queryKey: ['user'] });
   };
 

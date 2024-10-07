@@ -4,13 +4,11 @@ import { useRouter } from 'next/router';
 
 /**
  * 그룹 초대 링크용 토큰을 생성하는 함수
- * @param id - 초대할 그룹의 ID
+ * @param groupId - 초대할 그룹의 ID
  */
-export const getInvitation = async (groupId: number) => {
-  const response = await authAxiosInstance.get(`groups/${groupId}/invitation`);
-  return response.data;
+export const getInvitation = (groupId: number) => {
+  return authAxiosInstance.get(`groups/${groupId}/invitation`);
 };
-
 /**
  * @useInvitationQuery
  * 그룹 초대 링크용 토큰을 가져오는 훅
@@ -28,32 +26,25 @@ export const useInvitationQuery = (groupId: number) => {
 
 /**
  * 그룹에 초대 토큰 없이 유저를 추가하는 함수
- * @param id - 초대할 그룹의 ID
+ * @param groupId - 초대할 그룹의 ID
  */
-const inviteMember = async (
-  groupId: number,
-  data: {
-    userEmail: string;
-  },
-) => {
-  const response = await authAxiosInstance.post(
-    `groups/${groupId}/member`,
-    data,
-  );
-  return response.data;
+const inviteMember = (groupId: number, userEmail: string) => {
+  return authAxiosInstance.post(`groups/${groupId}/member`, {
+    userEmail: userEmail,
+  });
 };
 
 /**
- * @useInviteMemberQuery
+ * @useInviteMemberMutation
  * 그룹에 유저를 초대하는 mutation 훅
  * 서버에 유저 초대 요청을 POST로 전송하고,
  * 성공 시 그룹 및 사용자 데이터를 무효화하고 다시 가져옴
  */
-export const useInviteMemberQuery = (groupId: number) => {
+export const useInviteMemberMutation = (groupId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (email: string) => inviteMember(groupId, { userEmail: email }),
+    mutationFn: (email: string) => inviteMember(groupId, email),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
     },
@@ -68,16 +59,15 @@ export const useInviteMemberQuery = (groupId: number) => {
  * @param data - 유저 이메일과 초대 토큰을 포함한 데이터 객체
  * @returns 서버 응답 데이터 (그룹 참여 성공 여부)
  */
-const acceptInvitation = async (data: { userEmail: string; token: string }) => {
-  const response = await authAxiosInstance.post(
-    `groups/accept-invitation`,
-    data,
-  );
-  return response.data;
+const acceptInvitation = (data: { userEmail: string; token: string }) => {
+  return authAxiosInstance.post(`groups/accept-invitation`, {
+    userEmail: data.userEmail,
+    token: data.token,
+  });
 };
 
 /**
- * @useJoinTeamQuery
+ * @useJoinTeamMutation
  * 그룹 초대 토큰을 사용하여 유저를 그룹에 참여시키는 mutation 훅
  * - 서버에 초대 수락 요청을 POST로 전송함.
  * - 성공 시 그룹 및 사용자 데이터를 무효화하고 새로운 그룹 페이지로 이동.
@@ -86,7 +76,7 @@ const acceptInvitation = async (data: { userEmail: string; token: string }) => {
  * @returns `useMutation` 훅 - 그룹 참여 요청을 처리하는 mutation
  */
 
-export const useJoinTeamQuery = (groupId: number) => {
+export const useJoinTeamMutation = (groupId: number) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -97,7 +87,7 @@ export const useJoinTeamQuery = (groupId: number) => {
       await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
       await queryClient.invalidateQueries({ queryKey: ['user'] });
 
-      const joinGroupId = data.groupId;
+      const joinGroupId = data.data.groupId;
       router.push(`/groups/${joinGroupId}`);
     },
     onError: (error) => {

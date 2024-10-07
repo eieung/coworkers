@@ -10,14 +10,10 @@ import { authAxiosInstance } from '@/services/axios';
  * @param taskListId - 가져올 TaskList의 ID
  * @returns TaskList 데이터
  */
-const getTaskLists = async (
-  groupId: number,
-  taskListId: number,
-): Promise<TaskListType> => {
-  const { data } = await authAxiosInstance.get(
+export const getTaskLists = (groupId: number, taskListId: number) => {
+  return authAxiosInstance.get<TaskListType>(
     `groups/${groupId}/task-lists/${taskListId}`,
   );
-  return data;
 };
 
 /**
@@ -42,26 +38,20 @@ export const useTaskListsQuery = (groupId: number, taskListId: number) => {
  * @param id - 추가할 그룹의 ID
  * @param data - 생성할 할 일 목록의 제목
  */
-export const createTaskList = async (
-  groupId: number,
-  data: {
-    name: string;
-  },
-) => {
-  const response = await authAxiosInstance.post(
+export const createTaskList = (groupId: number, data: { name: string }) => {
+  return authAxiosInstance.post<{ data: TaskListType }>(
     `groups/${groupId}/task-lists`,
     data,
   );
-  return response.data;
 };
 
 /**
- * @useCreateTaskListQuery
+ * @useCreateTaskListMutation
  * 그룹에 새로운 할 일 목록을 추가하는 mutation 훅
  * 서버에 새 할 일 목록 POST 요청을 전송하고,
  * 성공 시 그룹 데이터를 무효화하고 다시 가져옴
  */
-export const useCreateTaskListQuery = (groupId: number) => {
+export const useCreateTaskListMutation = (groupId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -82,21 +72,18 @@ export const useCreateTaskListQuery = (groupId: number) => {
  * @param groupId - 그룹 ID
  * @param taskListId - 삭제할 멤버의 사용자 ID
  */
-export const deleteTaskList = async (groupId: number, taskListId: number) => {
-  const response = await authAxiosInstance.delete(
-    `groups/${groupId}/task-lists/${taskListId}`,
-  );
-  return response.data;
+export const deleteTaskList = (groupId: number, taskListId: number) => {
+  return authAxiosInstance.delete(`groups/${groupId}/task-lists/${taskListId}`);
 };
 
 /**
- * @useDeleteTaskListQuery
+ * @useDeleteTaskListMutation
  * 할 일 목록을 삭제하는 mutation 훅
  * 서버에 할 일 목록 삭제 DELETE 요청을 전송하고,
  * 성공 시 그룹 데이터를 무효화하고 다시 가져옴
  */
 
-export const useDeleteTaskListQuery = (groupId: number) => {
+export const useDeleteTaskListMutation = (groupId: number) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
