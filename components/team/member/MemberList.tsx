@@ -11,19 +11,19 @@ import CopyEmail from '@/components/common/modal/CopyEmail';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import { useUserStore } from '@/store/authStore';
-import { useDeleteMemberQuery } from '@/queries/group/member';
+import { useDeleteMemberMutation } from '@/queries/group/member';
 
 interface MemberProps {
   member: Member;
   isAdmin: boolean;
 }
 
-export default function MemberList({ member, isAdmin }: MemberProps) {
+export default function MemberList({ member, isAdmin = false }: MemberProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const openModal = useModalStore((state) => state.openModal);
 
-  const deleteMemberMutation = useDeleteMemberQuery(member.groupId);
+  const deleteMemberMutation = useDeleteMemberMutation(member.groupId);
 
   const { user } = useUserStore();
   const currentUserId = user?.id;

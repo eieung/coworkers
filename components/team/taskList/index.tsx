@@ -2,17 +2,36 @@ import useModalStore from '@/store/useModalStore';
 import Task from './Task';
 import TaskListForm from '@/components/common/modal/TaskListForm';
 import { useGroupsQuery } from '@/queries/group/group';
-import { useCreateTaskListQuery } from '@/queries/task-list/task-list';
+import { useRouter } from 'next/router';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
+import { useCreateTaskListMutation } from '@/queries/task-list/task-list';
 
-interface TaskListProps {
-  groupId: number;
-  isAdmin: boolean;
-}
+export default function TaskList() {
+  const router = useRouter();
+  const { groupId } = router.query;
 
-export default function TaskList({ groupId, isAdmin }: TaskListProps) {
-  const { data, isLoading, error } = useGroupsQuery(groupId);
+  const numericGroupId: number = groupId ? Number(groupId) : 0;
+  const {
+    data: groupResponse,
+    isLoading,
+    error,
+  } = useGroupsQuery(numericGroupId);
+
+  const groupData = groupResponse?.data;
+  const { accessToken } = useUserStore();
+  const { data: userData } = useUsersQuery(accessToken);
+
+  const isAdmin =
+    groupData && userData
+      ? groupData.members.some(
+          (member) =>
+            member.userId === userData.data.id && member.role === 'ADMIN',
+        )
+      : false;
+
   const openModal = useModalStore((state) => state.openModal);
-  const createTaskListMutation = useCreateTaskListQuery(groupId);
+  const createTaskListMutation = useCreateTaskListMutation(numericGroupId);
 
   if (isLoading) {
     return <div>스켈레톤 구현 해야 함</div>;
@@ -22,7 +41,7 @@ export default function TaskList({ groupId, isAdmin }: TaskListProps) {
     return <div>에러 처리 해야 함</div>;
   }
 
-  const taskLists = data?.taskLists || [];
+  const taskLists = groupResponse?.data.taskLists || [];
 
   const handleCreateTaskList = () => {
     openModal((close) => (
@@ -81,7 +100,7 @@ export default function TaskList({ groupId, isAdmin }: TaskListProps) {
               totalTasks={totalTasks}
               completedTasks={completedTasks}
               displayIndex={taskList.displayIndex}
-              groupId={groupId}
+              groupId={numericGroupId}
               taskListId={taskList.id}
               isAdmin={isAdmin}
             />

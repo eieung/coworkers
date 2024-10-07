@@ -2,20 +2,42 @@ import MemberList from './MemberList';
 import useModalStore from '@/store/useModalStore';
 import InviteMember from '@/components/common/modal/InviteMember';
 import { useGroupsQuery } from '@/queries/group/group';
+import { useRouter } from 'next/router';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
 
-interface MemberProps {
-  groupId: number;
-  isAdmin: boolean;
-}
-
-export default function Member({ groupId, isAdmin }: MemberProps) {
+export default function Member() {
   const openModal = useModalStore((state) => state.openModal);
+  const router = useRouter();
+  const { groupId } = router.query;
+
+  const numericGroupId: number = groupId ? Number(groupId) : 0;
 
   const handleOpenInviteModal = () => {
-    openModal((close) => <InviteMember close={close} groupId={groupId}/>);
+    openModal((close) => (
+      <InviteMember close={close} groupId={numericGroupId} />
+    ));
   };
 
-  const { data: groupData, isLoading, error } = useGroupsQuery(groupId);
+  const {
+    data: groupResponse,
+    isLoading,
+    error,
+  } = useGroupsQuery(numericGroupId);
+
+  const groupData = groupResponse?.data;
+
+  const { accessToken } = useUserStore();
+
+  const { data: userData } = useUsersQuery(accessToken);
+
+  const isAdmin =
+    groupData && userData
+      ? groupData.members.some(
+          (member) =>
+            member.userId === userData.data.id && member.role === 'ADMIN',
+        )
+      : false;
 
   if (isLoading) return <div>로딩 중...</div>;
 

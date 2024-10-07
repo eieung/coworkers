@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNotificationAPI } from '@/hooks/useNotificationAPI';
 import useModalStore from '@/store/useModalStore';
 import { toast } from 'react-toastify';
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
@@ -7,14 +6,44 @@ import Image from 'next/image';
 import editIcon from '@/assets/image/icon/edit.svg';
 import deleteIcon from '@/assets/image/icon/delete.svg';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
+import {
+  useAddNotificationMutation,
+  useDeleteNotificationMutation,
+  useNotificationsQuery,
+  useUpdateNotificationMutation,
+} from '@/queries/group/notification';
+import { useRouter } from 'next/router';
+import { useGroupsQuery } from '@/queries/group/group';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
 
-interface NotificationProps {
-  isAdmin: boolean;
-  groupId: number;
-}
-
-export default function Notification({ isAdmin, groupId }: NotificationProps) {
+export default function Notification() {
   const openModal = useModalStore((state) => state.openModal);
+  const router = useRouter();
+  const { groupId } = router.query;
+
+  const numericGroupId: number = groupId ? Number(groupId) : 0;
+  const { data: groupResponse } = useGroupsQuery(numericGroupId);
+  const groupData = groupResponse?.data;
+
+  const { data: notificationData, isLoading } =
+    useNotificationsQuery(numericGroupId);
+  const addNotificationMutation = useAddNotificationMutation(numericGroupId);
+  const updateNotificationMutation =
+    useUpdateNotificationMutation(numericGroupId);
+  const deleteNotificationMutation =
+    useDeleteNotificationMutation(numericGroupId);
+
+  const { accessToken } = useUserStore();
+  const { data: userData } = useUsersQuery(accessToken);
+
+  const isAdmin =
+    groupData && userData
+      ? groupData.members.some(
+          (member) =>
+            member.userId === userData.data.id && member.role === 'ADMIN',
+        )
+      : false;
 
   const handleAddNotificationModal = () => {
     openModal((close) => (
@@ -25,7 +54,7 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
         inputType={'textarea'}
         onAction={async (noticeContent) => {
           try {
-            await addNewNotice(noticeContent);
+            await addNotificationMutation.mutateAsync(noticeContent);
             toast.success('공지 등록이 완료되었습니다!');
             close();
           } catch (error) {
@@ -49,11 +78,15 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
         title={<div className="font-medium-24 mb-10">공지 수정하기</div>}
         buttonText={'수정하기'}
         inputType={'textarea'}
-        initialData={state.notice || ''}
+        initialData={notificationData?.data[0]?.content || ''}
         onAction={async (updatedNoticeContent) => {
           try {
-            if (state.noticeId) {
-              await updateNotice(state.noticeId, updatedNoticeContent);
+            const noticeId = notificationData?.data[0]?._id;
+            if (noticeId) {
+              await updateNotificationMutation.mutateAsync({
+                id: noticeId,
+                content: updatedNoticeContent,
+              });
               toast.success('공지 수정이 완료되었습니다!');
               close();
             }
@@ -81,8 +114,9 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
         confirmText="삭제하기"
         onConfirm={async () => {
           try {
-            if (state.noticeId) {
-              await deleteNotice(state.noticeId);
+            const noticeId = notificationData?.data[0]?._id;
+            if (noticeId) {
+              await deleteNotificationMutation.mutateAsync(noticeId);
               toast.success('공지 삭제가 완료되었습니다!');
               close();
             }
@@ -96,24 +130,17 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
     ));
   };
 
-  const {
-    state,
-    fetchNotification,
-    addNewNotice,
-    updateNotice,
-    deleteNotice,
-    updateState,
-  } = useNotificationAPI(groupId);
-
   useEffect(() => {
-    fetchNotification();
-  }, [groupId]);
+    if (notificationData?.error) {
+      toast.error('공지사항 불러오기에 실패했습니다.');
+    }
+  }, [notificationData]);
 
-  if (state.loading) {
+  if (isLoading) {
     return <span>공지를 불러오는 중입니다.</span>;
   }
 
-  if (!state.notice && !isAdmin) {
+  if (!notificationData?.data[0] && !isAdmin) {
     return null;
   }
 
@@ -121,7 +148,7 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
     <div className="flex flex-col overflow-hidden">
       <div className="flex items-center justify-between py-4 pb-4 pt-6">
         <b className="font-medium-16 text-text-primary">공지</b>
-        {isAdmin && !state.notice && (
+        {isAdmin && !notificationData?.data[0] && (
           <button
             className="font-regular-14 text-brand-primary"
             onClick={handleAddNotificationModal}
@@ -129,7 +156,7 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
             + 새로운 공지 등록하기
           </button>
         )}
-        {isAdmin && state.notice && (
+        {isAdmin && notificationData?.data[0] && (
           <div className="flex items-center gap-2">
             <button onClick={handleEditNotificationModal}>
               <Image src={editIcon} alt="수정" width={16} height={16} />
@@ -141,10 +168,10 @@ export default function Notification({ isAdmin, groupId }: NotificationProps) {
         )}
       </div>
       <div className="relative flex overflow-hidden rounded-2xl bg-bg-secondary p-4">
-        {state.notice ? (
+        {notificationData?.data[0] ? (
           <div className="animate-marquee w-full whitespace-nowrap">
             <p className="font-bold-16 inline-block w-full px-4 text-text-primary">
-              {state.notice}
+              {notificationData?.data[0]?.content}
             </p>
           </div>
         ) : isAdmin ? (

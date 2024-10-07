@@ -8,7 +8,7 @@ import CircularProgressBar from '@/components/common/CircularProgressBar';
 import { useEffect, useRef, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { useDeleteTaskListQuery } from '@/queries/task-list/task-list';
+import { useDeleteTaskListMutation } from '@/queries/task-list/task-list';
 
 interface TaskProps {
   name: string;
@@ -27,13 +27,13 @@ export default function Task({
   displayIndex,
   groupId,
   taskListId,
-  isAdmin,
+  isAdmin = false,
 }: TaskProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const openModal = useModalStore((state) => state.openModal);
 
-  const deleteTaskListMutation = useDeleteTaskListQuery(groupId);
+  const deleteTaskListMutation = useDeleteTaskListMutation(groupId);
 
   const percentage =
     totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -69,7 +69,7 @@ export default function Task({
         buttonType="danger"
       />
     ));
-  }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
