@@ -148,7 +148,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="relative flex h-[640px] w-[375px] flex-col items-center md:h-[940px] md:w-[744px]">
+      <div className="relative flex h-[640px] w-[375px] flex-col items-center md:h-[940px] md:w-[744px] lg:h-[1080px] lg:w-[1920px]">
         <div className="absolute top-[123px]">
           <div className="flex flex-col items-center gap-4">
             <span className="font-medium-24 text-white">
@@ -168,7 +168,7 @@ export default function Home() {
             width={375}
             height={640}
             quality={100}
-            className="absolute inset-0 md:hidden"
+            className="absolute inset-0 md:hidden lg:hidden"
           />
           <Image
             src={landingBottomTablet}
@@ -177,6 +177,13 @@ export default function Home() {
             height={940}
             quality={100}
             className="absolute inset-0 sm:hidden md:block lg:hidden"
+          />
+          <Image
+            src={landingBottom}
+            alt="랜딩 페이지 하단 이미지"
+            width={1920}
+            height={1080}
+            className="absolute inset-0 sm:hidden md:hidden lg:block"
           />
         </div>
       </div>
