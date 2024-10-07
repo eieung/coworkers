@@ -5,7 +5,10 @@ import Button from '@/components/common/button';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '@/components/common/Input';
 import clsx from 'clsx';
-import { useInvitationQuery, useInviteMemberQuery } from '@/queries/group/invitaion';
+import {
+  useInvitationQuery,
+  useInviteMemberMutation,
+} from '@/queries/group/invitaion';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,7 +40,7 @@ export default function InviteMember({ close, groupId }: InviteMemberProps) {
     useInvitationQuery(groupId);
 
   // loading 처리 시 이상함
-  const { mutate: inviteMember } = useInviteMemberQuery(groupId);
+  const { mutate: inviteMember } = useInviteMemberMutation(groupId);
 
   const handleInviteCodeCopyButtonClick = async (index: number) => {
     if (index === 0) {
@@ -45,7 +48,7 @@ export default function InviteMember({ close, groupId }: InviteMemberProps) {
         toast.info('초대 코드를 생성 중입니다...');
         return;
       }
-      const invitationToken = invitationData;
+      const invitationToken = invitationData?.data;
       if (invitationToken) {
         await navigator.clipboard.writeText(invitationToken);
         toast.success('초대 코드가 복사되었습니다!');
