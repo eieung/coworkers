@@ -2,6 +2,7 @@ import Button from '@/components/common/button';
 import Image from 'next/image';
 import landingTop from '@/assets/image/landing/landing-top-desktop.png';
 import landingBottom from '@/assets/image/landing/landing-bottom-desktop.png';
+import landingBottomTablet from '@/assets/image/landing/landing-bottom-tablet.png';
 import landingBottomMobile from '@/assets/image/landing/landing-bottom-mobile.png';
 import repair from '@/assets/image/icon/repair.svg';
 import file from '@/assets/image/landing/file.svg';
@@ -147,15 +148,37 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="relative flex h-[640px] w-full flex-col overflow-hidden">
-        <Image
-          src={landingBottom}
-          alt="랜딩 페이지 하단 이미지"
-          objectFit="cover"
-          quality={100}
-          fill
-          className="absolute inset-0"
-        />
+      <div className="relative flex h-[640px] w-[375px] flex-col items-center md:h-[940px] md:w-[744px]">
+        <div className="absolute top-[123px]">
+          <div className="flex flex-col items-center gap-4">
+            <span className="font-medium-24 text-white">
+              지금 바로 시작해보세요
+            </span>
+            <span className="font-medium-16 text-center text-white">
+              팀원 모두와 같은 방향,
+              <br />
+              같은 속도로 나아가는 가장 쉬운 방법
+            </span>
+          </div>
+        </div>
+        <div className="relative flex h-full w-full overflow-hidden">
+          <Image
+            src={landingBottomMobile}
+            alt="랜딩 페이지 하단 이미지"
+            width={375}
+            height={640}
+            quality={100}
+            className="absolute inset-0 md:hidden"
+          />
+          <Image
+            src={landingBottomTablet}
+            alt="랜딩 페이지 하단 이미지"
+            width={744}
+            height={940}
+            quality={100}
+            className="absolute inset-0 sm:hidden md:block lg:hidden"
+          />
+        </div>
       </div>
     </div>
   );
