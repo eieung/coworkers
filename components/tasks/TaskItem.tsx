@@ -161,7 +161,7 @@ const TaskItem = ({
       onClick={handleOpenTaskDetailModal}
     >
       <motion.div
-        className="absolute left-0 top-0 h-full w-full"
+        className="absolute left-0 top-0 z-0 h-full w-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0 }}
         whileHover={{
@@ -169,7 +169,7 @@ const TaskItem = ({
           opacity: 1,
         }}
         transition={{
-          duration: 1.2,
+          duration: 1,
           ease: 'easeInOut',
         }}
       >
@@ -178,11 +178,11 @@ const TaskItem = ({
           style={{ left: 'calc(50% - 15px)' }}
           src={moveImg}
           alt="check"
-          width={30}
-          height={30}
+          width={35}
+          height={35}
         />
       </motion.div>
-      <div className="flex items-center justify-between gap-2">
+      <div className="z-10 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <label
             className="flex h-6 w-6 cursor-pointer items-center justify-center"

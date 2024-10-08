@@ -69,7 +69,7 @@ export default function TaskDetail({
 
   const isComplete = !!doneAt;
   const { id = 0, image, nickname = 'Anonymous' } = writer || {};
-  const userImageContainer = image || defaultUserImg;
+  const userImageContainer = image || defaultUserImg.src;
   const buttonType = isComplete ? 'floating-outlined' : 'floating-solid';
 
   const { openModal } = useModalStore((state) => ({

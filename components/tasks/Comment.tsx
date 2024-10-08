@@ -36,7 +36,7 @@ export default function Comment({
 }: CommentProps) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const userImageContainer = image || defaultUserImg;
+  const userImageContainer = image || defaultUserImg.src;
   const openModal = useModalStore((state) => state.openModal);
   const handleDelete = useDeleteComment(taskId, commentId);
   const handleEdit = useEditComment(taskId, commentId);
