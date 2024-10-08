@@ -5,14 +5,17 @@ import useModalStore from '@/store/useModalStore';
 import TeamForm from '../common/modal/TeamForm';
 import CustomInputModal from '../common/modal/CustomInputModal';
 import { toast } from 'react-toastify';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
+import NotFound from '@/pages/404';
 
 export default function EmptyTeam() {
   const openModal = useModalStore((state) => state.openModal);
+  const { accessToken } = useUserStore();
+  const { data: userData, isLoading } = useUsersQuery(accessToken);
 
   const handleCreateTeamModal = () => {
-    openModal((close) => (
-      <TeamForm close={close} groupId={0} isEditMode={false} />
-    ));
+    openModal((close) => <TeamForm close={close} isEditMode={false} />);
   };
 
   const handleCustomInputModal = () => {
@@ -32,6 +35,17 @@ export default function EmptyTeam() {
       />
     ));
   };
+
+  const userHasTeam = (userData?.data?.memberships ?? []).length > 0;
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  // NotFound 말고 다른 거로 수정하기
+  if (userHasTeam) {
+    return <NotFound />;
+  }
 
   return (
     <div className="m-auto mt-[186px] flex flex-col items-center justify-center md:mt-[272px] lg:mt-[212px]">

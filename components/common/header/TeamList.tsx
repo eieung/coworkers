@@ -15,24 +15,15 @@ interface TeamListProps {
   onTeamSelect: (teamId: number, teamName: string) => void;
 }
 
-export default function TeamList({
-  teams,
-  onTeamSelect,
-}: TeamListProps) {
+export default function TeamList({ teams, onTeamSelect }: TeamListProps) {
   const openModal = useModalStore((state) => state.openModal);
 
-
-
   const handleCreateTeamModal = () => {
-    openModal((close) => (
-      <TeamForm close={close} groupId={0} isEditMode={false} />
-    ));
+    openModal((close) => <TeamForm close={close} isEditMode={false} />);
   };
 
   return (
-    <div
-      className="h-auto w-[218px] rounded-2xl bg-bg-secondary p-4"
-    >
+    <div className="h-auto w-[218px] rounded-2xl bg-bg-secondary p-4">
       {teams.length > 0 &&
         teams.map((team) => (
           <button

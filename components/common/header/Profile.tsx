@@ -6,7 +6,7 @@ import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
 import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
-import { useJoinTeamMutation } from '@/queries/group/invitaion';
+import { useJoinTeamMutation } from '@/queries/group/invitation';
 
 export default function Profile() {
   const { accessToken } = useUserStore();
@@ -16,7 +16,7 @@ export default function Profile() {
   const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
-  const { mutate: joinTeam } = useJoinTeamMutation(user?.data.id || 0);
+  const { mutate: joinTeam } = useJoinTeamMutation(user?.data.id as any);
 
   const handleCustomInputModal = () => {
     openModal((close) => (

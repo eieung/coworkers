@@ -8,7 +8,7 @@ import { authAxiosInstance } from '@/services/axios';
  * @param groupId - 그룹 ID
  * @param memberUserId - 삭제할 멤버의 사용자 ID
  */
-export const deleteMember = (groupId: number, memberUserId: number) => {
+export const deleteMember = (groupId: string, memberUserId: string) => {
   return authAxiosInstance.delete(`groups/${groupId}/member/${memberUserId}`);
 };
 
@@ -18,12 +18,12 @@ export const deleteMember = (groupId: number, memberUserId: number) => {
  * 서버에 그룹 멤버 삭제 DELETE 요청을 전송하고,
  * 성공 시 그룹 데이터를 무효화하고 다시 가져옴
  */
-export const useDeleteMemberMutation = (groupId: number) => {
+export const useDeleteMemberMutation = (groupId: string) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (memberUserId: number) => deleteMember(groupId, memberUserId),
+    mutationFn: (memberUserId: string) => deleteMember(groupId, memberUserId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
 

@@ -57,7 +57,7 @@ export default function MemberList({ member, isAdmin = false }: MemberProps) {
         isAlert={true}
         confirmText="추방하기"
         onConfirm={() => {
-          deleteMemberMutation.mutate(member.userId);
+          deleteMemberMutation.mutate(member.userId as any);
           close();
         }}
         buttonType="danger"

@@ -15,8 +15,8 @@ interface TaskProps {
   totalTasks: number;
   completedTasks: number;
   displayIndex: number;
-  groupId: number;
-  taskListId: number;
+  groupId: string;
+  taskListId: string;
   isAdmin: boolean;
 }
 

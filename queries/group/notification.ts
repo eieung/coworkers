@@ -20,7 +20,7 @@ const fetchAPI = async (url: string, options?: RequestInit) => {
  * 공지사항을 가져오는 함수
  * @param groupId - 그룹 ID
  */
-const getNotifications = (groupId: number) => {
+const getNotifications = (groupId: string) => {
   return fetchAPI(`/api/groups/${groupId}/notification`);
 };
 
@@ -29,9 +29,9 @@ const getNotifications = (groupId: number) => {
  * 공지사항 데이터를 가져오는 훅
  * @param groupId - 그룹 ID
  */
-export const useNotificationsQuery = (groupId: number) => {
+export const useNotificationsQuery = (groupId: string) => {
   return useQuery({
-    queryKey: ['notifications', groupId],
+    queryKey: ['groups', groupId, 'notification'],
     queryFn: () => getNotifications(groupId),
     staleTime: 1000 * 60 * 5,
     retry: 1,
@@ -43,7 +43,7 @@ export const useNotificationsQuery = (groupId: number) => {
  * @param groupId - 그룹 ID
  * @param content - 추가할 공지 내용
  */
-const addNotification = (groupId: number, content: string) => {
+const addNotification = (groupId: string, content: string) => {
   return fetchAPI(`/api/groups/${groupId}/notification`, {
     method: 'POST',
     headers: {
@@ -60,12 +60,12 @@ const addNotification = (groupId: number, content: string) => {
  * @useAddNotificationMutation
  * 공지사항을 추가하는 mutation 훅
  */
-export const useAddNotificationMutation = (groupId: number) => {
+export const useAddNotificationMutation = (groupId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (content: string) => addNotification(groupId, content),
     onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['notifications', groupId] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
     onError: (error: any) => {
       console.error(error);
@@ -79,7 +79,7 @@ export const useAddNotificationMutation = (groupId: number) => {
  * @param id - 수정할 공지 ID
  * @param content - 수정할 내용
  */
-const updateNotification = (groupId: number, id: string, content: string) => {
+const updateNotification = (groupId: string, id: string, content: string) => {
   return fetchAPI(`/api/groups/${groupId}/notification?id=${id}`, {
     method: 'PATCH',
     headers: {
@@ -95,13 +95,14 @@ const updateNotification = (groupId: number, id: string, content: string) => {
  * @useUpdateNotificationMutation
  * 공지사항을 수정하는 mutation 훅
  */
-export const useUpdateNotificationMutation = (groupId: number) => {
+export const useUpdateNotificationMutation = (groupId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, content }: { id: string; content: string }) =>
       updateNotification(groupId, id, content),
     onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['notifications', groupId] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+
     },
     onError: (error: any) => {
       console.error(error);
@@ -114,7 +115,7 @@ export const useUpdateNotificationMutation = (groupId: number) => {
  * @param groupId - 그룹 ID
  * @param id - 삭제할 공지 ID
  */
-const deleteNotification = (groupId: number, id: string) => {
+const deleteNotification = (groupId: string, id: string) => {
   return fetchAPI(`/api/groups/${groupId}/notification?id=${id}`, {
     method: 'DELETE',
   });
@@ -124,12 +125,13 @@ const deleteNotification = (groupId: number, id: string) => {
  * @useDeleteNotificationMutation
  * 공지사항을 삭제하는 mutation 훅
  */
-export const useDeleteNotificationMutation = (groupId: number) => {
+export const useDeleteNotificationMutation = (groupId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteNotification(groupId, id),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['notifications', groupId] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+
     },
     onError: (error: any) => {
       console.error(error);

@@ -1,6 +1,6 @@
 import { TaskResponse } from '@/types/task';
 export interface GroupResponse {
-  id: number;
+  id: string;
   name: string;
   image: string;
   createdAt: string;
@@ -11,7 +11,7 @@ export interface GroupResponse {
 
 export interface Member {
   userId: number;
-  groupId: number;
+  groupId: string;
   userName: string;
   userEmail: string;
   userImage: string | null;
@@ -19,7 +19,7 @@ export interface Member {
 }
 
 export interface TaskList {
-  id: number;
+  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
