@@ -16,7 +16,7 @@ export default function Profile() {
 
   const loggedInMenuItems = [
     { label: '마이 히스토리', href: '/history' },
-    { label: '계정 설정', href: '/settings' },
+    { label: '계정 설정', href: '/mypage' },
     { label: '팀 참여', href: '/team' },
     { label: '로그아웃', onClick: handleLogout },
   ];
