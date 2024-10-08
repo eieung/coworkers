@@ -5,6 +5,7 @@ import closeImg from '@/assets/image/icon/x.svg';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import useClickOutside from '@/hooks/useClickOutside';
+import { motion } from 'framer-motion';
 
 /*
  * @component
@@ -143,7 +144,9 @@ function Modal({
         )}
       />
       {!isCustom ? (
-        <div
+        <motion.div
+          animate={{ y: [-50, 0] }}
+          transition={{ type: 'spring' }}
           className={twMerge(
             'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:absolute sm:bottom-0 sm:max-w-full',
             'font-medium-16 p-[16px_16px_32px] text-text-primary shadow-lg',
@@ -197,9 +200,11 @@ function Modal({
               {children}
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div
+        <motion.div
+          animate={{ x: [-50, 0] }}
+          transition={{ type: 'spring' }}
           className={twMerge('fixed bg-bg-secondary shadow-lg', className)}
           ref={modalRef}
         >
@@ -218,7 +223,7 @@ function Modal({
           >
             <div className={twMerge('px-2', childrenClassName)}>{children}</div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>,
     document.body,

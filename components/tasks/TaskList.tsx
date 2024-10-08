@@ -5,13 +5,19 @@ import useModalStore from '@/store/useModalStore';
 import DatePicker from '@/components/common/modal/DatePicker';
 import { TaskListType, TaskType } from '@/types/taskList';
 import {
+  useDeleteRecurringTask,
   useDeleteTask,
   useEditTask,
   useEditTaskIndex,
   useGetTasks,
   useToggleTask,
 } from '@/queries/tasks/useTaskData';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 import { useState, useEffect } from 'react';
 
 interface TaskListProps {
@@ -41,6 +47,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
   const { mutate: deleteTask } = useDeleteTask(groupId);
   const editTaskIndexMutation = useEditTaskIndex(groupId, currentCategory?.id);
   const { mutate: editTask } = useEditTask(groupId, currentCategory?.id);
+  const { mutate: deleteRecurringTask } = useDeleteRecurringTask(groupId);
 
   useEffect(() => {
     const sortedTasks = [...initialTasks].sort((a, b) => {
@@ -53,7 +60,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
     openModal((close) => <DatePicker close={close} />);
   };
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
@@ -67,7 +74,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
 
     editTaskIndexMutation.mutate({
       taskListId: currentCategory?.id as number,
-      taskId: draggableId,
+      taskId: Number(draggableId),
       displayIndex: destination.index,
     });
   };
@@ -82,7 +89,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
             shallow={false}
           >
             <span
-              className={`font-medium-16 relative flex-shrink-0 ${
+              className={`font-medium-16 relative flex-shrink-0 transition duration-300 ease-in-out ${
                 String(category.id) === listId
                   ? 'text-text-tertiary'
                   : 'text-text-default'
@@ -116,7 +123,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
                 {...provided.droppableProps}
               >
                 {tasks.map((taskData: TaskType, index: number) => {
-                  const { id, doneAt } = taskData;
+                  const { id, doneAt, recurringId } = taskData;
 
                   return (
                     <Draggable key={id} draggableId={String(id)} index={index}>
@@ -132,6 +139,9 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
                             onToggle={() => toggleTask({ id, doneAt })}
                             onEdit={(name) => editTask({ id, name, doneAt })}
                             onDelete={() => deleteTask(id)}
+                            onRecurringDelete={() =>
+                              deleteRecurringTask({ taskId: id, recurringId })
+                            }
                           />
                         </div>
                       )}

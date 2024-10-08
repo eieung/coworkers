@@ -117,7 +117,7 @@ export default function ModalVariants() {
         // 모달 전체 넓이 수정 원할 시 사용. 모달 기본적으로 모바일은 max-w-full
         className={'max-w-[400px] md:max-w-[350px]'}
         // 모달 안의 컨텐츠의 넓이 수정시 사용.
-        childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
+        childrenClassName={'w-[350px] sm:w-[300px] md:w-[300px]'}
         /*  텍스트말고 <div className="">내용</div> 이런 형태로 하면 스타일 변경 가능 */
         bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
       />

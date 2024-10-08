@@ -9,7 +9,7 @@ type ModalState = {
   modals: Modal[];
   openModal: (component: (close: () => void) => JSX.Element) => void;
   closeModal: () => void;
-  updateModal: (component: (close: () => void) => JSX.Element) => void; // ID 없이 수정
+  updateModal: (component: (close: () => void) => JSX.Element) => void;
   isEmpty: () => boolean;
   initializePopStateListener: () => void;
   removePopStateListener: () => void;
@@ -73,7 +73,10 @@ const useModalStore = create<ModalState>((set, get) => ({
     });
   },
 
-  removePopStateListener: () => {},
+  removePopStateListener: () => {
+    const removeListener = get().removePopStateListener;
+    if (removeListener) removeListener();
+  },
 }));
 
 export default useModalStore;

@@ -12,6 +12,7 @@ import Button from '@/components/common/button';
 import whiteCheckImg from '@/assets/image/icon/check.svg';
 import clsx from 'clsx';
 import {
+  useDeleteRecurringTask,
   useDeleteTask,
   useEditTask,
   useToggleTask,
@@ -46,6 +47,7 @@ export default function TaskDetail({
     updatedAt,
     frequency,
     doneAt,
+    recurringId,
   } = taskdetailData;
 
   const {
@@ -80,6 +82,7 @@ export default function TaskDetail({
 
   const toggleTaskMutation = useToggleTask(groupId as string);
   const deleteTaskMutation = useDeleteTask(groupId as string);
+  const deleteRecurringTaskMutation = useDeleteRecurringTask(groupId as string);
   const editTaskMutation = useEditTask(groupId as string, Number(listId));
 
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function TaskDetail({
       onClick: () => setIsEditing(true),
     },
     {
-      label: '삭제하기',
+      label: '단일 삭제하기',
       onClick: () => {
         openModal((close) => (
           <ConfirmModal
@@ -108,8 +111,34 @@ export default function TaskDetail({
               deleteTaskMutation.mutate(Number(taskId));
               close();
             }}
-            title={`'${name}'\n할 일을 정말 삭제하시겠어요?`}
-            description={'삭제 후에는 되돌릴 수 없습니다.'}
+            title={`'${name}'\n할 일 단일 항목을 정말 삭제하시겠어요?`}
+            description={
+              '단일 항목만 삭제합니다.\n삭제 후에는 되돌릴 수 없습니다.'
+            }
+            isAlert={true}
+            confirmText={'삭제하기'}
+            buttonType={'danger'}
+          />
+        ));
+      },
+    },
+    {
+      label: '반복 삭제하기',
+      onClick: () => {
+        openModal((close) => (
+          <ConfirmModal
+            close={close}
+            onConfirm={() => {
+              deleteRecurringTaskMutation.mutate({
+                taskId: Number(taskId),
+                recurringId,
+              });
+              close();
+            }}
+            title={`'${name}'\n할 일 반복 전부를 정말 삭제하시겠어요?`}
+            description={
+              '반복 설정된 할 일이 전부 삭제됩니다.\n삭제 후에는 되돌릴 수 없습니다.'
+            }
             isAlert={true}
             confirmText={'삭제하기'}
             buttonType={'danger'}
