@@ -36,7 +36,7 @@ export default function Comment({
 }: CommentProps) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const userImageContainer = image || defaultUserImg;
+  const userImageContainer = image || defaultUserImg.src;
   const openModal = useModalStore((state) => state.openModal);
   const handleDelete = useDeleteComment(taskId, commentId);
   const handleEdit = useEditComment(taskId, commentId);
@@ -134,7 +134,10 @@ export default function Comment({
           <>
             <p>{content}</p>
             {Number(currentUserId) === commentUserId && (
-              <div onClick={(e) => e.stopPropagation()}>
+              <div
+                className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Dropdown
                   trigger={
                     <Image

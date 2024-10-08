@@ -3,9 +3,9 @@ import rightImg from '@/assets/image/icon/arrow_right.svg';
 import calendarImg from '@/assets/image/icon/calendar.svg';
 import CustomCalendar from '@/components/common/CustomCalendar';
 import useClickOutside from '@/hooks/useClickOutside';
+import clsx from 'clsx';
 import Image from 'next/image';
 import { memo, useRef, useState } from 'react';
-import checkImg from '@/assets/image/icon/check-calendar.svg';
 
 const formatDate = (date: Date) => {
   const months = [
@@ -78,15 +78,16 @@ const DateManager = memo(function DateManager({
         {formatDate(adjustToLocalDate(new Date(currentDate)))}
       </h1>
       <div className="flex items-center gap-1">
-        {today === currentDate && (
-          <Image
-            className="mr-2"
-            src={checkImg}
-            alt="당일"
-            width={20}
-            height={15}
-          />
-        )}
+        <div
+          className={clsx(
+            'absolute left-[50px] top-[-22px] flex items-center justify-center',
+            today !== currentDate ? 'hidden' : '',
+          )}
+        >
+          <h1 className="glow-text rounded-lg p-[2px] text-sm font-bold text-transparent">
+            today
+          </h1>
+        </div>
         <button
           className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
           onClick={handlePrevDate}

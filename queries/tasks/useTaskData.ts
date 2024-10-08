@@ -213,7 +213,6 @@ export const useEditTaskIndex = (
         taskData: { displayIndex },
       }),
     onSuccess: () => {
-      toast.success('할 일의 순서가 수정되었습니다!');
       queryClient.invalidateQueries({
         queryKey: ['tasks', groupId, currentCategoryId],
       });
