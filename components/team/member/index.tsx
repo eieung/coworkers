@@ -11,11 +11,9 @@ export default function Member() {
   const router = useRouter();
   const { groupId } = router.query;
 
-  const numericGroupId: number = groupId ? Number(groupId) : 0;
-
   const handleOpenInviteModal = () => {
     openModal((close) => (
-      <InviteMember close={close} groupId={numericGroupId} />
+      <InviteMember close={close} groupId={groupId as string} />
     ));
   };
 
@@ -23,7 +21,7 @@ export default function Member() {
     data: groupResponse,
     isLoading,
     error,
-  } = useGroupsQuery(numericGroupId);
+  } = useGroupsQuery(groupId as string);
 
   const groupData = groupResponse?.data;
 

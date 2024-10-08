@@ -30,7 +30,7 @@ export default function List() {
     if (user?.data.memberships && user.data.memberships.length > 0) {
       if (initialGroupId === null) {
         // 초기 그룹 ID 설정 (첫 로드 시에만)
-        setInitialGroupId(user.data.memberships[0].group.id);
+        setInitialGroupId(user.data.memberships[0].group.id as any);
       }
 
       if (groupId) {
@@ -79,7 +79,7 @@ export default function List() {
 
   const selectedTeamName =
     hasTeams && selectedGroupId
-      ? user.data.memberships.find((m) => m.group.id === selectedGroupId)?.group
+      ? user.data.memberships.find((m) => m.group.id === selectedGroupId as any)?.group
           .name
       : '팀 시작하기';
 
@@ -113,7 +113,7 @@ export default function List() {
       {isTeamListVisible && hasTeams && (
         <div className="team-list-translate">
           <TeamList
-            teams={user.data.memberships.map((m) => m.group)}
+            teams={user.data.memberships.map((m) => m.group) as any}
             onTeamSelect={handleTeamSelect}
           />
         </div>

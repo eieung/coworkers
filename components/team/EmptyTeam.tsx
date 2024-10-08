@@ -5,14 +5,17 @@ import useModalStore from '@/store/useModalStore';
 import TeamForm from '../common/modal/TeamForm';
 import CustomInputModal from '../common/modal/CustomInputModal';
 import { toast } from 'react-toastify';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
+import NotFound from '@/pages/404';
 
 export default function EmptyTeam() {
   const openModal = useModalStore((state) => state.openModal);
+  const { accessToken } = useUserStore();
+  const { data: userData, isLoading } = useUsersQuery(accessToken);
 
   const handleCreateTeamModal = () => {
-    openModal((close) => (
-      <TeamForm close={close} groupId={0} isEditMode={false} />
-    ));
+    openModal((close) => <TeamForm close={close} isEditMode={false} />);
   };
 
   const handleCustomInputModal = () => {
@@ -24,14 +27,25 @@ export default function EmptyTeam() {
         onAction={(data) => {
           toast.success(`${data} 팀에 참여되었습니다!`);
         }}
-        placeholder={'팀 링크를 입력해주세요.'}
-        label={'팀 링크'}
+        placeholder={'초대 코드를 입력해주세요.'}
+        label={'팀 초대 코드'}
         className={'max-w-[400px] md:max-w-[350px]'}
         childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
-        bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
+        bottomDescription={'공유받은 초대 코드를 입력해 참여할 수 있어요.'}
       />
     ));
   };
+
+  const userHasTeam = (userData?.data?.memberships ?? []).length > 0;
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  // NotFound 말고 다른 거로 수정하기
+  if (userHasTeam) {
+    return <NotFound />;
+  }
 
   return (
     <div className="m-auto mt-[186px] flex flex-col items-center justify-center md:mt-[272px] lg:mt-[212px]">

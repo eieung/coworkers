@@ -11,13 +11,12 @@ export default function TaskReport() {
   const router = useRouter();
   const { groupId } = router.query;
 
-  const numericGroupId: number = groupId ? Number(groupId) : 0;
 
   const {
     data: groupResponse,
     isLoading,
     error,
-  } = useGroupsQuery(numericGroupId);
+  } = useGroupsQuery(groupId as string);
   const [todayTasksCount, setTodayTasksCount] = useState(0);
   const [doneTasksCount, setDoneTasksCount] = useState(0);
   const [percentage, setPercentage] = useState(0);

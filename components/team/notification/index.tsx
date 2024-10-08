@@ -22,17 +22,19 @@ export default function Notification() {
   const router = useRouter();
   const { groupId } = router.query;
 
-  const numericGroupId: number = groupId ? Number(groupId) : 0;
-  const { data: groupResponse, isError } = useGroupsQuery(numericGroupId);
+  const { data: groupResponse, isError } = useGroupsQuery(groupId as string);
   const groupData = groupResponse?.data;
 
-  const { data: notificationData, isLoading } =
-    useNotificationsQuery(numericGroupId);
-  const addNotificationMutation = useAddNotificationMutation(numericGroupId);
-  const updateNotificationMutation =
-    useUpdateNotificationMutation(numericGroupId);
-  const deleteNotificationMutation =
-    useDeleteNotificationMutation(numericGroupId);
+  const { data: notificationData, isLoading } = useNotificationsQuery(
+    groupId as string,
+  );
+  const addNotificationMutation = useAddNotificationMutation(groupId as string);
+  const updateNotificationMutation = useUpdateNotificationMutation(
+    groupId as string,
+  );
+  const deleteNotificationMutation = useDeleteNotificationMutation(
+    groupId as string,
+  );
 
   const { accessToken } = useUserStore();
   const { data: userData } = useUsersQuery(accessToken);

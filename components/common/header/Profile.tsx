@@ -6,7 +6,7 @@ import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
 import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
-import { useJoinTeamMutation } from '@/queries/group/invitaion';
+import { useJoinTeamMutation } from '@/queries/group/invitation';
 
 export default function Profile() {
   const { accessToken } = useUserStore();
@@ -16,7 +16,7 @@ export default function Profile() {
   const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
-  const { mutate: joinTeam } = useJoinTeamMutation(user?.data.id || 0);
+  const { mutate: joinTeam } = useJoinTeamMutation(user?.data.id as any);
 
   const handleCustomInputModal = () => {
     openModal((close) => (
@@ -43,11 +43,11 @@ export default function Profile() {
             toast.error('로그인 상태를 확인해주세요.');
           }
         }}
-        placeholder={'팀 링크를 입력해주세요.'}
-        label={'팀 링크'}
+        placeholder={'초대 코드를 입력해주세요.'}
+        label={'팀 초대 코드'}
         className={'max-w-[400px] md:max-w-[350px]'}
         childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
-        bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
+        bottomDescription={'공유받은 초대 코드를 입력해 참여할 수 있어요.'}
       />
     ));
   };

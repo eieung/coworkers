@@ -21,12 +21,11 @@ export default function TaskList() {
   const router = useRouter();
   const { groupId } = router.query;
 
-  const numericGroupId: number = groupId ? Number(groupId) : 0;
   const {
     data: groupResponse,
     isLoading,
     error,
-  } = useGroupsQuery(numericGroupId);
+  } = useGroupsQuery(groupId as string);
 
   const groupData = groupResponse?.data;
   const { accessToken } = useUserStore();
@@ -41,7 +40,7 @@ export default function TaskList() {
       : false;
 
   const openModal = useModalStore((state) => state.openModal);
-  const createTaskListMutation = useCreateTaskListMutation(numericGroupId);
+  const createTaskListMutation = useCreateTaskListMutation(groupId as string);
   const [taskLists, setTaskLists] = useState(groupData?.taskLists || []);
 
   const reorderTaskListMutation = reOrderTaskListMutation();
@@ -94,8 +93,8 @@ export default function TaskList() {
     setTaskLists(reorderedTaskLists);
 
     reorderTaskListMutation.mutate({
-      groupId: numericGroupId,
-      taskListId: parseInt(draggableId),
+      groupId: groupId as string,
+      taskListId: draggableId,
       data: { displayIndex: destination.index },
     });
   };
@@ -150,7 +149,7 @@ export default function TaskList() {
                             totalTasks={totalTasks}
                             completedTasks={completedTasks}
                             displayIndex={taskList.displayIndex}
-                            groupId={numericGroupId}
+                            groupId={groupId as string}
                             taskListId={taskList.id}
                             isAdmin={isAdmin}
                           />
