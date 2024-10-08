@@ -309,6 +309,19 @@ th {
     border-image: var(--brand-gradient) 1;
     background-clip: padding-box;
   }
+
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: var(--brand-gradient);
+  }
+
+  .border-brand-gradient {
+    border: 1px solid transparent;
+    border-image: var(--brand-gradient) 1;
+    background-clip: padding-box;
+  }
 }
 
 /* 공통 Toastify 설정 */
