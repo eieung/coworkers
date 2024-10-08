@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  transition: all 0.3s ease;
+}
+
 :root {
   /* Base colors */
   --black: #101318;
@@ -58,7 +62,7 @@
   --icon-tertiary: #10b981;
 
   /* Etc colors */
-  --bg-dropdown: #18212f;
+  --bg-darkBlue: #18212f;
 }
 
 body {
@@ -297,23 +301,36 @@ th {
     transform: translate(-50%, 0%);
   }
 
-  /* 글씨가 흐르는 공지 애니메이션 */
-  @keyframes marquee {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: var(--brand-gradient);
   }
 
-  .animate-marquee {
-    animation: marquee 30s linear infinite;
+  .border-brand-gradient {
+    border: 1px solid transparent;
+    border-image: var(--brand-gradient) 1;
+    background-clip: padding-box;
+  }
+
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: var(--brand-gradient);
+  }
+
+  .border-brand-gradient {
+    border: 1px solid transparent;
+    border-image: var(--brand-gradient) 1;
+    background-clip: padding-box;
   }
 }
 
 /* 공통 Toastify 설정 */
 .toast-container .Toastify__toast {
+  font-family: inherit;
   color: var(--text-primary);
   background: var(--bg-secondary);
 }

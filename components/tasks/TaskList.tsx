@@ -3,14 +3,22 @@ import Link from 'next/link';
 import TaskItem from './TaskItem';
 import useModalStore from '@/store/useModalStore';
 import DatePicker from '@/components/common/modal/DatePicker';
-import { TaskListType, TaskType } from '@/types/taskListType';
+import { TaskListType, TaskType } from '@/types/taskList';
 import {
-  patchTaskRequest,
-  deleteTaskRequest,
-  getTasksRequest,
-} from '@/libs/taskListApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+  useDeleteRecurringTask,
+  useDeleteTask,
+  useEditTask,
+  useEditTaskIndex,
+  useGetTasks,
+  useToggleTask,
+} from '@/queries/tasks/useTaskData';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
+import { useState, useEffect } from 'react';
 
 interface TaskListProps {
   categories: TaskListType[];
@@ -20,115 +28,55 @@ interface TaskListProps {
 
 const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
   const router = useRouter();
-  const { listid: listId } = router.query;
+  const { listId } = router.query;
 
   const currentCategory = categories.find(
     (category) => String(category.id) === listId,
   );
 
   const openModal = useModalStore((state) => state.openModal);
-  const queryClient = useQueryClient();
 
   const {
-    data: tasks = [],
+    data: initialTasks = [],
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
-    queryFn: () => {
-      if (currentCategory?.id) {
-        return getTasksRequest({
-          groupId,
-          taskListId: currentCategory.id,
-          date: currentDate,
-        });
-      }
-      return Promise.resolve({ tasks: [] });
-    },
-    enabled: !!groupId && !!currentCategory?.id,
-    select: (data) => data.tasks,
-  });
+  } = useGetTasks(groupId, currentCategory?.id, currentDate);
 
-  const toggleTaskMutation = useMutation<
-    void,
-    Error,
-    { id: number; doneAt: string | null }
-  >({
-    mutationFn: ({ id, doneAt }) => {
-      const newDoneAt = !doneAt;
-      return patchTaskRequest({
-        taskId: id,
-        taskData: {
-          done: newDoneAt,
-        },
-      });
-    },
-  });
+  const [tasks, setTasks] = useState<TaskType[]>(initialTasks);
+  const { mutate: toggleTask } = useToggleTask(groupId);
+  const { mutate: deleteTask } = useDeleteTask(groupId);
+  const editTaskIndexMutation = useEditTaskIndex(groupId, currentCategory?.id);
+  const { mutate: editTask } = useEditTask(groupId, currentCategory?.id);
+  const { mutate: deleteRecurringTask } = useDeleteRecurringTask(groupId);
 
-  const toggleTask = (id: number, doneAt: string | null) => {
-    toggleTaskMutation.mutate(
-      { id, doneAt },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
-          });
-        },
-      },
-    );
-  };
-
-  const editTaskMutation = useMutation<
-    void,
-    Error,
-    { id: number; data: string }
-  >({
-    mutationFn: ({ id, data }) => {
-      return patchTaskRequest({ taskId: id, taskData: { name: data } });
-    },
-  });
-
-  const editTask = (id: number, data: string) => {
-    editTaskMutation.mutate(
-      { id, data },
-      {
-        onSuccess: () => {
-          toast.success(`${data} 수정되었습니다!`);
-          queryClient.invalidateQueries({
-            queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
-          });
-        },
-        onError: (error) => {
-          console.error('Error editing task:', error.message);
-          toast.error('작업을 수정하는 도중 오류가 발생했습니다.');
-        },
-      },
-    );
-  };
-
-  const deleteTaskMutation = useMutation<void, Error, number>({
-    mutationFn: (id) => {
-      return deleteTaskRequest({ groupId, taskId: id });
-    },
-  });
-
-  const deleteTask = (id: number) => {
-    deleteTaskMutation.mutate(id, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ['tasks', groupId, currentCategory?.id, currentDate],
-        });
-        toast.success('할 일이 삭제되었습니다!');
-      },
-      onError: (error) => {
-        console.error('Error deleting task:', error.message);
-        toast.error('할 일을 삭제하는 도중 오류가 발생했습니다.');
-      },
+  useEffect(() => {
+    const sortedTasks = [...initialTasks].sort((a, b) => {
+      return (a.displayIndex || 0) - (b.displayIndex || 0);
     });
-  };
+    setTasks(sortedTasks);
+  }, [initialTasks]);
 
   const handleDatePickerModal = () => {
     openModal((close) => <DatePicker close={close} />);
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) return;
+    if (destination.index === source.index) return;
+
+    const reorderedTasks = Array.from(tasks);
+    const [removed] = reorderedTasks.splice(source.index, 1);
+    reorderedTasks.splice(destination.index, 0, removed);
+
+    setTasks(reorderedTasks);
+
+    editTaskIndexMutation.mutate({
+      taskListId: currentCategory?.id as number,
+      taskId: Number(draggableId),
+      displayIndex: destination.index,
+    });
   };
 
   return (
@@ -141,7 +89,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
             shallow={false}
           >
             <span
-              className={`font-medium-16 relative flex-shrink-0 ${
+              className={`font-medium-16 relative flex-shrink-0 transition duration-300 ease-in-out ${
                 String(category.id) === listId
                   ? 'text-text-tertiary'
                   : 'text-text-default'
@@ -158,30 +106,55 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
           </Link>
         ))}
       </div>
-      {currentCategory && tasks?.length === 0 ? (
+
+      {currentCategory && tasks.length === 0 ? (
         <div className="flex-center font-regular-14 my-[250px] flex text-text-default sm:my-[150px] md:my-[250px]">
           아직 할 일 목록이 없습니다.
           <br />
           새로운 목록을 추가해주세요.
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          {tasks.map((taskData: TaskType) => {
-            const { id, doneAt } = taskData;
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="tasks">
+            {(provided) => (
+              <div
+                className="flex flex-col gap-4"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {tasks.map((taskData: TaskType, index: number) => {
+                  const { id, doneAt, recurringId } = taskData;
 
-            return (
-              <TaskItem
-                key={id}
-                taskData={taskData}
-                completed={!!doneAt}
-                onToggle={() => toggleTask(id, doneAt)}
-                onEdit={(data) => editTask(id, data)}
-                onDelete={() => deleteTask(id)}
-              />
-            );
-          })}
-        </div>
+                  return (
+                    <Draggable key={id} draggableId={String(id)} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <TaskItem
+                            taskData={taskData}
+                            completed={!!doneAt}
+                            onToggle={() => toggleTask({ id, doneAt })}
+                            onEdit={(name) => editTask({ id, name, doneAt })}
+                            onDelete={() => deleteTask(id)}
+                            onRecurringDelete={() =>
+                              deleteRecurringTask({ taskId: id, recurringId })
+                            }
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       )}
+
       <div className="fixed bottom-12 right-7 sm:bottom-[38px] md:bottom-6 md:right-6 md:flex md:justify-end lg:right-[calc((100vw-1200px)/2)]">
         <div
           className="flex-center flex h-12 w-[125px] cursor-pointer rounded-[40px] bg-brand-primary text-white shadow-floating hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive"

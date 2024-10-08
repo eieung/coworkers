@@ -5,6 +5,7 @@ import closeImg from '@/assets/image/icon/x.svg';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import useClickOutside from '@/hooks/useClickOutside';
+import { motion } from 'framer-motion';
 
 /*
  * @component
@@ -143,9 +144,12 @@ function Modal({
         )}
       />
       {!isCustom ? (
-        <div
+        <motion.div
+          animate={{ y: [-50, 0] }}
+          transition={{ type: 'spring' }}
           className={twMerge(
-            'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:max-w-[375px]',
+            'transition-none',
+            'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:absolute sm:bottom-0 sm:max-w-full',
             'font-medium-16 p-[16px_16px_32px] text-text-primary shadow-lg',
             className,
           )}
@@ -175,7 +179,7 @@ function Modal({
           {title && (
             <h2
               className={clsx(
-                'mb-2 mt-2 whitespace-pre-line font-bold text-center',
+                'mb-2 mt-2 whitespace-pre-line text-center font-bold',
                 titleClassName,
               )}
             >
@@ -197,10 +201,16 @@ function Modal({
               {children}
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div
-          className={twMerge('fixed bg-bg-secondary shadow-lg', className)}
+        <motion.div
+          animate={{ x: [-50, 0] }}
+          transition={{ type: 'spring' }}
+          className={twMerge(
+            'transition-none',
+            'fixed bg-bg-secondary shadow-lg',
+            className,
+          )}
           ref={modalRef}
         >
           {showCloseIcon && (
@@ -216,9 +226,11 @@ function Modal({
               'scrollbar:w-2 scrollbar:rounded-full scrollbar:bg-bg-primary scrollbar-thumb:rounded-full scrollbar-thumb:bg-bg-tertiary',
             )}
           >
-            <div className={twMerge('px-2', childrenClassName)}>{children}</div>
+            <div className={twMerge('px-2 pb-10', childrenClassName)}>
+              {children}
+            </div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>,
     document.body,

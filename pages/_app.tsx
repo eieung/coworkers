@@ -1,6 +1,7 @@
 import Header from '@/components/common/header';
 import ModalRenderer from '@/components/common/modal/ModalRender';
 import '@/styles/globals.css';
+import '@/styles/animation.css';
 import 'react-toastify/dist/ReactToastify.css';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';

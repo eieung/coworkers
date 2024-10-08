@@ -2,16 +2,13 @@ import inputArrowDefaultImg from '@/assets/image/icon/input-arrow-default.svg';
 import inputArrowActiveImg from '@/assets/image/icon/input-arrow-active.svg';
 import Image from 'next/image';
 import { Controller, useForm } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  AddCommentParams,
-  addCommentRequest,
-  getCommentsRequest,
-} from '@/libs/taskCommentApi';
-import { toast } from 'react-toastify';
-import { CommentType } from '@/types/taskListType';
+import { CommentType } from '@/types/taskList';
 import Comment from '@/components/tasks/Comment';
 import Textarea from '@/components/common/Textarea';
+import {
+  useCreateComment,
+  useGetComments,
+} from '@/queries/tasks/useTaskCommentData';
 
 interface FormData {
   comment: string;
@@ -34,54 +31,28 @@ export default function CommentSection({ taskId }: CommentSectionProps) {
     },
   });
 
-  const queryClient = useQueryClient();
-
-  const { data: comments = [] } = useQuery({
-    queryKey: ['comments', taskId],
-    queryFn: () => getCommentsRequest({ taskId }),
-    enabled: !!taskId,
-  });
+  const { data: comments = [] } = useGetComments(taskId);
 
   const sortedComments = [...comments].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
-  const addCommentMutation = useMutation<void, Error, AddCommentParams>({
-    mutationFn: ({ taskId, commentData }) =>
-      addCommentRequest({
-        taskId,
-        commentData,
-      }),
-  });
+  const createCommentMutation = useCreateComment(taskId);
 
   const onSubmit = (data: FormData) => {
-    addCommentMutation.mutate(
-      {
-        taskId,
-        commentData: {
-          content: data.comment.trim(),
-        },
+    createCommentMutation.mutate({
+      taskId,
+      commentData: {
+        content: data.comment.trim(),
       },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ['comments'],
-          });
-          toast.success('댓글이 성공적으로 추가되었습니다.');
-          reset();
-        },
-        onError: (error) => {
-          console.error('댓글 추가 중 오류 발생:', error);
-          toast.error('댓글 추가에 실패했습니다.');
-        },
-      },
-    );
+    });
+    reset();
   };
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="h-[1px] w-full bg-bd-primary"></div>
+        <div className="mb-[1px] h-[1px] w-full bg-bd-primary"></div>
         <span className="flex gap-2">
           <div className="flex flex-grow flex-col">
             <Controller
@@ -114,9 +85,9 @@ export default function CommentSection({ taskId }: CommentSectionProps) {
             />
           </button>
         </span>
-        <div className="mb-4 h-[1px] w-full bg-bd-primary"></div>
+        <div className="mb-4 mt-[1px] h-[1px] w-full bg-bd-primary"></div>
         {sortedComments.length === 0 && (
-          <p className="flex-center font-regular-14 my-[100px] flex text-text-default sm:my-[150px] md:my-[250px]">
+          <p className="flex-center font-regular-14 my-[100px] flex text-text-default sm:my-[150px] md:my-[100px]">
             아직 댓글이 없습니다.
             <br /> 댓글을 추가해보세요.
           </p>

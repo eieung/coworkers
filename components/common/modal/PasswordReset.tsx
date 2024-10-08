@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 interface PasswordResetProps {
   close: () => void;
@@ -18,6 +19,7 @@ interface FormData {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function PasswordReset({ close, onAction }: PasswordResetProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -33,10 +35,16 @@ export default function PasswordReset({ close, onAction }: PasswordResetProps) {
   const { title, description, inputs, buttons } =
     ModalUserActions[ACTION_TYPE.PASSWORD_RESET];
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     const trimmedInput = data.value.trim();
-    onAction(trimmedInput);
-    close();
+    try {
+      await onAction(trimmedInput);
+    } catch (error) {
+      console.error('비밀번호 재설정에 실패했습니다.', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,6 +80,7 @@ export default function PasswordReset({ close, onAction }: PasswordResetProps) {
                   trigger('value');
                 }}
                 value={field.value}
+                disabled={isLoading}
               />
             )}
           />
@@ -82,7 +91,7 @@ export default function PasswordReset({ close, onAction }: PasswordResetProps) {
               key={index}
               {...button}
               onClick={index === 0 ? close : button.onClick}
-              disabled={index === 0 ? false : !isValid}
+              disabled={index === 0 ? false : !isValid || isLoading}
             />
           ))}
         </div>

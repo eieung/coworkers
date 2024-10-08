@@ -5,10 +5,12 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
  * @interface NotificationModel
  * @extends Document - Mongoose Document를 확장하여 MongoDB 문서의 메서드와 속성을 포함합니다.
  * @property content - 공지사항의 내용 (string)
+ * @property groupId - 그룹 ID (number)
  * @property createdAt - 공지사항 생성 시간 (Date)
  */
 export interface NotificationModel extends Document {
   content: string;
+  groupId: number;
   createdAt: Date;
 }
 
@@ -20,11 +22,15 @@ export interface NotificationModel extends Document {
 const NotificationSchema: Schema = new mongoose.Schema({
   content: {
     type: String,
-    required: true, // 공지사항 내용은 필수입니다.
+    required: true,
+  },
+  groupId: {
+    type: Number,
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now, // 생성 시간은 기본적으로 현재 날짜로 설정됩니다.
+    default: Date.now,
   },
 });
 

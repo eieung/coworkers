@@ -2,6 +2,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Modal from '.';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
+import Input from '@/components/common/Input';
 import Textarea from '@/components/common/Textarea';
 
 interface CreateTaskProps {
@@ -13,6 +14,11 @@ interface CreateTaskProps {
   onAction: (data: string) => void;
   initialData?: string;
   placeholder?: string;
+  className?: string;
+  childrenClassName?: string;
+  showCloseIcon?: boolean;
+  bottomDescription?: React.ReactNode;
+  inputType?: 'input' | 'textarea';
 }
 
 interface FormData {
@@ -28,6 +34,11 @@ export default function CustomInputModal({
   onAction,
   initialData = '',
   placeholder = '내용을 입력해주세요',
+  className,
+  childrenClassName,
+  showCloseIcon = true,
+  bottomDescription = null,
+  inputType = 'input',
 }: CreateTaskProps) {
   const {
     control,
@@ -50,8 +61,10 @@ export default function CustomInputModal({
       onClose={close}
       title={title}
       description={description}
-      showCloseIcon={true}
+      showCloseIcon={showCloseIcon}
       titleClassName="font-regular-18"
+      className={className}
+      childrenClassName={childrenClassName}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mt-4 flex flex-col">
@@ -59,19 +72,33 @@ export default function CustomInputModal({
             name="title"
             control={control}
             rules={{ required: '내용 입력은 필수입니다.' }}
-            render={({ field }) => (
-              <Textarea
-                {...field}
-                label={label}
-                placeholder={placeholder}
-                className={clsx('h-2 w-full border')}
-                invalid={!!errors.title}
-                validationMessage={errors.title?.message}
-                onBlur={(e) => {
-                  field.onChange(e.target.value.trim());
-                }}
-              />
-            )}
+            render={({ field }) =>
+              inputType === 'input' ? (
+                <Input
+                  {...field}
+                  label={label}
+                  placeholder={placeholder}
+                  className={clsx('h-12 w-full border')}
+                  invalid={!!errors.title}
+                  validationMessage={errors.title?.message}
+                  onBlur={(e) => {
+                    field.onChange(e.target.value.trim());
+                  }}
+                />
+              ) : (
+                <Textarea
+                  {...field}
+                  label={label}
+                  placeholder={placeholder}
+                  className={clsx('w-full border')}
+                  invalid={!!errors.title}
+                  validationMessage={errors.title?.message}
+                  onBlur={(e) => {
+                    field.onChange(e.target.value.trim());
+                  }}
+                />
+              )
+            }
           />
         </div>
         <Button
@@ -80,6 +107,11 @@ export default function CustomInputModal({
           children={buttonText}
           fullWidth={true}
         />
+        {bottomDescription && (
+          <div className="flex-center font-regular-16 mt-6 flex text-text-primary">
+            {bottomDescription}
+          </div>
+        )}
       </form>
     </Modal>
   );

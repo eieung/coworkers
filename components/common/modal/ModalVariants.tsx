@@ -21,9 +21,9 @@ export default function ModalVariants() {
   /* 모달 사용 예시 */
 
   // 회원 초대하기
-  const handleOpenInviteModal = () => {
-    openModal((close) => <InviteMember close={close} />); // 각 컴포넌트 별로 전달할 props은 modal 폴더안의 해당 컴포넌트에서 각자 추가하시면 됩니다.
-  };
+  // const handleOpenInviteModal = () => {
+  //   openModal((close) => <InviteMember close={close} />); // 각 컴포넌트 별로 전달할 props은 modal 폴더안의 해당 컴포넌트에서 각자 추가하시면 됩니다.
+  // };
 
   // 할일 목록 만들기
   const handleOpenCreateListModal = () => {
@@ -100,29 +100,26 @@ export default function ModalVariants() {
   //   ));
   // };
 
-  // 커스텀 인풋 모달 예시
-  const [inputData, setInputData] = useState<string>('공지 내용입니다');
+  // 커스텀 인풋 모달 팀 참여하기 예시
   const handleCustomInputModal = () => {
     openModal((close) => (
       <CustomInputModal
         close={close}
-        title={
-          <div className="flex items-center gap-2">
-            {/* fontawesome 이용 */}
-            <i className="fas fa-solid fa-pen-to-square" />
-            <span>공지 수정</span>
-          </div>
-        }
-        buttonText={'수정하기'}
+        title={<div className="font-medium-24 mb-10">팀 참여하기</div>}
+        buttonText={'참여하기'}
         // 작동 함수
         onAction={(data) => {
-          setInputData(data);
-          toast.success(`${data} 수정되었습니다!`);
+          toast.success(`${data} 팀에 참여되었습니다!`);
         }}
-        // input에 보이게 할 데이터. 설정 안해도 됨
-        initialData={inputData}
         // 설정 안할시 기본은 "내용을 입력해주세요"
-        placeholder={'공지 내용을 입력해주세요'}
+        placeholder={'팀 링크를 입력해주세요.'}
+        label={'팀 링크'}
+        // 모달 전체 넓이 수정 원할 시 사용. 모달 기본적으로 모바일은 max-w-full
+        className={'max-w-[400px] md:max-w-[350px]'}
+        // 모달 안의 컨텐츠의 넓이 수정시 사용.
+        childrenClassName={'w-[350px] sm:w-[300px] md:w-[300px]'}
+        /*  텍스트말고 <div className="">내용</div> 이런 형태로 하면 스타일 변경 가능 */
+        bottomDescription={'공유받은 팀 링크를 입력해 참여할 수 있어요.'}
       />
     ));
   };
@@ -146,9 +143,9 @@ export default function ModalVariants() {
     // 버튼과 모달 연동 설정 예시
     // 연결 태그를 button 태그로 할 시 스페이스바와 엔터시 모달 지속 호출 이슈가 있어 button외 다른 태그 사용 권장
     <div className="flex-center mt-40 flex flex-col gap-4 text-white">
-      <div className="cursor-pointer" onClick={handleOpenInviteModal}>
+      {/* <div className="cursor-pointer" onClick={handleOpenInviteModal}>
         회원 초대하기
-      </div>
+      </div> */}
       <div className="cursor-pointer" onClick={handleOpenCreateListModal}>
         할일 목록 만들기
       </div>

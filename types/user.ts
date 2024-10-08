@@ -4,7 +4,7 @@ export interface Group {
   createdAt: string;
   image: string;
   name: string;
-  id: number;
+  id: string;
 }
 
 export interface Membership {
@@ -13,7 +13,7 @@ export interface Membership {
   userImage: string;
   userEmail: string;
   userName: string;
-  groupId: number;
+  groupId: string;
   userId: number;
 }
 

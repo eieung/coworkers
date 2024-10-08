@@ -1,12 +1,41 @@
-import { useGroup } from '@/hooks/useGroup';
 import MemberList from './MemberList';
+import useModalStore from '@/store/useModalStore';
+import InviteMember from '@/components/common/modal/InviteMember';
+import { useGroupsQuery } from '@/queries/group/group';
+import { useRouter } from 'next/router';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
 
-interface MemberProps {
-  groupId: number;
-}
+export default function Member() {
+  const openModal = useModalStore((state) => state.openModal);
+  const router = useRouter();
+  const { groupId } = router.query;
 
-export default function Member({ groupId }: MemberProps) {
-  const { data: groupData, isLoading, error } = useGroup(groupId);
+  const handleOpenInviteModal = () => {
+    openModal((close) => (
+      <InviteMember close={close} groupId={groupId as string} />
+    ));
+  };
+
+  const {
+    data: groupResponse,
+    isLoading,
+    error,
+  } = useGroupsQuery(groupId as string);
+
+  const groupData = groupResponse?.data;
+
+  const { accessToken } = useUserStore();
+
+  const { data: userData } = useUsersQuery(accessToken);
+
+  const isAdmin =
+    groupData && userData
+      ? groupData.members.some(
+          (member) =>
+            member.userId === userData.data.id && member.role === 'ADMIN',
+        )
+      : false;
 
   if (isLoading) return <div>로딩 중...</div>;
 
@@ -36,13 +65,18 @@ export default function Member({ groupId }: MemberProps) {
             ({groupData.members.length}명)
           </span>
         </div>
-        <button className="font-regular-14 text-brand-primary">
-          + 새로운 멤버 초대하기
-        </button>
+        {isAdmin && (
+          <button
+            className="font-regular-14 text-brand-primary"
+            onClick={handleOpenInviteModal}
+          >
+            + 새로운 멤버 초대하기
+          </button>
+        )}
       </div>
       <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-3">
         {sortedMembers.map((member) => (
-          <MemberList key={member.userId} member={member} />
+          <MemberList key={member.userId} member={member} isAdmin={isAdmin} />
         ))}
       </div>
     </div>
