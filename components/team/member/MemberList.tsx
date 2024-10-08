@@ -10,20 +10,20 @@ import useModalStore from '@/store/useModalStore';
 import CopyEmail from '@/components/common/modal/CopyEmail';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
-import { useDeleteMember } from '@/hooks/useDeleteMember';
 import { useUserStore } from '@/store/authStore';
+import { useDeleteMemberMutation } from '@/queries/group/member';
 
 interface MemberProps {
   member: Member;
   isAdmin: boolean;
 }
 
-export default function MemberList({ member, isAdmin }: MemberProps) {
+export default function MemberList({ member, isAdmin = false }: MemberProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const openModal = useModalStore((state) => state.openModal);
 
-  const deleteMemberMutation = useDeleteMember(member.groupId);
+  const deleteMemberMutation = useDeleteMemberMutation(member.groupId);
 
   const { user } = useUserStore();
   const currentUserId = user?.id;
@@ -65,7 +65,6 @@ export default function MemberList({ member, isAdmin }: MemberProps) {
     ));
   };
 
-  // 바깥 여백 클릭 시 메뉴 닫히는 거 자주 쓰이는 데 훅으로 빼도 될 듯
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -90,10 +89,16 @@ export default function MemberList({ member, isAdmin }: MemberProps) {
           className="rounded-full object-contain"
         />
         <div className="flex min-w-0 flex-col">
-          <span className="font-medium-14 flex flex-row gap-x-1 text-text-primary">
+          <span className="font-medium-14 flex flex-row gap-x-1 truncate text-text-primary">
             {member.userName}
             {member.role === 'ADMIN' && (
-              <Image src={crownIcon} alt="관리자" width={14} height={17} />
+              <Image
+                src={crownIcon}
+                alt="관리자"
+                width={14}
+                height={17}
+                className="object-contain"
+              />
             )}
           </span>
           <span className="font-regular-12 truncate text-text-secondary">

@@ -2,14 +2,18 @@ import Image from 'next/image';
 import checkImg from '@/assets/image/icon/check.svg';
 import commentImg from '@/assets/image/icon/comment.svg';
 import menuImg from '@/assets/image/icon/kebab.svg';
+import moveImg from '@/assets/image/icon/arrows-move.svg';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { TaskType } from '@/types/taskListType';
+import { TaskType } from '@/types/taskList';
 import TaskDetail from '@/components/tasks/TaskDetail';
 import CustomInputModal from '@/components/common/modal/CustomInputModal';
 import DateAndFrequency from '@/components/tasks/DateAndFrequency';
 import { useRouter } from 'next/router';
+import { useGetTaskItem } from '@/queries/tasks/useTaskData';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 interface TaskItemProps {
   taskData: TaskType;
@@ -17,6 +21,7 @@ interface TaskItemProps {
   onToggle: () => void;
   onEdit: (data: string) => void;
   onDelete: () => void;
+  onRecurringDelete: () => void;
 }
 
 const TaskItem = ({
@@ -25,12 +30,30 @@ const TaskItem = ({
   onToggle,
   onEdit,
   onDelete,
+  onRecurringDelete,
 }: TaskItemProps) => {
-  const { name, date, frequency, commentCount } = taskData;
-  const { openModal } = useModalStore((state) => ({
+  const { id: taskId, name, date, frequency, commentCount } = taskData;
+  const { openModal, updateModal } = useModalStore((state) => ({
     openModal: state.openModal,
+    updateModal: state.updateModal,
   }));
+
+  console.log(taskData);
   const router = useRouter();
+
+  const {
+    data: taskdetailData = [],
+    isLoading,
+    error,
+  } = useGetTaskItem(String(taskId));
+
+  useEffect(() => {
+    if (taskdetailData) {
+      updateModal((close) => (
+        <TaskDetail taskdetailData={taskdetailData} onClose={close} />
+      ));
+    }
+  }, [taskdetailData, updateModal]);
 
   const handleOpenTaskDetailModal = () => {
     openModal((close) => {
@@ -50,7 +73,16 @@ const TaskItem = ({
         );
       };
 
-      return <TaskDetail taskData={taskData} onClose={handleModalClose} />;
+      return (
+        <>
+          {taskdetailData && (
+            <TaskDetail
+              taskdetailData={taskdetailData}
+              onClose={handleModalClose}
+            />
+          )}
+        </>
+      );
     });
     // 모달용 쿼리 추가
     router.push(
@@ -82,7 +114,7 @@ const TaskItem = ({
       },
     },
     {
-      label: '삭제하기',
+      label: '단일 삭제하기',
       onClick: () => {
         openModal((close) => (
           <ConfirmModal
@@ -90,8 +122,30 @@ const TaskItem = ({
             onConfirm={() => {
               onDelete();
             }}
-            title={`'${name}'\n할 일을 정말 삭제하시겠어요?`}
-            description={'삭제 후에는 되돌릴 수 없습니다.'}
+            title={`'${name}'\n할 일 단일 항목을 정말 삭제하시겠어요?`}
+            description={
+              '단일 항목만 삭제합니다.\n삭제 후에는 되돌릴 수 없습니다.'
+            }
+            isAlert={true}
+            confirmText={'삭제하기'}
+            buttonType={'danger'}
+          />
+        ));
+      },
+    },
+    {
+      label: '반복 삭제하기',
+      onClick: () => {
+        openModal((close) => (
+          <ConfirmModal
+            close={close}
+            onConfirm={() => {
+              onRecurringDelete();
+            }}
+            title={`'${name}'\n할 일 반복 전부를 정말 삭제하시겠어요?`}
+            description={
+              '반복 설정된 할 일이 전부 삭제됩니다.\n삭제 후에는 되돌릴 수 없습니다.'
+            }
             isAlert={true}
             confirmText={'삭제하기'}
             buttonType={'danger'}
@@ -103,9 +157,31 @@ const TaskItem = ({
 
   return (
     <div
-      className="flex w-full cursor-pointer flex-col gap-[10px] rounded-lg bg-bg-secondary p-[12px_14px] text-text-primary"
+      className="relative flex w-full cursor-pointer flex-col gap-[10px] rounded-lg bg-bg-secondary p-[12px_14px] text-text-primary"
       onClick={handleOpenTaskDetailModal}
     >
+      <motion.div
+        className="absolute left-0 top-0 h-full w-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0 }}
+        whileHover={{
+          scale: [1, 1.2, 1],
+          opacity: 1,
+        }}
+        transition={{
+          duration: 1.2,
+          ease: 'easeInOut',
+        }}
+      >
+        <Image
+          className="absolute top-1/2 -translate-y-1/2"
+          style={{ left: 'calc(50% - 15px)' }}
+          src={moveImg}
+          alt="check"
+          width={30}
+          height={30}
+        />
+      </motion.div>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <label
@@ -151,7 +227,7 @@ const TaskItem = ({
         <div onClick={(e) => e.stopPropagation()}>
           <Dropdown
             trigger={
-              <span className="flex-center flex h-6 w-6">
+              <span className="flex-center flex h-6 w-6 rounded-md transition duration-300 ease-in-out hover:bg-bg-tertiary">
                 <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
               </span>
             }

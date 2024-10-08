@@ -1,6 +1,7 @@
 import useClickOutside from '@/hooks/useClickOutside';
 import { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { motion } from 'framer-motion';
 
 interface DropdownProps {
   trigger: React.ReactNode; // 트리거를 React 컴포넌트로 받음 (버튼, 이미지 등)
@@ -49,7 +50,11 @@ export default function Dropdown({
         {trigger}
       </button>
       {isOpen && (
-        <ul
+        <motion.ul
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2 }}
           className={twMerge(
             'absolute right-0 z-20 mt-2 overflow-hidden rounded-xl border border-bd-primary bg-bg-secondary text-white',
           )}
@@ -79,7 +84,7 @@ export default function Dropdown({
               )}
             </li>
           ))}
-        </ul>
+        </motion.ul>
       )}
     </div>
   );

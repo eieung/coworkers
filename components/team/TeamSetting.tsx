@@ -1,27 +1,50 @@
 import Image from 'next/image';
 import settingIcon from '@/assets/image/icon/gear.svg';
 import thumbnailTeam from '@/assets/image/task/thumbnail-team.svg';
-import { useGroup } from '@/hooks/useGroup';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import TeamForm from '@/components/common/modal/TeamForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import useModalStore from '@/store/useModalStore';
-import { useDeleteGroup } from '@/hooks/useDeleteGroup';
+import {  useDeleteGroupMutation, useGroupsQuery } from '@/queries/group/group';
+import { useRouter } from 'next/router';
+import { useUserStore } from '@/store/authStore';
+import { useUsersQuery } from '@/queries/user/user';
+import Error from '@/components/common/error';
 
-interface TeamSettingProps {
-  groupId: number;
-  isAdmin: boolean;
-}
+export default function TeamSetting() {
+  const router = useRouter();
+  const { groupId } = router.query;
 
-export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
-  const { data: groupData, isLoading, error } = useGroup(groupId);
+  const numericGroupId: number = groupId ? Number(groupId) : 0;
+  const {
+    data: groupResponse,
+    isLoading,
+    error,
+  } = useGroupsQuery(numericGroupId);
   const openModal = useModalStore((state) => state.openModal);
-  const deleteGroupMutation = useDeleteGroup();
+  const deleteGroupMutation = useDeleteGroupMutation();
 
+  const groupData = groupResponse?.data;
+  const { accessToken } = useUserStore();
+  const { data: userData } = useUsersQuery(accessToken);
+
+  const isAdmin =
+    groupData && userData
+      ? groupData.members.some(
+          (member) =>
+            member.userId === userData.data.id && member.role === 'ADMIN',
+        )
+      : false;
   if (isLoading) return <div>로딩 중...</div>;
-  if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
-  // TODO: 이 부분 어떻게 처리하면 좋을 지?
-  if (!groupData) return <div>데이터 없음</div>;
+  if (error) {
+    return (
+      <Error
+        errorMessage="데이터를 불러오는 중 오류가 발생했습니다."
+        onRetry={() => router.push('/login')}
+      />
+    );
+  }
+  if (!groupData) return null;
 
   const handleEditTeam = () => {
     openModal((close) => (
@@ -30,7 +53,7 @@ export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
         name={groupData?.name}
         image={groupData?.image}
         isEditMode={true}
-        groupId={groupId}
+        groupId={numericGroupId}
       />
     ));
   };
@@ -43,7 +66,7 @@ export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
         close={close}
         confirmText="삭제하기"
         onConfirm={() => {
-          deleteGroupMutation.mutate(groupId);
+          deleteGroupMutation.mutate(numericGroupId);
           close();
         }}
         buttonType="danger"
@@ -72,7 +95,6 @@ export default function TeamSetting({ groupId, isAdmin }: TeamSettingProps) {
             { label: '삭제하기', onClick: handleDeleteTeam },
           ]}
           className="w-[120px]"
-          itemClassName="w-full h-10"
         />
       ) : (
         <img

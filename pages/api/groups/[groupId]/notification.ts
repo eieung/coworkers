@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '@/libs/dbConnect';
 import Notification, { NotificationModel } from '@/models/Notification';
+import dbConnect from '@/services/database/dbConnect';
 
 /*
  * @ notification API 핸들러는 Next.js를 사용하여 CRUD(Create, Read, Update, Delete) 작업을 처리

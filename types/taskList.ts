@@ -35,6 +35,15 @@ export interface TaskListType {
   tasks: TaskType[];
 }
 
+export interface TaskDataType {
+  name: string;
+  description: string;
+  startDate: string;
+  frequencyType: string;
+  weekDays?: number[];
+  monthDay?: number;
+}
+
 export interface CommentType {
   id: number;
   taskId: number;

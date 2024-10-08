@@ -2,26 +2,46 @@ import { useRouter } from 'next/router';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import userIcon from '@/assets/image/icon/user.svg';
 import { useUserStore } from '@/store/authStore';
-import { useUser } from '@/hooks/useUser';
 import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
+import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
+import { useJoinTeamMutation } from '@/queries/group/invitaion';
 
 export default function Profile() {
-  const { clearUser, accessToken } = useUserStore();
+  const { accessToken } = useUserStore();
+  const { logout } = useAuthQuery();
+
   const router = useRouter();
-  const { data: user } = useUser(accessToken);
+  const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
-  // api 연동 필요
+  const { mutate: joinTeam } = useJoinTeamMutation(user?.data.id || 0);
+
   const handleCustomInputModal = () => {
     openModal((close) => (
       <CustomInputModal
         close={close}
         title={<div className="font-medium-24 mb-10">팀 참여하기</div>}
         buttonText={'참여하기'}
-        onAction={(data) => {
-          toast.success(`${data} 팀에 참여되었습니다!`);
+        onAction={(teamToken) => {
+          if (user?.data.email) {
+            joinTeam(
+              { userEmail: user.data.email, token: teamToken },
+              {
+                onSuccess: () => {
+                  toast.success('팀에 성공적으로 참여되었습니다!');
+                  close();
+                },
+                onError: (error) => {
+                  toast.error('팀 참여에 실패했습니다. 다시 시도해주세요.');
+                  console.error(error);
+                },
+              },
+            );
+          } else {
+            toast.error('로그인 상태를 확인해주세요.');
+          }
         }}
         placeholder={'팀 링크를 입력해주세요.'}
         label={'팀 링크'}
@@ -33,7 +53,7 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    clearUser();
+    logout();
     router.push('/login');
   };
 
@@ -67,14 +87,14 @@ export default function Profile() {
       trigger={
         <div className="flex items-center gap-x-2">
           <img
-            src={user?.image || userIcon.src}
+            src={user?.data.image || userIcon.src}
             alt="프로필"
             width={24}
             height={24}
             className="rounded-full object-contain md:h-4 md:w-4 lg:h-4 lg:w-4"
           />
           <span className="font-medium-14 hidden text-text-primary lg:block">
-            {user?.nickname}
+            {user?.data.nickname}
           </span>
         </div>
       }
