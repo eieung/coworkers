@@ -10,7 +10,7 @@ import {
   getTaskItemRequest,
   editTaskIndexRequest,
   deleteRecurringTaskRequest,
-} from '@/libs/task/taskListApi';
+} from '@/services/task/taskListApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 

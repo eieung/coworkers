@@ -4,8 +4,8 @@ import {
   deleteCommentRequest,
   editCommentRequest,
   getCommentsRequest,
-} from '@/libs/task/taskCommentApi';
-import {} from '@/libs/task/taskListApi';
+} from '@/services/task/taskCommentApi';
+import {} from '@/services/task/taskListApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
