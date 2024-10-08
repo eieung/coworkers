@@ -109,7 +109,7 @@ const DateManager = memo(function DateManager({
       </button>
       {isCalendarVisible && (
         <div
-          className="absolute left-0 top-10 z-10 w-[282px] rounded-3xl bg-bg-secondary shadow-lg"
+          className="absolute left-0 top-10 z-20 w-[282px] rounded-3xl bg-bg-secondary shadow-lg"
           ref={calendarRef}
         >
           <CustomCalendar
