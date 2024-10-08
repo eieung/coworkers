@@ -129,6 +129,24 @@ export const deleteTaskRequest = ({ groupId, taskId }: DeleteTaskParams) => {
   );
 };
 
+export interface DeleteRecurringTaskParams {
+  groupId: string | string[] | undefined;
+  taskId: number;
+  recurringId: number;
+}
+
+export const deleteRecurringTaskRequest = ({
+  groupId,
+  taskId,
+  recurringId,
+}: DeleteRecurringTaskParams) => {
+  return fetchData(
+    `/groups/${groupId}/task-lists/{taskListId}/tasks/${taskId}/recurring/${recurringId}`,
+    undefined,
+    'DELETE',
+  );
+};
+
 export interface EditTaskParams {
   taskId: number;
   taskData: {

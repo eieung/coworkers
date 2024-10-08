@@ -9,6 +9,7 @@ import {
   CreateTaskParams,
   getTaskItemRequest,
   editTaskIndexRequest,
+  deleteRecurringTaskRequest,
 } from '@/libs/task/taskListApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
@@ -141,6 +142,26 @@ export const useDeleteTask = (groupId: string) => {
       const errorMessage =
         error.message || '할 일을 삭제하는 도중 오류가 발생했습니다.';
       console.error('Error deleting task:', errorMessage);
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteRecurringTask = (groupId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { taskId: number; recurringId: number }>({
+    mutationFn: ({ taskId, recurringId }) =>
+      deleteRecurringTaskRequest({ groupId, taskId, recurringId }),
+    onSuccess: () => {
+      toast.success('반복 할 일이 전부 삭제되었습니다!');
+      queryClient.invalidateQueries({ queryKey: ['tasks', groupId] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || '반복 할 일을 삭제하는 도중 오류가 발생했습니다.';
+      console.error('Error deleting recurring task:', errorMessage);
       toast.error(errorMessage);
     },
   });

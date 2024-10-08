@@ -65,7 +65,7 @@ export default function Notification() {
         placeholder={'등록할 공지를 입력해주세요.'}
         label={'공지 내용'}
         className={'max-w-[400px] md:max-w-[350px]'}
-        childrenClassName={'w-[350px] sm:w-[300px] md:-w-[300px]'}
+        childrenClassName={'w-[350px] sm:w-[300px] md:w-[300px]'}
         bottomDescription={'팀에 속한 멤버들에게 공지를 할 수 있어요.'}
       />
     ));
