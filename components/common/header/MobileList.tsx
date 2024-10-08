@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useUserStore } from '@/store/authStore';
-import { useUser } from '@/hooks/useUser';
 import useModalStore from '@/store/useModalStore';
 import TeamForm from '../modal/TeamForm';
+import { useUsersQuery } from '@/queries/user/user';
 
 export default function MobileList() {
   const { accessToken } = useUserStore();
-  const { data: user } = useUser(accessToken);
+  const { data: user } = useUsersQuery(accessToken);
   const openModal = useModalStore((state) => state.openModal);
 
-  const teams = user?.memberships.map((membership) => membership.group) || [];
+  const teams =
+    user?.data.memberships.map((membership) => membership.group) || [];
 
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function MobileList() {
 
   if (!isVisible) return null;
 
-  const hasTeams = user?.memberships && user.memberships.length > 0;
+  const hasTeams = user?.data.memberships && user.data.memberships.length > 0;
 
   const handleCreateTeamModal = () => {
     openModal((close) => (

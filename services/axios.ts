@@ -1,7 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
 import { BASE_URL } from '@/constants/baseUrl';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
 // 인증이 필요한 요청에 사용
@@ -55,21 +53,9 @@ authAxiosInstance.interceptors.request.use(
 authAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { logout } = useAuth();
-    const router = useRouter();
-
     if (error.response && error.response.status === 401) {
       error.message = '로그인이 필요한 서비스입니다.';
-      toast.error('로그인 기한이 만료되었습니다.');
-      logout();
-      router.push('/login');
-    } else if (error.response && error.response.status >= 500) {
-      error.message = '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.';
-    } else {
-      error.message =
-        error.response?.data?.message || '요청 중 에러가 발생했습니다.';
     }
-    console.error('응답 인터셉터 에러:', error.message);
     return Promise.reject(error);
   },
 );

@@ -3,7 +3,7 @@ import { useValidation } from '@/hooks/useValidation';
 import Button from '../common/button';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { publicAxiosInstance } from '@/libs/axios';
+import { publicAxiosInstance } from '@/services/axios';
 
 export default function SignUpForm() {
   const {

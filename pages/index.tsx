@@ -11,7 +11,7 @@ import checkBox from '@/assets/image/landing/check.svg';
 import sectionTop from '@/assets/image/landing/landing-section-top.png';
 import sectionMiddle from '@/assets/image/landing/landing-section-middle.png';
 import sectionBottom from '@/assets/image/landing/landing-section-bottom.png';
-import { authAxiosInstance } from '@/libs/axios';
+import { authAxiosInstance } from '@/services/axios';
 import { useUserStore } from '@/store/authStore';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';

@@ -1,4 +1,4 @@
-import { authAxiosInstance } from '@/libs/axios';
+import { authAxiosInstance } from '@/services/axios';
 import { TaskDataType, TaskListType } from '@/types/taskList';
 import { AxiosError } from 'axios';
 

@@ -1,4 +1,4 @@
-import { publicAxiosInstance } from '../axios';
+import { publicAxiosInstance } from '@/services/axios';
 
 interface OauthDataType {
   state?: string;
