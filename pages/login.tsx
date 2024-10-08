@@ -1,5 +1,5 @@
-import LoginForm from '@/components/authentication/loginForm';
-import SocialLogin from '@/components/authentication/socialLogin';
+import LoginForm from '@/components/authentication/LoginForm';
+import SocialLogin from '@/components/authentication/SocialLogin';
 
 export default function Login() {
   return (
