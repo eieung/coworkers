@@ -1,4 +1,4 @@
-import loginWithSocial from '@/libs/socialLogin/authApi';
+import loginWithSocial from '@/services/socialLogin/authApi';
 import { useUserStore } from '@/store/authStore';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

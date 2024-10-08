@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
 import { useEffect } from 'react';
-import loginWithSocial from '@/libs/socialLogin/authApi';
+import loginWithSocial from '@/services/socialLogin/authApi';
 
 export default function KaKaoAuthCallback() {
   const router = useRouter();
