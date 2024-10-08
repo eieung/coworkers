@@ -11,7 +11,10 @@ import closeImg from '@/assets/image/icon/x.svg';
 import Image from 'next/image';
 import FileInput from '@/components/common/FileInput';
 import { useState, useEffect } from 'react';
-import { useCreateGroupMutation, usereviseGroupMutation } from '@/queries/group/group';
+import {
+  useCreateGroupMutation,
+  useReviseGroupMutation,
+} from '@/queries/group/group';
 import { useUploadImageMutation } from '@/queries/image/upload-images';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -27,7 +30,7 @@ interface TeamFormProps {
   name?: string;
   image?: string | null;
   isEditMode?: boolean;
-  groupId: number;
+  groupId?: string;
 }
 
 export default function TeamForm({
@@ -52,7 +55,7 @@ export default function TeamForm({
   const [preview, setPreview] = useState<string>(image || addImg.src);
 
   const createGroupMutation = useCreateGroupMutation();
-  const patchTeamMutation = usereviseGroupMutation();
+  const patchTeamMutation = useReviseGroupMutation();
   const uploadImageMutation = useUploadImageMutation();
 
   useEffect(() => {
@@ -76,7 +79,7 @@ export default function TeamForm({
 
   const editTeamHandler = (data: FormData) => {
     patchTeamMutation.mutate({
-      id: groupId,
+      id: groupId as string,
       data: {
         name: data.name.trim(),
         image: imageURL !== DEFAULT_IMAGE_URL ? imageURL : DEFAULT_IMAGE_URL,

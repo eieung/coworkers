@@ -8,13 +8,13 @@ import clsx from 'clsx';
 import {
   useInvitationQuery,
   useInviteMemberMutation,
-} from '@/queries/group/invitaion';
+} from '@/queries/group/invitation';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface InviteMemberProps {
   close: () => void;
-  groupId: number;
+  groupId: string;
 }
 
 interface FormData {
