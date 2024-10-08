@@ -8,6 +8,7 @@ import { useGroupStore } from '@/store/useGroupStore';
 import { useUsersQuery } from '@/queries/user/user';
 import { useState, useEffect, useRef } from 'react';
 import useClickOutside from '@/hooks/useClickOutside';
+import { motion } from 'framer-motion';
 
 export default function List() {
   const [isTeamListVisible, setIsTeamListVisible] = useState(false);
@@ -79,8 +80,9 @@ export default function List() {
 
   const selectedTeamName =
     hasTeams && selectedGroupId
-      ? user.data.memberships.find((m) => m.group.id === selectedGroupId as any)?.group
-          .name
+      ? user.data.memberships.find(
+          (m) => m.group.id === (selectedGroupId as any),
+        )?.group.name
       : '팀 시작하기';
 
   return (
@@ -111,12 +113,18 @@ export default function List() {
       </Link>
 
       {isTeamListVisible && hasTeams && (
-        <div className="team-list-translate">
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="team-list-translate"
+        >
           <TeamList
             teams={user.data.memberships.map((m) => m.group) as any}
             onTeamSelect={handleTeamSelect}
           />
-        </div>
+        </motion.div>
       )}
     </div>
   );
