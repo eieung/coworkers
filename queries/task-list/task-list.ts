@@ -101,3 +101,33 @@ export const useDeleteTaskListMutation = (groupId: number) => {
     },
   });
 };
+
+export const reOrderTaskList = (
+  groupId: number,
+  taskListId: number,
+  data: { displayIndex: number },
+) => {
+  return authAxiosInstance.patch(
+    `groups/${groupId}/task-lists/${taskListId}/order`,
+    data,
+  );
+};
+
+export const reOrderTaskListMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      groupId,
+      taskListId,
+      data,
+    }: {
+      groupId: number;
+      taskListId: number;
+      data: { displayIndex: number };
+    }) => reOrderTaskList(groupId, taskListId, data),
+    onSuccess: async (_, { groupId }) => {
+      await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
+    },
+  });
+};

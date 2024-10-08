@@ -5,7 +5,17 @@ import { useGroupsQuery } from '@/queries/group/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user/user';
-import { useCreateTaskListMutation } from '@/queries/task-list/task-list';
+import {
+  reOrderTaskListMutation,
+  useCreateTaskListMutation,
+} from '@/queries/task-list/task-list';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
+import { useEffect, useState } from 'react';
 
 export default function TaskList() {
   const router = useRouter();
@@ -32,6 +42,15 @@ export default function TaskList() {
 
   const openModal = useModalStore((state) => state.openModal);
   const createTaskListMutation = useCreateTaskListMutation(numericGroupId);
+  const [taskLists, setTaskLists] = useState(groupData?.taskLists || []);
+
+  const reorderTaskListMutation = reOrderTaskListMutation();
+
+  useEffect(() => {
+    if (groupData) {
+      setTaskLists(groupData.taskLists);
+    }
+  }, [groupData]);
 
   if (isLoading) {
     return <div>스켈레톤 구현 해야 함</div>;
@@ -40,8 +59,6 @@ export default function TaskList() {
   if (error) {
     return <div>에러 처리 해야 함</div>;
   }
-
-  const taskLists = groupResponse?.data.taskLists || [];
 
   const handleCreateTaskList = () => {
     openModal((close) => (
@@ -64,6 +81,25 @@ export default function TaskList() {
     ));
   };
 
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) return;
+    if (destination.index === source.index) return;
+
+    const reorderedTaskLists = Array.from(taskLists);
+    const [removed] = reorderedTaskLists.splice(source.index, 1);
+    reorderedTaskLists.splice(destination.index, 0, removed);
+
+    setTaskLists(reorderedTaskLists);
+
+    reorderTaskListMutation.mutate({
+      groupId: numericGroupId,
+      taskListId: parseInt(draggableId),
+      data: { displayIndex: destination.index },
+    });
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between py-4 pb-4 pt-6">
@@ -82,31 +118,53 @@ export default function TaskList() {
           </button>
         )}
       </div>
-      {taskLists.length === 0 ? (
-        <p className="font-medium-14 py-6 text-center text-text-default">
-          아직 할 일 목록이 없습니다.
-        </p>
-      ) : (
-        taskLists.map((taskList) => {
-          const totalTasks = taskList.tasks.length;
-          const completedTasks = taskList.tasks.filter(
-            (task) => task.doneAt,
-          ).length;
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="task-lists" direction="vertical">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {taskLists.length === 0 ? (
+                <p className="font-medium-14 py-6 text-center text-text-default">
+                  아직 할 일 목록이 없습니다.
+                </p>
+              ) : (
+                taskLists.map((taskList, index) => {
+                  const totalTasks = taskList.tasks.length;
+                  const completedTasks = taskList.tasks.filter(
+                    (task) => task.doneAt,
+                  ).length;
 
-          return (
-            <Task
-              key={taskList.id}
-              name={taskList.name}
-              totalTasks={totalTasks}
-              completedTasks={completedTasks}
-              displayIndex={taskList.displayIndex}
-              groupId={numericGroupId}
-              taskListId={taskList.id}
-              isAdmin={isAdmin}
-            />
-          );
-        })
-      )}
+                  return (
+                    <Draggable
+                      key={taskList.id}
+                      draggableId={String(taskList.id)}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Task
+                            name={taskList.name}
+                            totalTasks={totalTasks}
+                            completedTasks={completedTasks}
+                            displayIndex={taskList.displayIndex}
+                            groupId={numericGroupId}
+                            taskListId={taskList.id}
+                            isAdmin={isAdmin}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })
+              )}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }
