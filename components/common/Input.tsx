@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import visibilityOn from '@/assets/image/icon/visibility_on.svg';
 import visibilityOff from '@/assets/image/icon/visibility_off.svg';
 import Image from 'next/image';
+import { twMerge } from 'tailwind-merge';
 
 /*
  * @component
@@ -73,7 +74,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             type={type === 'password' && isPasswordVisible ? 'text' : type}
-            className={clsx(
+            className={twMerge(
               'placeholder:font-regular-16 rounded-[12px] border border-solid border-bd-primary bg-bg-secondary p-4 text-text-primary outline-none placeholder:text-text-default',
               'hover:border-it-hover',
               'focus:border-it-focus',

@@ -4,17 +4,24 @@ import Image from 'next/image';
 import CircularProgressBar from '@/components/common/CircularProgressBar';
 import todoIcon from '@/assets/image/task/todo.svg';
 import doneIcon from '@/assets/image/task/done.svg';
-import { useGroup } from '@/hooks/useGroup';
+import { useGroupsQuery } from '@/queries/group/group';
+import { useRouter } from 'next/router';
 
-interface TaskReportProps {
-  groupId: number;
-}
+export default function TaskReport() {
+  const router = useRouter();
+  const { groupId } = router.query;
 
-export default function TaskReport({ groupId }: TaskReportProps) {
-  const { data: groupData, isLoading, error } = useGroup(groupId);
+
+  const {
+    data: groupResponse,
+    isLoading,
+    error,
+  } = useGroupsQuery(groupId as string);
   const [todayTasksCount, setTodayTasksCount] = useState(0);
   const [doneTasksCount, setDoneTasksCount] = useState(0);
   const [percentage, setPercentage] = useState(0);
+
+  const groupData = groupResponse?.data;
 
   /*
    * @ 설명:

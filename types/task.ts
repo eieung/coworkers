@@ -1,7 +1,7 @@
 import { User } from './user';
 
 export interface TaskResponse {
-  id: number;
+  id: string;
   name: string;
   description: string;
   date: string;

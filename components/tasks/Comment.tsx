@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CommentType } from '@/types/taskListType';
+import { CommentType } from '@/types/taskList';
 import defaultUserImg from '@/assets/image/icon/member.svg';
 import Image from 'next/image';
 import { getElapsedTime } from '@/utils/common';
@@ -10,13 +10,11 @@ import Textarea from '@/components/common/Textarea';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
-import {
-  deleteCommentRequest,
-  editCommentRequest,
-} from '@/libs/taskCommentApi';
 import { useForm } from 'react-hook-form';
+import {
+  useDeleteComment,
+  useEditComment,
+} from '@/queries/tasks/useTaskCommentData';
 
 interface CommentProps {
   taskId: number;
@@ -38,9 +36,10 @@ export default function Comment({
 }: CommentProps) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const userImageContainer = image || defaultUserImg;
+  const userImageContainer = image || defaultUserImg.src;
   const openModal = useModalStore((state) => state.openModal);
-  const queryClient = useQueryClient();
+  const handleDelete = useDeleteComment(taskId, commentId);
+  const handleEdit = useEditComment(taskId, commentId);
 
   const {
     register,
@@ -64,45 +63,18 @@ export default function Comment({
     setIsEditing(false);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setValue('comment', content);
-  };
-
-  const handleDelete = async () => {
-    try {
-      await deleteCommentRequest({
-        taskId: taskId,
-        commentId: commentId,
-      });
-      toast.success('댓글이 삭제되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
-    } catch (error) {
-      console.error('댓글 삭제 중 오류 발생:', error);
-      toast.error('댓글 삭제에 실패했습니다.');
-    }
-  };
-
   const onSubmit = async (data: FormValues) => {
-    try {
-      await editCommentRequest({
-        taskId: taskId,
-        commentId: commentId,
-        commentData: { content: data.comment.trim() },
-      });
-      toast.success('댓글이 성공적으로 수정되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['comments'] });
-      setIsEditing(false);
-    } catch (error) {
-      console.error('댓글 수정 중 오류 발생:', error);
-      toast.error('댓글 수정에 실패했습니다.');
-    }
+    await handleEdit(data.comment);
+    setIsEditing(false);
   };
 
   const dropdownItems = [
     {
       label: '수정하기',
-      onClick: handleEdit,
+      onClick: () => {
+        setIsEditing(true);
+        setValue('comment', content);
+      },
     },
     {
       label: '삭제하기',
@@ -162,7 +134,10 @@ export default function Comment({
           <>
             <p>{content}</p>
             {Number(currentUserId) === commentUserId && (
-              <div onClick={(e) => e.stopPropagation()}>
+              <div
+                className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Dropdown
                   trigger={
                     <Image
@@ -181,15 +156,13 @@ export default function Comment({
       </span>
       {!isEditing && (
         <div className={'mt-4 flex items-center justify-between'}>
-          <span className={'flex items-center gap-3'}>
-            <Image
+          <span className={'flex h-[32px] w-[32px] items-center gap-3'}>
+            <img
               className="rounded-full"
               src={userImageContainer}
               alt="유저 이미지"
-              width={32}
-              height={32}
             />
-            <span className="font-medium-14">{nickname}</span>
+            <span className="font-medium-14 whitespace-nowrap">{nickname}</span>
           </span>
           <span
             className="font-regular-14 text-text-secondary"

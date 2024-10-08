@@ -17,7 +17,7 @@ export default function DeleteAccount({ close }: DeleteAccountProps) {
         description={description}
         close={close}
         isAlert={true}
-        confirmText={buttons[1].children}
+        confirmText={buttons[1].children as string}
         buttonType="danger"
         onConfirm={() => {
           toast('탈퇴되었습니다!');

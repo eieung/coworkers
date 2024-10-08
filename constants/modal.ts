@@ -34,10 +34,20 @@ const DEFAULT_BUTTON_FONT = 'font-medium-16';
 export const ModalUserActions: Record<ACTION_TYPE, Action> = {
   [ACTION_TYPE.INVITE_MEMBER]: {
     title: '멤버 초대',
-    description: '그룹에 참여할 수 있는 링크를 복사합니다.',
+    description: '그룹에 참여할 수 있는 코드를 복사하고 초대합니다.',
     buttons: [
       {
-        children: '링크 복사하기',
+        type: 'button',
+        children: '초대 코드 복사하기',
+        appearance: 'outlined',
+        size: 'floating-large',
+        disabled: false,
+        font: DEFAULT_BUTTON_FONT,
+        fullWidth: true,
+      },
+      {
+        type: 'submit',
+        children: '초대하기',
         appearance: 'solid',
         size: 'floating-large',
         disabled: false,
@@ -231,27 +241,23 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
     ],
     inputs: [
       {
-        name: 'title',
+        name: 'name',
         height: 'h-12',
         label: '할 일 제목',
         placeholder: '할 일 제목을 입력해주세요.',
       },
       {
-        name: 'date',
+        name: 'startDate',
         height: 'h-12',
-        label: '시작 날짜 및 시간',
+        label: '시작 날짜',
       },
       {
-        name: 'time',
-        height: 'h-12',
-      },
-      {
-        name: 'repeat',
+        name: 'frequencyType',
         height: 'h-11',
         label: '반복 설정',
       },
       {
-        name: 'memo',
+        name: 'description',
         height: 'h-[75px]',
         label: '할 일 메모',
         placeholder: '메모를 입력해주세요.',
@@ -281,7 +287,7 @@ export const ModalUserActions: Record<ACTION_TYPE, Action> = {
         appearance: 'solid',
         size: 'floating-large',
         disabled: false,
-        children: '링크보내기',
+        children: '링크 보내기',
         font: DEFAULT_BUTTON_FONT,
         fullWidth: true,
       },

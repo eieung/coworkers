@@ -5,11 +5,17 @@ import rightArrowImg from '@/assets/image/icon/triangle_arrow_right.svg';
 
 interface CustomCalendarProps {
   onDateSelect: (date: Date | null) => void;
+  disablePastDates?: boolean;
 }
 
-const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
+const CustomCalendar = ({
+  onDateSelect,
+  disablePastDates = false,
+}: CustomCalendarProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   // 월의 첫 번째 날과 마지막 날 계산
   const getFirstDayOfMonth = (date: Date) => {
@@ -57,9 +63,15 @@ const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
   };
 
   const handleDateClick = (date: Date) => {
-    if (date.getMonth() === currentMonth.getMonth()) {
-      setSelectedDate(date);
-      onDateSelect(date);
+    const normalizedDate = new Date(date);
+    normalizedDate.setHours(0, 0, 0, 0);
+
+    if (
+      normalizedDate.getMonth() === currentMonth.getMonth() &&
+      (normalizedDate >= today || !disablePastDates)
+    ) {
+      setSelectedDate(normalizedDate);
+      onDateSelect(normalizedDate);
     }
   };
 
@@ -78,9 +90,9 @@ const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
   };
 
   return (
-    <div className="w-full rounded-xl border border-bd-primary p-4 hover:border-it-hover">
+    <div className="w-full p-4">
       <header className="flex items-center justify-between py-[5px]">
-        <button onClick={handlePrevMonth}>
+        <button onClick={handlePrevMonth} type="button">
           <Image
             src={leftArrowImg}
             alt="Previous month"
@@ -93,7 +105,7 @@ const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
           {currentMonth.getFullYear()}년{' '}
           {currentMonth.toLocaleString('ko-KR', { month: 'long' })}
         </h2>
-        <button onClick={handleNextMonth}>
+        <button onClick={handleNextMonth} type="button">
           <Image src={rightArrowImg} alt="Next month" width={24} height={24} />
         </button>
       </header>
@@ -109,13 +121,21 @@ const CustomCalendar = ({ onDateSelect }: CustomCalendarProps) => {
           <div
             key={index}
             onClick={() => handleDateClick(date)}
-            className={`font-medium-14 cursor-pointer p-2 ${
+            className={`font-medium-14 p-2 ${
               date.getMonth() !== currentMonth.getMonth()
-                ? 'text-text-default'
-                : ''
+                ? 'cursor-default text-text-default' // 현재 월이 아닐 경우 기본 커서와 색상 적용
+                : disablePastDates && date < today // disablePastDates가 true이고, date가 오늘보다 이전일 경우
+                  ? 'cursor-default text-gray-400' // 선택 불가능 스타일 적용
+                  : 'cursor-pointer hover:rounded-lg hover:bg-brand-primary hover:text-bg-secondary' // 선택 가능 스타일 적용
             } ${
               selectedDate?.toDateString() === date.toDateString()
-                ? 'rounded-lg bg-brand-primary text-bg-secondary'
+                ? 'rounded-lg bg-point-blue text-bg-secondary' // 선택된 날짜 스타일 적용
+                : ''
+            } ${
+              date.toDateString() === today.toDateString()
+                ? selectedDate?.toDateString() === today.toDateString() // 오늘 날짜 선택된 경우
+                  ? 'text-white'
+                  : 'text-blue-500'
                 : ''
             }`}
           >

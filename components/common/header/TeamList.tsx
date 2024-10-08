@@ -1,4 +1,3 @@
-import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import kebabIcon from '@/assets/image/icon/kebab.svg';
 import plusIcon from '@/assets/image/icon/plus.svg';
@@ -14,49 +13,22 @@ interface Team {
 interface TeamListProps {
   teams: Team[];
   onTeamSelect: (teamId: number, teamName: string) => void;
-  onClose: () => void;
 }
 
-export default function TeamList({
-  teams,
-  onTeamSelect,
-  onClose,
-}: TeamListProps) {
+export default function TeamList({ teams, onTeamSelect }: TeamListProps) {
   const openModal = useModalStore((state) => state.openModal);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
-        onClose();
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
 
   const handleCreateTeamModal = () => {
-    openModal((close) => (
-      <TeamForm close={close} groupId={0} isEditMode={false} />
-    ));
+    openModal((close) => <TeamForm close={close} isEditMode={false} />);
   };
 
   return (
-    <div
-      ref={wrapperRef}
-      className="h-auto w-[218px] rounded-2xl bg-bg-secondary p-4"
-    >
+    <div className="h-auto w-[218px] rounded-2xl bg-bg-secondary p-4">
       {teams.length > 0 &&
         teams.map((team) => (
-          <div
+          <button
             key={team.id}
-            className="mb-2 flex items-center justify-between rounded-[8px] p-2 hover:bg-bg-tertiary"
+            className="mb-2 flex w-full items-center justify-between rounded-[8px] p-2 hover:bg-bg-tertiary"
             onClick={() => onTeamSelect(team.id, team.name)}
           >
             <div className="flex items-center gap-x-3">
@@ -70,7 +42,7 @@ export default function TeamList({
             <button className="text-white">
               <Image src={kebabIcon} alt="케밥 아이콘" width={16} height={16} />
             </button>
-          </div>
+          </button>
         ))}
       <button
         onClick={handleCreateTeamModal}

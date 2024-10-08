@@ -51,8 +51,6 @@ export default function TextDropdown({
   const router = useRouter();
   const isBoardsPage = router.pathname === '/boards';
 
-  console.log(isBoardsPage);
-
   return (
     <div className="flex items-center">
       <Dropdown
@@ -62,7 +60,7 @@ export default function TextDropdown({
               className={twMerge(
                 'font-medium-14 flex h-11 items-center justify-between gap-2 rounded-xl p-[10px_12.5px]',
                 !isBoardsPage
-                  ? 'font-medium-14 w-[109px] bg-bg-dropdown text-text-default'
+                  ? 'font-medium-14 bg-bg-darkBlue w-[109px] text-text-default'
                   : 'font-regular-14 w-[120px] bg-bg-tertiary text-text-primary', // /boards 페이지일 때 색상 변경
               )}
             >

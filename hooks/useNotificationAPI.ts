@@ -57,7 +57,7 @@ const fetchAPI = async (url: string, options?: RequestInit) => {
  * useNotificationAPI 훅은 공지사항을 관리하기 위한 로직을 제공합니다.
  * @returns UseNotificationAPI - 훅의 반환 값
  */
-export function useNotificationAPI(): UseNotificationAPI {
+export function useNotificationAPI(groupId: number): UseNotificationAPI {
   const [state, setState] = useState<NotificationState>({
     notice: null,
     loading: true,
@@ -82,7 +82,8 @@ export function useNotificationAPI(): UseNotificationAPI {
   const fetchNotification = async () => {
     updateState({ loading: true });
     try {
-      const data = await fetchAPI('/api/notification');
+      const data = await fetchAPI(`/api/groups/${groupId}/notification`);
+
       const newState: Partial<NotificationState> = { loading: false };
 
       if (data.success && data.data.length > 0) {
@@ -112,15 +113,29 @@ export function useNotificationAPI(): UseNotificationAPI {
    */
   const addNewNotice = async (content: string) => {
     try {
-      const data = await fetchAPI('/api/notification', {
+      const response = await fetch('/api/groups/${groupId}/notification', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content,
+          groupId: groupId,
+        }),
       });
-      if (data.success) {
-        await fetchNotification();
-        updateState({ showForm: false, newNotice: '', errorMessage: null });
+
+      if (!response.ok) {
+        throw new Error('새로운 공지 생성에 실패했습니다.');
       }
+
+      const data = await response.json();
+      updateState({
+        notice: data.data.content,
+        noticeId: data.data._id,
+        newNotice: '',
+        showForm: false,
+      });
+      fetchNotification()
     } catch (error) {
       console.error('공지 추가에 실패했습니다.', error);
       updateState({ errorMessage: '공지 추가에 실패했습니다.' });
@@ -135,11 +150,11 @@ export function useNotificationAPI(): UseNotificationAPI {
   const updateNotice = async (id: string, content: string) => {
     try {
       const data = await fetchAPI(
-        `/api/notification?id=${encodeURIComponent(id)}`,
+        `/api/groups/${groupId}/notification?id=${encodeURIComponent(id)}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ content, groupId }),
         },
       );
       if (data.success) {
@@ -164,7 +179,7 @@ export function useNotificationAPI(): UseNotificationAPI {
   const deleteNotice = async (id: string) => {
     try {
       const data = await fetchAPI(
-        `/api/notification?id=${encodeURIComponent(id)}`,
+        `/api/groups/${groupId}/notification?id=${encodeURIComponent(id)}`,
         {
           method: 'DELETE',
         },

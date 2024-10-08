@@ -80,7 +80,7 @@ const config: Config = {
         'icon-tertiary': 'var(--icon-tertiary)',
 
         /* Etc colors */
-        'bg-dropdown': 'var(--bg-dropdown)',
+        'bg-darkBlue': 'var(--bg-darkBlue)',
       },
     },
   },

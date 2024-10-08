@@ -4,15 +4,16 @@ import Link from 'next/link';
 import toggleIcon from '@/assets/image/icon/header-toggle.svg';
 import TeamList from './TeamList';
 import { useUserStore } from '@/store/authStore';
-import { useUser } from '@/hooks/useUser';
 import { useGroupStore } from '@/store/useGroupStore';
-import { useState, useEffect } from 'react';
+import { useUsersQuery } from '@/queries/user/user';
+import { useState, useEffect, useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
+import { motion } from 'framer-motion';
 
 export default function List() {
   const [isTeamListVisible, setIsTeamListVisible] = useState(false);
-
   const { accessToken } = useUserStore();
-  const { data: user } = useUser(accessToken);
+  const { data: user } = useUsersQuery(accessToken);
   const {
     selectedGroupId,
     setSelectedGroupId,
@@ -23,11 +24,14 @@ export default function List() {
   const router = useRouter();
   const { groupId } = router.query;
 
+  const teamListRef = useRef<HTMLDivElement>(null);
+  useClickOutside(teamListRef, () => setIsTeamListVisible(false));
+
   useEffect(() => {
-    if (user?.memberships && user.memberships.length > 0) {
+    if (user?.data.memberships && user.data.memberships.length > 0) {
       if (initialGroupId === null) {
         // 초기 그룹 ID 설정 (첫 로드 시에만)
-        setInitialGroupId(user.memberships[0].group.id);
+        setInitialGroupId(user.data.memberships[0].group.id as any);
       }
 
       if (groupId) {
@@ -57,8 +61,8 @@ export default function List() {
     setIsTeamListVisible(false);
   };
 
-  const handleCloseTeamList = () => {
-    setIsTeamListVisible(false);
+  const handleGetStarted = () => {
+    router.push('/get-started-team');
   };
 
   // 로그인하지 않은 상태
@@ -72,21 +76,31 @@ export default function List() {
     );
   }
 
-  const hasTeams = user?.memberships && user.memberships.length > 0;
+  const hasTeams = user?.data.memberships && user.data.memberships.length > 0;
 
   const selectedTeamName =
     hasTeams && selectedGroupId
-      ? user.memberships.find((m) => m.group.id === selectedGroupId)?.group.name
-      : '팀 생성하기';
+      ? user.data.memberships.find(
+          (m) => m.group.id === (selectedGroupId as any),
+        )?.group.name
+      : '팀 시작하기';
 
   return (
-    <div className="relative flex gap-x-8 sm:hidden">
+    <div className="relative flex gap-x-8 sm:hidden" ref={teamListRef}>
       <div className="flex gap-x-[11px]">
-        <Link href={selectedGroupId ? `/groups/${selectedGroupId}` : '/'}>
-          <span className="font-medium-16 text-text-primary">
-            {selectedTeamName}
-          </span>
-        </Link>
+        {selectedTeamName === '팀 시작하기' ? (
+          <button onClick={handleGetStarted}>
+            <span className="font-medium-16 text-text-primary">
+              {selectedTeamName}
+            </span>
+          </button>
+        ) : (
+          <Link href={selectedGroupId ? `/groups/${selectedGroupId}` : '/'}>
+            <span className="font-medium-16 text-text-primary">
+              {selectedTeamName}
+            </span>
+          </Link>
+        )}
         {hasTeams && (
           <button onClick={toggleTeamListVisibility}>
             <Image src={toggleIcon} alt="토글" width={16} height={16} />
@@ -99,13 +113,18 @@ export default function List() {
       </Link>
 
       {isTeamListVisible && hasTeams && (
-        <div className="team-list-translate">
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="team-list-translate"
+        >
           <TeamList
-            teams={user.memberships.map((m) => m.group)}
+            teams={user.data.memberships.map((m) => m.group) as any}
             onTeamSelect={handleTeamSelect}
-            onClose={handleCloseTeamList}
           />
-        </div>
+        </motion.div>
       )}
     </div>
   );
