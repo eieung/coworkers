@@ -215,7 +215,10 @@ export default function TaskDetail({
                 )}
               </h1>
             </div>
-            <div onClick={(e) => e.stopPropagation()}>
+            <div
+              className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary"
+              onClick={(e) => e.stopPropagation()}
+            >
               {!isEditing && (
                 <Dropdown
                   trigger={

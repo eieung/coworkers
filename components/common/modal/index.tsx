@@ -148,6 +148,7 @@ function Modal({
           animate={{ y: [-50, 0] }}
           transition={{ type: 'spring' }}
           className={twMerge(
+            'transition-none',
             'flex-center relative w-full max-w-[384px] flex-col rounded-xl bg-bg-secondary sm:absolute sm:bottom-0 sm:max-w-full',
             'font-medium-16 p-[16px_16px_32px] text-text-primary shadow-lg',
             className,
@@ -205,7 +206,11 @@ function Modal({
         <motion.div
           animate={{ x: [-50, 0] }}
           transition={{ type: 'spring' }}
-          className={twMerge('fixed bg-bg-secondary shadow-lg', className)}
+          className={twMerge(
+            'transition-none',
+            'fixed bg-bg-secondary shadow-lg',
+            className,
+          )}
           ref={modalRef}
         >
           {showCloseIcon && (

@@ -134,7 +134,10 @@ export default function Comment({
           <>
             <p>{content}</p>
             {Number(currentUserId) === commentUserId && (
-              <div onClick={(e) => e.stopPropagation()}>
+              <div
+                className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Dropdown
                   trigger={
                     <Image

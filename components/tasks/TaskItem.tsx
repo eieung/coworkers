@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useGetTaskItem } from '@/queries/tasks/useTaskData';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import clsx from 'clsx';
 
 interface TaskItemProps {
   taskData: TaskType;
@@ -161,7 +162,10 @@ const TaskItem = ({
       onClick={handleOpenTaskDetailModal}
     >
       <motion.div
-        className="absolute left-0 top-0 z-0 h-full w-full"
+        className={clsx(
+          'transition-none',
+          'absolute left-0 top-0 z-0 h-full w-full',
+        )}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0 }}
         whileHover={{
@@ -227,7 +231,7 @@ const TaskItem = ({
         <div onClick={(e) => e.stopPropagation()}>
           <Dropdown
             trigger={
-              <span className="flex-center flex h-6 w-6 rounded-md transition duration-300 ease-in-out hover:bg-bg-tertiary">
+              <span className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary">
                 <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
               </span>
             }
