@@ -186,8 +186,8 @@ const TaskItem = ({
           height={35}
         />
       </motion.div>
-      <div className="z-10 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="z-10 flex items-center gap-2">
           <label
             className="flex h-6 w-6 cursor-pointer items-center justify-center"
             onClick={(e) => e.stopPropagation()}
