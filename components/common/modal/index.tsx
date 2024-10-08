@@ -226,7 +226,9 @@ function Modal({
               'scrollbar:w-2 scrollbar:rounded-full scrollbar:bg-bg-primary scrollbar-thumb:rounded-full scrollbar-thumb:bg-bg-tertiary',
             )}
           >
-            <div className={twMerge('px-2', childrenClassName)}>{children}</div>
+            <div className={twMerge('px-2 pb-10', childrenClassName)}>
+              {children}
+            </div>
           </div>
         </motion.div>
       )}
