@@ -34,7 +34,7 @@ export default function MobileList() {
 
   const handleCreateTeamModal = () => {
     openModal((close) => (
-      <TeamForm close={close} groupId={0} isEditMode={false} />
+      <TeamForm close={close} isEditMode={false} />
     ));
   };
   return (

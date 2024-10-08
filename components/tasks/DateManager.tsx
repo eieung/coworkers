@@ -74,32 +74,34 @@ const DateManager = memo(function DateManager({
 
   return (
     <div className="relative flex items-center gap-3">
-      <h1 className="text-text-primary">
-        {formatDate(adjustToLocalDate(new Date(currentDate)))}
-      </h1>
-      <div className="flex items-center gap-1">
-        <div
-          className={clsx(
-            'absolute left-[50px] top-[-22px] flex items-center justify-center',
-            today !== currentDate ? 'hidden' : '',
-          )}
-        >
-          <h1 className="glow-text rounded-lg p-[2px] text-sm font-bold text-transparent">
-            today
-          </h1>
+      <div
+        className={clsx(
+          'absolute left-[50px] top-[-22px] flex items-center justify-center',
+          today !== currentDate ? 'hidden' : '',
+        )}
+      >
+        <h1 className="glow-text rounded-lg p-[2px] text-sm font-bold text-transparent">
+          today
+        </h1>
+      </div>
+      <div className="flex w-[140px] items-center justify-between">
+        <h1 className="text-text-primary">
+          {formatDate(adjustToLocalDate(new Date(currentDate)))}
+        </h1>
+        <div className="flex items-center gap-1">
+          <button
+            className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
+            onClick={handlePrevDate}
+          >
+            <Image src={leftImg} alt="왼쪽 화살표" width={12} height={12} />
+          </button>
+          <button
+            className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
+            onClick={handleNextDate}
+          >
+            <Image src={rightImg} alt="오른쪽 화살표" width={12} height={12} />
+          </button>
         </div>
-        <button
-          className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
-          onClick={handlePrevDate}
-        >
-          <Image src={leftImg} alt="왼쪽 화살표" width={12} height={12} />
-        </button>
-        <button
-          className="flex-center flex h-4 w-4 rounded-full bg-bg-secondary"
-          onClick={handleNextDate}
-        >
-          <Image src={rightImg} alt="오른쪽 화살표" width={12} height={12} />
-        </button>
       </div>
       <button
         className="flex-center flex h-6 w-6 rounded-full bg-bg-secondary"

@@ -9,7 +9,7 @@ import { authAxiosInstance } from '@/services/axios';
  * @param groupId - 가져올 그룹의 ID
  * @returns 그룹 데이터
  */
-export const getGroups = (groupId: number) => {
+export const getGroups = (groupId: string) => {
   return authAxiosInstance.get<GroupResponse>(`groups/${groupId}`);
 };
 
@@ -39,7 +39,7 @@ export const getGroups = (groupId: number) => {
  *    - 데이터 요청이 실패했을 경우 재시도 횟수를 의미
  */
 
-export const useGroupsQuery = (id: number) => {
+export const useGroupsQuery = (id: string) => {
   return useQuery({
     queryKey: ['groups', id],
     queryFn: () => getGroups(id),
@@ -105,7 +105,7 @@ export const useCreateGroupMutation = () => {
  * 팀 정보를 삭제하는 함수
  * @param groupId - 삭제할 그룹의 ID
  */
-export const deleteGroup = (groupId: number) => {
+export const deleteGroup = (groupId: string) => {
   return authAxiosInstance.delete(`groups/${groupId}`);
 };
 
@@ -121,7 +121,7 @@ export const useDeleteGroupMutation = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (id: number) => deleteGroup(id),
+    mutationFn: (id: string) => deleteGroup(id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['groups'] });
       await queryClient.invalidateQueries({ queryKey: ['user'] });
@@ -142,19 +142,19 @@ export const useDeleteGroupMutation = () => {
  * @param data - 수정할 팀 데이터 (이름, 이미지)
  */
 export const reviseGroup = (
-  groupId: number,
+  groupId: string,
   data: { name: string; image: string | null },
 ) => {
   return authAxiosInstance.patch(`groups/${groupId}`, data);
 };
 
 /**
- * @usereviseGroupMutation
+ * @useReviseGroupMutation
  * 팀 정보를 수정하는 mutation 훅
  * 서버에 팀 정보를 PATCH 요청으로 업데이트하고,
  * 성공 시 그룹 및 사용자 데이터를 무효화하고 다시 가져옴
  */
-export const usereviseGroupMutation = () => {
+export const useReviseGroupMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -162,7 +162,7 @@ export const usereviseGroupMutation = () => {
       id,
       data,
     }: {
-      id: number;
+      id: string;
       data: { name: string; image: string | null };
     }) => reviseGroup(id, data),
     onSuccess: async (_, { id }) => {

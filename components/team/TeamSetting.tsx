@@ -5,7 +5,7 @@ import Dropdown from '@/components/common/dropdown/Dropdown';
 import TeamForm from '@/components/common/modal/TeamForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import useModalStore from '@/store/useModalStore';
-import {  useDeleteGroupMutation, useGroupsQuery } from '@/queries/group/group';
+import { useDeleteGroupMutation, useGroupsQuery } from '@/queries/group/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user/user';
@@ -15,12 +15,11 @@ export default function TeamSetting() {
   const router = useRouter();
   const { groupId } = router.query;
 
-  const numericGroupId: number = groupId ? Number(groupId) : 0;
   const {
     data: groupResponse,
     isLoading,
     error,
-  } = useGroupsQuery(numericGroupId);
+  } = useGroupsQuery(groupId as string);
   const openModal = useModalStore((state) => state.openModal);
   const deleteGroupMutation = useDeleteGroupMutation();
 
@@ -53,7 +52,7 @@ export default function TeamSetting() {
         name={groupData?.name}
         image={groupData?.image}
         isEditMode={true}
-        groupId={numericGroupId}
+        groupId={groupId as string}
       />
     ));
   };
@@ -66,7 +65,7 @@ export default function TeamSetting() {
         close={close}
         confirmText="삭제하기"
         onConfirm={() => {
-          deleteGroupMutation.mutate(numericGroupId);
+          deleteGroupMutation.mutate(groupId as string);
           close();
         }}
         buttonType="danger"
