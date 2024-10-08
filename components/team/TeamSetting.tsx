@@ -9,6 +9,7 @@ import {  useDeleteGroupMutation, useGroupsQuery } from '@/queries/group/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user/user';
+import Error from '@/components/common/error';
 
 export default function TeamSetting() {
   const router = useRouter();
@@ -35,9 +36,15 @@ export default function TeamSetting() {
         )
       : false;
   if (isLoading) return <div>로딩 중...</div>;
-  if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
-  // TODO: 이 부분 어떻게 처리하면 좋을 지?
-  if (!groupData) return <div>데이터 없음</div>;
+  if (error) {
+    return (
+      <Error
+        errorMessage="데이터를 불러오는 중 오류가 발생했습니다."
+        onRetry={() => router.push('/login')}
+      />
+    );
+  }
+  if (!groupData) return null;
 
   const handleEditTeam = () => {
     openModal((close) => (

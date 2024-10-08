@@ -23,7 +23,7 @@ export default function Notification() {
   const { groupId } = router.query;
 
   const numericGroupId: number = groupId ? Number(groupId) : 0;
-  const { data: groupResponse } = useGroupsQuery(numericGroupId);
+  const { data: groupResponse, isError } = useGroupsQuery(numericGroupId);
   const groupData = groupResponse?.data;
 
   const { data: notificationData, isLoading } =
@@ -140,6 +140,9 @@ export default function Notification() {
     return <span>공지를 불러오는 중입니다.</span>;
   }
 
+  if (isError) {
+    return <div>데이터를 불러오지 못했습니다.</div>;
+  }
   if (!notificationData?.data[0] && !isAdmin) {
     return null;
   }
@@ -169,7 +172,7 @@ export default function Notification() {
       </div>
       <div className="relative flex overflow-hidden rounded-2xl bg-bg-secondary p-4">
         {notificationData?.data[0] ? (
-          <div className="animate-marquee w-full whitespace-nowrap">
+          <div className="w-full text-center">
             <p className="font-bold-16 inline-block w-full px-4 text-text-primary">
               {notificationData?.data[0]?.content}
             </p>
