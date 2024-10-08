@@ -1,4 +1,4 @@
-import { authAxiosInstance } from '@/libs/axios';
+import { authAxiosInstance } from '@/services/axios';
 
 export const getHistoryRequest = async () => {
   const response = await authAxiosInstance.get(`/user/history`);
