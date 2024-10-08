@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useGetTaskItem } from '@/queries/tasks/useTaskData';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import clsx from 'clsx';
 
 interface TaskItemProps {
   taskData: TaskType;
@@ -161,7 +162,10 @@ const TaskItem = ({
       onClick={handleOpenTaskDetailModal}
     >
       <motion.div
-        className="absolute left-0 top-0 h-full w-full"
+        className={clsx(
+          'transition-none',
+          'absolute left-0 top-0 z-0 h-full w-full',
+        )}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0 }}
         whileHover={{
@@ -169,7 +173,7 @@ const TaskItem = ({
           opacity: 1,
         }}
         transition={{
-          duration: 1.2,
+          duration: 1,
           ease: 'easeInOut',
         }}
       >
@@ -178,12 +182,12 @@ const TaskItem = ({
           style={{ left: 'calc(50% - 15px)' }}
           src={moveImg}
           alt="check"
-          width={30}
-          height={30}
+          width={35}
+          height={35}
         />
       </motion.div>
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="z-10 flex items-center gap-2">
           <label
             className="flex h-6 w-6 cursor-pointer items-center justify-center"
             onClick={(e) => e.stopPropagation()}
@@ -227,7 +231,7 @@ const TaskItem = ({
         <div onClick={(e) => e.stopPropagation()}>
           <Dropdown
             trigger={
-              <span className="flex-center flex h-6 w-6 rounded-md transition duration-300 ease-in-out hover:bg-bg-tertiary">
+              <span className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary">
                 <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
               </span>
             }

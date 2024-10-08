@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  transition: all 0.3s ease;
+}
+
 :root {
   /* Base colors */
   --black: #101318;

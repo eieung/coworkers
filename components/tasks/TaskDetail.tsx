@@ -69,7 +69,7 @@ export default function TaskDetail({
 
   const isComplete = !!doneAt;
   const { id = 0, image, nickname = 'Anonymous' } = writer || {};
-  const userImageContainer = image || defaultUserImg;
+  const userImageContainer = image || defaultUserImg.src;
   const buttonType = isComplete ? 'floating-outlined' : 'floating-solid';
 
   const { openModal } = useModalStore((state) => ({
@@ -215,7 +215,10 @@ export default function TaskDetail({
                 )}
               </h1>
             </div>
-            <div onClick={(e) => e.stopPropagation()}>
+            <div
+              className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary"
+              onClick={(e) => e.stopPropagation()}
+            >
               {!isEditing && (
                 <Dropdown
                   trigger={

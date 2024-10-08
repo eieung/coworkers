@@ -56,6 +56,7 @@ export default function Dropdown({
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={twMerge(
+            'transition-none',
             'absolute right-0 z-20 mt-2 overflow-hidden rounded-xl border border-bd-primary bg-bg-secondary text-white',
           )}
         >
