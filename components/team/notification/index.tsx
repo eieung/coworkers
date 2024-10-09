@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import { useGroupsQuery } from '@/queries/group/group';
 import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user/user';
+import NotificationLoading from '@/components/common/skeleton/team/NotificationLoading';
 
 export default function Notification() {
   const openModal = useModalStore((state) => state.openModal);
@@ -139,7 +140,7 @@ export default function Notification() {
   }, [notificationData]);
 
   if (isLoading) {
-    return <span>공지를 불러오는 중입니다.</span>;
+    return <NotificationLoading />;
   }
 
   if (isError) {
