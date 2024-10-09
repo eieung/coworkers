@@ -1,6 +1,8 @@
 import React from 'react';
 import secession from '@/assets/image/icon/secession.svg';
 import Image from 'next/image';
+import member123 from '@/assets/image/icon/member.svg'
+import { Member } from '@/types/group';
 import member from '@/assets/image/icon/member.svg'
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -10,26 +12,36 @@ import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { toast } from 'react-toastify';
 import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 import ChangePassword from '@/components/common/modal/ChangePassword'; // ChangePassword 컴포넌트 import
+import CopyEmail from '@/components/common/modal/CopyEmail';
 
-const userId = "나무"; // 실제 사용자 ID로 설정
+
+
+const userId = ""; // 실제 사용자 ID로 설정
 //const createGroupMutation = useCreateGroup();
+interface MemberProps {
+  member: Member; // Use the Member interface
+}
 
-  const DeleteAccountButton = () => {
+const DeleteAccountButton = ({ member }: MemberProps) => {
     //export default function SettingsPage() {
  // const SettingsPage = () => {
+
     const fileInputRef = useRef(null);
-    const [imageSrc, setImageSrc] = useState(member); // 초기 이미지를 member로 설정
+    const [imageSrc, setImageSrc] = useState(member123); // 초기 이미지를 member로 설정
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false); // 비밀번호 변경 모달 열림 상태
-    const [name, setName] = useState(''); // 상태로 name 관리
-    const [email, setEmail] = useState(''); // 상태로 name 관리
+    const [name, setName] = useState(member ? member.userName : ''); // Default to empty if undefined
+    const [email, setEmail] = useState(member ? member.userEmail : ''); // Default to empty if undefined  
     const [password, setPassword] = useState(''); // 상태로 name 관리
 
-    const handleNameChange = (event) => {
-      setName(event.target.value); // 입력값 변경 시 상태 업데이트
-      setEmail(event.target.value); // 입력값 변경 시 상태 업데이트
-      setPassword(event.target.value);
+      const handleNameChange = (event) => {
+      const { name, value } = event.target;
+        if (name === "name") setName(value);
+        if (name === "email") setEmail(value);
+        if (name === "password") setPassword(value);
+    
+      console.log("계정설정페이지 생성 요청되었습니다.");
     };
-     console.log("계정설정페이지 생성 요청되었습니다.");
+    
   
     const handleClick = () => {
       fileInputRef.current.click(); // 파일 선택 대화상자 열기
@@ -90,19 +102,21 @@ const userId = "나무"; // 실제 사용자 ID로 설정
           <label className="block text-text-primary mb-3">이름</label>
           <input
             type="text"
-            placeholder="나무"
+            name="name"            
             className="w-full bg-bg-secondary text-white p-4 rounded-lg"
             onChange={handleNameChange} 
+            value={name}
           />
         </div>
 
         <div>
           <label className="block text-text-primary mb-3">이메일</label>
           <input
-            type="email"
-            placeholder="namu@gmail.com"
+            type="email" 
+            name="email"         
             className="w-full placeholder:text-text-secondary text-white bg-bg-secondary p-4 rounded-lg"
             onChange={handleNameChange} 
+            value={email}
           />
         </div>
 
@@ -110,12 +124,14 @@ const userId = "나무"; // 실제 사용자 ID로 설정
           <label className="block text-text-primary mb-1">비밀번호</label>
           <input
             type="password"
+            name="password" 
             placeholder="********"
-            className="w-full placeholder:text-text-secondary text-white bg-bg-secondary p-4 rounded-lg pr-[120px]" />
+            className="w-full placeholder:text-text-secondary text-white bg-bg-secondary p-4 rounded-lg pr-[120px]" 
+            onChange={handleNameChange} 
+            value={password} />
             <button
             className="absolute right-2 top-9 bg-brand-primary text-white py-2 px-4 rounded-lg"
-            onClick={handleOpenChangePasswordModal}
-            onChange={handleNameChange} >
+            onClick={handleOpenChangePasswordModal}>
             변경하기
           </button>
            {/* 회원 탈퇴 버튼 */}
