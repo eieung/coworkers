@@ -4,7 +4,7 @@ import Image from 'next/image';
 import CircularProgressBar from '@/components/common/CircularProgressBar';
 import todoIcon from '@/assets/image/task/todo.svg';
 import doneIcon from '@/assets/image/task/done.svg';
-import { useGroupsQuery } from '@/queries/group/group';
+import { useGroupsQuery } from '@/queries/group';
 import { useRouter } from 'next/router';
 import TaskReportLoading from '@/components/common/skeleton/team/TaskReportLoading';
 

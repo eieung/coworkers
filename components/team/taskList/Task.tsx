@@ -8,7 +8,7 @@ import CircularProgressBar from '@/components/common/CircularProgressBar';
 import { useEffect, useRef, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { useDeleteTaskListMutation } from '@/queries/task-list/task-list';
+import { useDeleteTaskListMutation } from '@/queries/task-list';
 
 interface TaskProps {
   name: string;
@@ -104,7 +104,6 @@ export default function Task({
             <div className="flex h-4 w-4 items-center">
               <CircularProgressBar
                 percentage={percentage}
-                pathColor="#10b981"
                 trailColor="#f8fafc"
                 className="h-3 w-3"
               />

@@ -1,14 +1,14 @@
 import useModalStore from '@/store/useModalStore';
 import Task from './Task';
 import TaskListForm from '@/components/common/modal/TaskListForm';
-import { useGroupsQuery } from '@/queries/group/group';
+import { useGroupsQuery } from '@/queries/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 import {
   reOrderTaskListMutation,
   useCreateTaskListMutation,
-} from '@/queries/task-list/task-list';
+} from '@/queries/task-list';
 import {
   DragDropContext,
   Droppable,
@@ -100,6 +100,31 @@ export default function TaskList() {
     });
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent, index: number) => {
+    if (event.key === 'ArrowUp' && index > 0) {
+      onDragEnd({
+        source: { index, droppableId: 'task-lists' },
+        destination: { index: index - 1, droppableId: 'task-lists' },
+        draggableId: String(taskLists[index].id),
+        mode: 'SNAP',
+        reason: 'DROP',
+        type: 'DEFAULT',
+        combine: null,
+      });
+    }
+    if (event.key === 'ArrowDown' && index < taskLists.length - 1) {
+      onDragEnd({
+        source: { index, droppableId: 'task-lists' },
+        destination: { index: index + 1, droppableId: 'task-lists' },
+        draggableId: String(taskLists[index].id),
+        mode: 'SNAP',
+        reason: 'DROP',
+        type: 'DEFAULT',
+        combine: null,
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between py-4 pb-4 pt-6">
@@ -144,6 +169,8 @@ export default function TaskList() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          tabIndex={0}
+                          onKeyDown={(event) => handleKeyDown(event, index)}
                         >
                           <Task
                             name={taskList.name}
