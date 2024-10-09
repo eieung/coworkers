@@ -97,7 +97,7 @@ export default function PasswordReset({ close, onAction }: PasswordResetProps) {
               {isLoading && index !== 0 ? (
                 <Loader
                   type="clip"
-                  color="black"
+                  color="white"
                   size={30}
                   className="mx-auto"
                 />
