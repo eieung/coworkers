@@ -5,7 +5,7 @@ import { useUserStore } from '@/store/authStore';
 import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
-import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
+import { useAuthQuery, useUsersQuery } from '@/queries/user';
 import { useJoinTeamMutation } from '@/queries/group/invitation';
 
 export default function Profile() {

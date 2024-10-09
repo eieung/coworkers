@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 import {
   useCreateGroupMutation,
   useReviseGroupMutation,
-} from '@/queries/group/group';
+} from '@/queries/group';
 import { useUploadImageMutation } from '@/queries/image/upload-images';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
