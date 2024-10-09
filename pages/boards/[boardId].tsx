@@ -90,7 +90,7 @@ export default function BoardDetail() {
         date: '2024.07.25',
       };
       setPost(fetchedPost);
-    }
+}
   }, [postId]);
 
   /* useEffect(() => {
