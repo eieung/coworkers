@@ -118,7 +118,7 @@ export default function List() {
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="team-list-translate"
+          className="team-list-translate transition-none"
         >
           <TeamList
             teams={user.data.memberships.map((m) => m.group) as any}
