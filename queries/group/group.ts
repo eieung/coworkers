@@ -109,7 +109,6 @@ export const deleteGroup = (groupId: string) => {
   return authAxiosInstance.delete(`groups/${groupId}`);
 };
 
-// TODO: 그룹 삭제 시 Header/List에 빈 값 들어가는 거 해결 필요
 /**
  * @useDeleteGroupMutation
  * 그룹을 삭제하는 mutation 훅
@@ -126,8 +125,19 @@ export const useDeleteGroupMutation = () => {
       await queryClient.invalidateQueries({ queryKey: ['groups'] });
       await queryClient.invalidateQueries({ queryKey: ['user'] });
 
+      const userData = queryClient.getQueryData<{
+        data: { memberships: any[] };
+      }>(['user']);
+      const memberships = userData?.data?.memberships ?? [];
+
+      if (memberships.length > 0) {
+        const firstGroupId = memberships[0].group.id;
+        router.push(`/groups/${firstGroupId}`);
+      } else {
+        router.push('/get-started-team');
+      }
+
       toast.success('그룹이 성공적으로 삭제되었습니다.');
-      router.push('/');
     },
     onError: (error) => {
       toast.error('그룹을 삭제하는 중 오류가 발생했습니다.');
