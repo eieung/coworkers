@@ -65,7 +65,7 @@ export default function TasksPage() {
 
       {isTaskListLoading ? (
         <div className="flex-center flex h-[600px]">
-          <Loader className="" />
+          <Loader />
         </div>
       ) : (
         categories && (
