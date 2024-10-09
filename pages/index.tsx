@@ -61,7 +61,7 @@ export default function Home() {
         </div>
 
         <div className="mt-[55px] flex flex-col items-center gap-3 md:mt-[100px] lg:mt-[84px]">
-          <div className="flex gap-[4px] gap-[8px]">
+          <div className="flex sm:gap-[4px] md:gap-[16px] lg:gap-[24px]">
             <span className="font-semibold-24 md:font-medium-40 text-text-primary lg:text-5xl">
               함께 만들어가는 투두 리스트
             </span>
