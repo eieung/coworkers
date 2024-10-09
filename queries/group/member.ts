@@ -37,3 +37,34 @@ export const useDeleteMemberMutation = (groupId: string) => {
     },
   });
 };
+
+export const useLeaveTeamMutation = (groupId: string) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (memberUserId: string) => deleteMember(groupId, memberUserId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
+      await queryClient.invalidateQueries({ queryKey: ['user'] });
+
+      const userData = queryClient.getQueryData<{
+        data: { memberships: any[] };
+      }>(['user']);
+      const memberships = userData?.data?.memberships ?? [];
+
+      if (memberships.length > 0) {
+        const firstGroupId = memberships[0].group.id;
+        router.push(`/groups/${firstGroupId}`);
+      } else {
+        router.push('/get-started-team');
+      }
+
+      toast.success('팀에서 탈퇴되었습니다.');
+    },
+    onError: (error) => {
+      toast.error('팀에서 탈퇴 중 에러가 발생했습니다.');
+      console.error(error);
+    },
+  });
+};
