@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.btn123{
+    color: var(--white);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    background-color: rgb(16, 185, 129);
+    border-radius: 0.5rem;
+    width: 150px;
+    float:right;
+    margin-top: -0.2rem;
+    margin-bottom: -40px;
+    display: block;
+}
+    
+/* styles.css */
+@media (max-width: 768px) {
+  .btn123{
+    position: absolute;
+    width: 250px;
+    bottom: 2em; /* 원하는 만큼 더 아래로 이동 */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: -80px; /* 더 아래로 이동하기 위한 여백 추가 */
+    }
+  }
+
+  .w-fulls {
+    width: 20%;
+}
+.h-fulls {
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+  .w-fulls {
+    width: 50%;
+    height: 130px;
+}
+.h-fulls {
+    height: 50%;
+}
+  }
+
+  /* 기본 스타일 */
+.button {
+  position: fixed; /* 기본 위치 */
+}
+
+/* 모바일 스타일 */
+@media (max-width: 768px) {
+  .button {
+    position: fixed; /* 스크롤에 고정 */   
+    margin-bottom: -40px;
+    right: 140px; /* 오른쪽에서 20px */
+    /* 추가 스타일 필요 시 여기에 추가 */
+  }
+}
+
+@media (max-width: 768px) {
+.sss{
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 세로 방향으로 나열 */
+  gap: 24px; /* 항목 간의 간격 (6 * 4px, 기본 Tailwind 설정) */
+}
+}
+
+
+.container {
+  display: flex; /* 가로로 나열 */
+  flex-wrap: nowrap;  
+}
+
+.kkk {
+  flex: 1 1 auto; /* 자식 요소가 가로로 나열되면서 비율에 따라 크기 조정 */
+  min-width: 0; /* 자식 요소가 너무 커지는 것을 방지 */
+}
+
+@media (max-width: 768px) { 
+  .kkk:nth-child(n+3) {
+    display: none; 
+  }
+  .kkk:nth-child(n+1) {                         
+    display: block; 
+  }
+}
+
+@media (max-width: 480px) {
+  .kkk:nth-child(n+2) {                         
+    display: none; 
+  }
+  .kkk:nth-child(n+1) {                         
+    display: block; 
+  }
+}
+

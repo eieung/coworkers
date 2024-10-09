@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
+import { fetchData } from '@/services/task/taskListApi';
+import { useAuthQuery } from '@/queries/user/user';
+import { useRouter } from 'next/router';
 
 interface ChangePasswordProps {
   close: () => void;
@@ -35,6 +38,10 @@ const validatePasswordConfirmation = (value: string, password: string) => {
 };
 
 export default function ChangePassword({ close }: ChangePasswordProps) {
+  const { replace } = useRouter();
+
+  const { logout } = useAuthQuery();
+
   const {
     control,
     handleSubmit,
@@ -55,7 +62,7 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
 
   const password = watch('password');
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     const trimmedPassword = data.password.trim();
     const trimmedPasswordConfirmation = data.passwordConfirmation.trim();
 
@@ -64,8 +71,20 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
       return;
     }
 
-    toast(`비밀번호가 성공적으로 변경되었습니다!`);
-    close();
+    try {
+      await fetchData('/user/password', undefined, 'PATCH', {
+        passwordConfirmation: trimmedPasswordConfirmation,
+        password: trimmedPassword,
+      });
+
+      logout();
+
+      toast(`비밀번호가 성공적으로 변경되었습니다!`);
+      close();
+      replace('/login');
+    } catch (err) {
+      toast.error('비밀번호 변경에 실패했습니다.');
+    }
   };
 
   return (
