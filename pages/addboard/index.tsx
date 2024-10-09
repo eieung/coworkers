@@ -1,6 +1,8 @@
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 export default function WritePost() {
+  const { query } = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState<File | null>(null);
@@ -18,15 +20,15 @@ export default function WritePost() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-4xl mx-auto p-8 rounded-lg">
-        <h1 className="text-2xl font-semibold mb-6">게시글 쓰기</h1>
+    <div className="min-h-screen bg-gray-900 p-6 text-white">
+      <div className="mx-auto max-w-4xl rounded-lg p-8">
+        <h1 className="mb-6 text-2xl font-semibold">게시글 쓰기</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2">* 제목</label>
+            <label className="mb-2 block text-sm font-medium">* 제목</label>
             <input
               type="text"
-              className="w-full p-3 bg-gray-700 text-white rounded-lg"
+              className="w-full rounded-lg bg-gray-700 p-3 text-white"
               placeholder="제목을 입력해주세요."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -34,9 +36,9 @@ export default function WritePost() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">* 내용</label>
+            <label className="mb-2 block text-sm font-medium">* 내용</label>
             <textarea
-              className="w-full p-3 bg-gray-700 text-white rounded-lg h-40"
+              className="h-40 w-full rounded-lg bg-gray-700 p-3 text-white"
               placeholder="내용을 입력해주세요."
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -44,14 +46,13 @@ export default function WritePost() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">이미지</label>
-            <div className="w-40 h-40 border border-dashed border-gray-600 flex items-center justify-center bg-gray-700 rounded-lg">
-              <label htmlFor="imageUpload" className="cursor-pointer text-center">
-                {image ? (
-                  <p>{image.name}</p>
-                ) : (
-                  <span>이미지 등록</span>
-                )}
+            <label className="mb-2 block text-sm font-medium">이미지</label>
+            <div className="flex h-40 w-40 items-center justify-center rounded-lg border border-dashed border-gray-600 bg-gray-700">
+              <label
+                htmlFor="imageUpload"
+                className="cursor-pointer text-center"
+              >
+                {image ? <p>{image.name}</p> : <span>이미지 등록</span>}
               </label>
               <input
                 type="file"
@@ -64,7 +65,7 @@ export default function WritePost() {
           </div>
           <button
             type="submit"
-            className="bg-emerald-500 px-6 py-2 rounded-lg text-white font-semibold"
+            className="rounded-lg bg-emerald-500 px-6 py-2 font-semibold text-white"
           >
             등록
           </button>

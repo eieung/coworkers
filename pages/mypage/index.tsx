@@ -15,6 +15,8 @@ import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 import ChangePassword from '@/components/common/modal/ChangePassword'; // ChangePassword 컴포넌트 import
 import { useValidation } from '@/hooks/useValidation';
 import { publicAxiosInstance } from '@/services/axios';
+import { fetchData } from '@/services/task/taskListApi';
+import { useAuthQuery } from '@/queries/user/user';
 /*export const usePasswordState = () => {
   const [password, setPassword] = useState(''); 
   return { password, setPassword };
@@ -185,22 +187,21 @@ interface DeleteAccountProps {
 }
 
 const DeleteAccount = ({ close }: DeleteAccountProps) => {
+  const { replace } = useRouter();
   const { title, description, buttons } =
     ModalUserActions[ACTION_TYPE.DELETE_ACCOUNT];
 
   const handleDelete = async () => {
-    //const response = await publicAxiosInstance.delete('/user/delete', { data: { name } }); // DELETE 메서드로 변경
+    try {
+      await fetchData('/user', undefined, 'DELETE'); // DELETE 메서드로 변경
+      toast('탈퇴되었습니다!');
+      close();
 
-    /*if (response.status === 200) {
-      toast('탈퇴되었습니다!');
+      replace('/login');
+    } catch (err) {
+      toast.error('탈퇴 실패. 다시 시도해 주세요.');
       close();
-    } else {
-      //toast.error('탈퇴 실패. 다시 시도해 주세요.');
-      toast('탈퇴되었습니다!');
-      close();
-    }*/
-    toast('탈퇴되었습니다!');
-    close();
+    }
   };
 
   return (
