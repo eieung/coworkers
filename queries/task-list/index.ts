@@ -3,6 +3,7 @@ import { TaskListType } from '@/types/taskList';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { authAxiosInstance } from '@/services/axios';
+import { queryOptions } from '../config';
 
 /**
  * TaskList 데이터를 가져오는 함수
@@ -28,7 +29,8 @@ export const useTaskListsQuery = (groupId: string, taskListId: string) => {
   return useQuery({
     queryKey: ['taskList', groupId, taskListId],
     queryFn: () => getTaskLists(groupId, taskListId),
-    staleTime: 1000 * 60 * 5,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime,
     retry: 1,
   });
 };
