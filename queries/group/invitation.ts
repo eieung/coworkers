@@ -1,6 +1,7 @@
 import { authAxiosInstance } from '@/services/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import { queryOptions } from '../config';
 
 /**
  * 그룹 초대 링크용 토큰을 생성하는 함수
@@ -19,7 +20,8 @@ export const useInvitationQuery = (groupId: string) => {
     queryKey: ['invitation', groupId],
     queryFn: () => getInvitation(groupId),
     enabled: !!groupId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime,
     retry: 1,
   });
 };

@@ -8,12 +8,15 @@ import {
 import {} from '@/services/task/taskListApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { queryOptions } from '../config';
 
 export const useGetComments = (taskId: number) => {
   return useQuery({
     queryKey: ['comments', taskId],
     queryFn: () => getCommentsRequest({ taskId }),
     enabled: !!taskId,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime
   });
 };
 

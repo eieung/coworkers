@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from '@/types/user';
 import { useUserStore } from '@/store/authStore';
 import { authAxiosInstance } from '@/services/axios';
+import { queryOptions } from '../config';
 
 /**
  * 사용자 데이터를 가져오는 함수
@@ -23,7 +24,8 @@ export const useUsersQuery = (accessToken: string | null) => {
     queryKey: ['user'],
     queryFn: getUsers,
     enabled: !!accessToken,
-    staleTime: 1000 * 60 * 5,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime,
     retry: 1,
   });
 };

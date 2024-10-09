@@ -13,12 +13,15 @@ import {
 } from '@/services/task/taskListApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { queryOptions } from '../config';
 
 export const useGetCategories = (groupId: string) => {
   return useQuery({
     queryKey: ['categories', groupId],
     queryFn: () => getTaskListsRequest({ groupId }),
     enabled: !!groupId,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime,
   });
 };
 
@@ -191,6 +194,7 @@ export const useToggleTask = (groupId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['taskItem'],
       });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
   });
 };

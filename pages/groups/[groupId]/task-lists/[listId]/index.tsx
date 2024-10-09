@@ -5,6 +5,8 @@ import TaskList from '@/components/tasks/TaskList';
 import { useRouter } from 'next/router';
 import { getUser } from '@/utils/auth';
 import { useGetCategories } from '@/queries/tasks/useTaskData';
+import Error from '@/components/common/error';
+import Loader from '@/components/common/Loader';
 
 export default function TasksPage() {
   const router = useRouter();
@@ -37,8 +39,19 @@ export default function TasksPage() {
     }
   }, [router, isTaskListError, taskListError]);
 
+  if (!groupId) return null;
+
+  if (isTaskListError) {
+    return (
+      <Error
+        errorMessage="데이터를 불러오는 중 오류가 발생했습니다."
+        onRetry={() => router.push('/login')}
+      />
+    );
+  }
+
   return (
-    <section className="mt-10 sm:mt-6 md:mt-6">
+    <section className="my-10 sm:mt-6 md:mt-6">
       <h1 className="font-bold-20 text-text-primary">할 일</h1>
       <div className="mt-6 flex items-center justify-between">
         <DateManager
@@ -49,12 +62,19 @@ export default function TasksPage() {
         />
         <AddNewCategory groupId={groupId as string} />
       </div>
-      {categories && (
-        <TaskList
-          categories={categories}
-          groupId={groupId as string}
-          currentDate={currentDate}
-        />
+
+      {isTaskListLoading ? (
+        <div className="flex-center flex h-[600px]">
+          <Loader />
+        </div>
+      ) : (
+        categories && (
+          <TaskList
+            categories={categories}
+            groupId={groupId as string}
+            currentDate={currentDate}
+          />
+        )
       )}
     </section>
   );

@@ -5,7 +5,7 @@ import toggleIcon from '@/assets/image/icon/header-toggle.svg';
 import TeamList from './TeamList';
 import { useUserStore } from '@/store/authStore';
 import { useGroupStore } from '@/store/useGroupStore';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 import { useState, useEffect, useRef } from 'react';
 import useClickOutside from '@/hooks/useClickOutside';
 import { motion } from 'framer-motion';
@@ -118,7 +118,7 @@ export default function List() {
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="team-list-translate"
+          className="team-list-translate transition-none"
         >
           <TeamList
             teams={user.data.memberships.map((m) => m.group) as any}
