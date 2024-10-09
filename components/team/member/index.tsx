@@ -5,6 +5,7 @@ import { useGroupsQuery } from '@/queries/group/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user/user';
+import MemberLoading from '@/components/common/skeleton/team/MemberLoading';
 
 export default function Member() {
   const openModal = useModalStore((state) => state.openModal);
@@ -37,7 +38,8 @@ export default function Member() {
         )
       : false;
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading)
+    return <MemberLoading/>;
 
   if (error) return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
 

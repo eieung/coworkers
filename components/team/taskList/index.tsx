@@ -16,6 +16,7 @@ import {
   DropResult,
 } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
+import TaskListLoading from '@/components/common/skeleton/team/TaskListLoading';
 
 export default function TaskList() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function TaskList() {
   }, [groupData]);
 
   if (isLoading) {
-    return <div>스켈레톤 구현 해야 함</div>;
+    return <TaskListLoading />;
   }
 
   if (error) {
