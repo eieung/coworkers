@@ -11,6 +11,7 @@ import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user';
 import Error from '@/components/common/error';
 import TeamSettingLoading from '../common/skeleton/team/TeamSettingLoading';
+import { useLeaveTeamMutation } from '@/queries/group/member';
 
 export default function TeamSetting() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function TeamSetting() {
   } = useGroupsQuery(groupId as string);
   const openModal = useModalStore((state) => state.openModal);
   const deleteGroupMutation = useDeleteGroupMutation();
+  const leaveTeamMutation = useLeaveTeamMutation(groupId as string);
 
   const groupData = groupResponse?.data;
   const { accessToken } = useUserStore();
@@ -74,9 +76,37 @@ export default function TeamSetting() {
     ));
   };
 
+  const handleLeaveTeam = (memberUserId: string) => {
+    openModal((close) => (
+      <ConfirmModal
+        title="팀에서 탈퇴하시겠어요?"
+        description="탈퇴시 팀을 떠납니다. 정말 탈퇴하시겠어요?"
+        close={close}
+        confirmText="탈퇴하기"
+        onConfirm={() => {
+          leaveTeamMutation.mutate(memberUserId, {
+            onSuccess: () => {
+              close();
+            },
+          });
+        }}
+        buttonType="danger"
+      />
+    ));
+  };
+
   return (
     <div className="relative flex h-16 items-center justify-between rounded-xl bg-bg-secondary px-6 py-5">
-      <strong className="font-bold-20 text-white">{groupData.name}</strong>
+      <div className="flex flex-row items-center gap-x-4">
+        <img
+          src={groupData.image}
+          alt={`${groupData.name} 이미지`}
+          width={32}
+          height={32}
+          className="rounded-xl object-contain"
+        />
+        <strong className="font-bold-20 text-white">{groupData.name}</strong>
+      </div>
       <Image
         src={thumbnailTeam}
         alt="팀 설정 배경"
@@ -97,12 +127,17 @@ export default function TeamSetting() {
           className="w-[120px]"
         />
       ) : (
-        <img
-          src={groupData.image}
-          alt={`${groupData.name} 이미지`}
-          width={32}
-          height={32}
-          className="rounded-xl object-contain"
+        <Dropdown
+          trigger={
+            <Image src={settingIcon} alt="설정" width={24} height={24} />
+          }
+          items={[
+            {
+              label: '팀 탈퇴하기',
+              onClick: () => handleLeaveTeam(userData?.data?.id as any),
+            },
+          ]}
+          className="w-[120px]"
         />
       )}
     </div>
