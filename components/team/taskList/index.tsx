@@ -141,6 +141,7 @@ export default function TaskList() {
                     >
                       {(provided) => (
                         <div
+                          className="transition-none"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
