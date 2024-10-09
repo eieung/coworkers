@@ -3,6 +3,7 @@ import { GroupResponse } from '@/types/group';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { authAxiosInstance } from '@/services/axios';
+import { queryOptions } from '@/queries/config';
 
 /**
  * 그룹 데이터를 가져오는 함수
@@ -43,7 +44,8 @@ export const useGroupsQuery = (id: string) => {
   return useQuery({
     queryKey: ['groups', id],
     queryFn: () => getGroups(id),
-    staleTime: 1000 * 60 * 5,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime,
     retry: 1,
   });
 };

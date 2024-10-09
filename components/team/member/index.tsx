@@ -1,10 +1,10 @@
 import MemberList from './MemberList';
 import useModalStore from '@/store/useModalStore';
 import InviteMember from '@/components/common/modal/InviteMember';
-import { useGroupsQuery } from '@/queries/group/group';
+import { useGroupsQuery } from '@/queries/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 import MemberLoading from '@/components/common/skeleton/team/MemberLoading';
 
 export default function Member() {
