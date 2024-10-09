@@ -177,14 +177,10 @@ export const useReviseGroupMutation = () => {
       id: string;
       data: { name: string; image: string | null };
     }) => reviseGroup(id, data),
-    onSuccess: async (_, { id }) => {
-      // Promise.all이 좋은 선택지는 아님. 추후에 수정 예정
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['groups', id] }),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ['groups', id] }),
         queryClient.invalidateQueries({ queryKey: ['user'] }),
-      ]);
-
-      toast.success('팀 정보가 성공적으로 수정되었습니다.');
+        toast.success('팀 정보가 성공적으로 수정되었습니다.');
     },
     onError: (error) => {
       toast.error('팀 정보를 수정하는 중 오류가 발생했습니다.');

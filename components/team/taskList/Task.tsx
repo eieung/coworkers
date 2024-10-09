@@ -8,7 +8,12 @@ import CircularProgressBar from '@/components/common/CircularProgressBar';
 import { useEffect, useRef, useState } from 'react';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
-import { useDeleteTaskListMutation } from '@/queries/task-list';
+import {
+  useDeleteTaskListMutation,
+  useReviseTaskListMutation,
+} from '@/queries/task-list';
+import editIcon from '@/assets/image/icon/edit.svg';
+import CustomInputModal from '@/components/common/modal/CustomInputModal';
 
 interface TaskProps {
   name: string;
@@ -34,6 +39,7 @@ export default function Task({
   const openModal = useModalStore((state) => state.openModal);
 
   const deleteTaskListMutation = useDeleteTaskListMutation(groupId);
+  const reviseTaskListMutation = useReviseTaskListMutation();
 
   const percentage =
     totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -67,6 +73,26 @@ export default function Task({
           close();
         }}
         buttonType="danger"
+      />
+    ));
+  };
+
+  const handleModifyTaskListModal = () => {
+    openModal((close) => (
+      <CustomInputModal
+        close={close}
+        title={'할 일 수정하기'}
+        buttonText={'수정하기'}
+        onAction={(value) => {
+          reviseTaskListMutation.mutate({
+            groupId,
+            taskListId,
+            data: { name: value },
+          });
+          close();
+        }}
+        initialData={name}
+        placeholder={'수정할 내용을 입력해주세요'}
       />
     ));
   };
@@ -113,33 +139,42 @@ export default function Task({
             {completedTasks}/{totalTasks}
           </span>
         </div>
-        {isAdmin ? (
-          <div className="flex items-center" ref={menuRef}>
-            {!isMenuOpen && (
-              <button onClick={handleKebabClick}>
-                <Image
-                  src={kebabIcon}
-                  alt="케밥 아이콘"
-                  width={16}
-                  height={16}
-                />
-              </button>
-            )}
-            {isMenuOpen && (
-              <button className="w-4" onClick={handleDeleteTaskListModal}>
-                <Image
-                  src={deleteIcon}
-                  alt="삭제"
-                  width={12}
-                  height={12}
-                  className="ml-[2px]"
-                />
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="w-2"></div>
-        )}
+        <div className="flex items-center gap-x-1" ref={menuRef}>
+          {!isMenuOpen && (
+            <button onClick={handleKebabClick}>
+              <Image src={kebabIcon} alt="케밥 아이콘" width={16} height={16} />
+            </button>
+          )}
+
+          {isMenuOpen && (
+            <button
+              className="mt-[1px] w-4"
+              onClick={handleModifyTaskListModal}
+            >
+              <Image
+                src={editIcon}
+                alt="수정"
+                width={12}
+                className="ml-[2px]"
+                height={12}
+              />
+            </button>
+          )}
+          {isAdmin && isMenuOpen && (
+            <button
+              className="flex w-4 items-center"
+              onClick={handleDeleteTaskListModal}
+            >
+              <Image
+                src={deleteIcon}
+                alt="삭제"
+                width={12}
+                height={12}
+                className="ml-[2px]"
+              />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
