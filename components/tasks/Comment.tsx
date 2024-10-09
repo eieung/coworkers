@@ -156,14 +156,14 @@ export default function Comment({
       </span>
       {!isEditing && (
         <div className={'mt-4 flex items-center justify-between'}>
-          <span className={'flex h-[32px] w-[32px] items-center gap-3'}>
+          <div className={'flex items-center gap-3'}>
             <img
-              className="rounded-full"
+              className="h-[32px] w-[32px] rounded-full object-cover"
               src={userImageContainer}
               alt="유저 이미지"
             />
             <span className="font-medium-14 whitespace-nowrap">{nickname}</span>
-          </span>
+          </div>
           <span
             className="font-regular-14 text-text-secondary"
             title={new Date(createdAt).toLocaleString()}

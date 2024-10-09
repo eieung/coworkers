@@ -5,7 +5,7 @@ import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
 import Textarea from '@/components/common/Textarea';
-import TextDropdown from '@/components/common/dropdown/TextDropdown';
+import CustomDropdown from '@/components/common/dropdown/CustomDropdown';
 import CustomCalendar from '@/components/common/CustomCalendar';
 import { useState } from 'react';
 import { formatDate } from '@/utils/common';
@@ -232,7 +232,7 @@ export default function DatePicker({ close }: DatePickerProps) {
                       <label className="font-medium-16 mb-3 inline-block text-text-primary">
                         {inputs[FORM_FIELD.FREQUENCYTYPE].label}
                       </label>
-                      <TextDropdown
+                      <CustomDropdown
                         items={[
                           {
                             label: '한 번',
