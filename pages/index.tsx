@@ -65,7 +65,7 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto flex flex-col items-center">
+    <div className="mx-auto flex flex-col items-center overflow-x-hidden">
       <div className="relative flex h-[640px] w-full flex-col items-center overflow-hidden md:h-[940px] lg:h-[1080px]">
         <div className="absolute inset-0 h-full w-full">
           <Image
@@ -103,7 +103,7 @@ export default function Home() {
       </div>
 
       <div
-        className="wow animate__animated animate__slideInLeft relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] p-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:mt-[60px] lg:h-[419px] lg:w-[996px]"
+        className="wow animate__animated animate__fadeInLeft relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] p-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:mt-[60px] lg:h-[419px] lg:w-[996px]"
         data-wow-duration="1.5s"
       >
         <div className="h-full w-full rounded-[40px] bg-bg-primary">
@@ -131,7 +131,7 @@ export default function Home() {
         />
       </div>
       <div
-        className="wow animate__animated animate__slideInRight relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] border border-bd-primary bg-bg-secondary outline-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:h-[419px] lg:w-[996px]"
+        className="wow animate__animated animate__fadeInRight relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] border border-bd-primary bg-bg-secondary outline-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:h-[419px] lg:w-[996px]"
         data-wow-duration="1.5s"
       >
         <Image
@@ -161,7 +161,7 @@ export default function Home() {
       </div>
 
       <div
-        className="wow animate__animated animate__slideInLeft relative mx-4 h-[467px] w-[343px] rounded-[40px] bg-[#020617] md:mx-6 md:h-[354px] md:w-[696px] lg:h-[419px] lg:w-[996px]"
+        className="wow animate__animated animate__fadeInLeft relative mx-4 h-[467px] w-[343px] rounded-[40px] bg-[#020617] md:mx-6 md:h-[354px] md:w-[696px] lg:h-[419px] lg:w-[996px]"
         data-wow-duration="1.5s"
       >
         <Image
