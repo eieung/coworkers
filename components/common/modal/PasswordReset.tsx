@@ -6,6 +6,7 @@ import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
 import { useState } from 'react';
+import Loader from '../Loader';
 
 interface PasswordResetProps {
   close: () => void;
@@ -92,7 +93,18 @@ export default function PasswordReset({ close, onAction }: PasswordResetProps) {
               {...button}
               onClick={index === 0 ? close : button.onClick}
               disabled={index === 0 ? false : !isValid || isLoading}
-            />
+            >
+              {isLoading && index !== 0 ? (
+                <Loader
+                  type="clip"
+                  color="white"
+                  size={30}
+                  className="mx-auto"
+                />
+              ) : (
+                button.children
+              )}
+            </Button>
           ))}
         </div>
       </form>

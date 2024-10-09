@@ -5,7 +5,7 @@ import { useUserStore } from '@/store/authStore';
 import useModalStore from '@/store/useModalStore';
 import CustomInputModal from '../modal/CustomInputModal';
 import { toast } from 'react-toastify';
-import { useAuthQuery, useUsersQuery } from '@/queries/user/user';
+import { useAuthQuery, useUsersQuery } from '@/queries/user';
 import { useJoinTeamMutation } from '@/queries/group/invitation';
 
 export default function Profile() {
@@ -59,7 +59,7 @@ export default function Profile() {
 
   const loggedInMenuItems = [
     { label: '마이 히스토리', href: '/history' },
-    { label: '계정 설정', href: '/settings' },
+    { label: '계정 설정', href: '/mypage' },
     { label: '팀 참여', onClick: handleCustomInputModal },
     { label: '로그아웃', onClick: handleLogout },
   ];

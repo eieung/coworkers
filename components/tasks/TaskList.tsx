@@ -136,6 +136,7 @@ const TaskList = ({ categories, groupId, currentDate }: TaskListProps) => {
                         >
                           {(provided) => (
                             <div
+                              className="transition-none"
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}

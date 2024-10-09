@@ -9,6 +9,7 @@ import {
   useCreateComment,
   useGetComments,
 } from '@/queries/tasks/useTaskCommentData';
+import Loader from '@/components/common/Loader';
 
 interface FormData {
   comment: string;
@@ -31,11 +32,14 @@ export default function CommentSection({ taskId }: CommentSectionProps) {
     },
   });
 
-  const { data: comments = [] } = useGetComments(taskId);
+  const { data: comments = null, isLoading, isError } = useGetComments(taskId);
 
-  const sortedComments = [...comments].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  const sortedComments = comments
+    ? [...comments].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
+    : [];
 
   const createCommentMutation = useCreateComment(taskId);
 
@@ -48,6 +52,13 @@ export default function CommentSection({ taskId }: CommentSectionProps) {
     });
     reset();
   };
+
+  if (isLoading)
+    return (
+      <div className="flex-center flex h-[300px]">
+        <Loader />
+      </div>
+    );
 
   return (
     <>
@@ -86,7 +97,7 @@ export default function CommentSection({ taskId }: CommentSectionProps) {
           </button>
         </span>
         <div className="mb-4 mt-[1px] h-[1px] w-full bg-bd-primary"></div>
-        {sortedComments.length === 0 && (
+        {comments && sortedComments.length === 0 && (
           <p className="flex-center font-regular-14 my-[100px] flex text-text-default sm:my-[150px] md:my-[100px]">
             아직 댓글이 없습니다.
             <br /> 댓글을 추가해보세요.

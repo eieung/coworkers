@@ -39,7 +39,6 @@ const TaskItem = ({
     updateModal: state.updateModal,
   }));
 
-  console.log(taskData);
   const router = useRouter();
 
   const {

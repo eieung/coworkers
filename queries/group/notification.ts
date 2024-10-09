@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { queryOptions } from '../config';
 
 /**
  * fetchAPI는 주어진 URL로 요청을 보내고 응답을 처리하는 함수입니다.
@@ -33,7 +34,8 @@ export const useNotificationsQuery = (groupId: string) => {
   return useQuery({
     queryKey: ['groups', groupId, 'notification'],
     queryFn: () => getNotifications(groupId),
-    staleTime: 1000 * 60 * 5,
+    staleTime: queryOptions.staleTime,
+    gcTime: queryOptions.gcTime,
     retry: 1,
   });
 };

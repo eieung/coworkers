@@ -82,6 +82,9 @@ const config: Config = {
         /* Etc colors */
         'bg-darkBlue': 'var(--bg-darkBlue)',
       },
+      maxWidth: {
+        unset: 'unset',
+      },
     },
   },
   plugins: [

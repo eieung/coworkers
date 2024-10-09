@@ -11,9 +11,10 @@ import checkBox from '@/assets/image/landing/check.svg';
 import sectionTop from '@/assets/image/landing/landing-section-top.png';
 import sectionMiddle from '@/assets/image/landing/landing-section-middle.png';
 import sectionBottom from '@/assets/image/landing/landing-section-bottom.png';
-
+import { WOW } from 'wow.js';
+import 'animate.css';
+import { useEffect } from 'react';
 import { authAxiosInstance } from '@/services/axios';
-
 import { useUserStore } from '@/store/authStore';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -22,6 +23,22 @@ import { GroupResponse } from '@/types/group';
 export default function Home() {
   const { accessToken } = useUserStore();
   const router = useRouter();
+
+  useEffect(() => {
+    const initWow = async () => {
+      if (typeof window !== 'undefined') {
+        const WOW = require('wow.js');
+        new WOW({
+          boxClass: 'wow',
+          animateClass: 'animate__animated',
+          offset: 0,
+          mobile: true,
+          live: true,
+        }).init();
+      }
+    };
+    initWow();
+  }, []);
 
   const startCoworkers = async () => {
     if (accessToken) {
@@ -48,7 +65,7 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto flex flex-col items-center">
+    <div className="mx-auto flex flex-col items-center overflow-x-hidden">
       <div className="relative flex h-[640px] w-full flex-col items-center overflow-hidden md:h-[940px] lg:h-[1080px]">
         <div className="absolute inset-0 h-full w-full">
           <Image
@@ -61,7 +78,7 @@ export default function Home() {
         </div>
 
         <div className="mt-[55px] flex flex-col items-center gap-3 md:mt-[100px] lg:mt-[84px]">
-          <div className="flex gap-[4px] gap-[8px]">
+          <div className="flex sm:gap-[4px] md:gap-[16px] lg:gap-[24px]">
             <span className="font-semibold-24 md:font-medium-40 text-text-primary lg:text-5xl">
               함께 만들어가는 투두 리스트
             </span>
@@ -85,7 +102,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] p-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:mt-[60px] lg:h-[419px] lg:w-[996px]">
+      <div
+        className="wow animate__animated animate__fadeInLeft relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] p-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:mt-[60px] lg:h-[419px] lg:w-[996px]"
+        data-wow-duration="1.5s"
+      >
         <div className="h-full w-full rounded-[40px] bg-bg-primary">
           <div className="absolute top-[48px] flex flex-col gap-4 sm:left-[54px] md:right-[121.5px] md:top-[124px] lg:right-[181px] lg:top-[155px]">
             <Image
@@ -110,7 +130,10 @@ export default function Home() {
           className="absolute bottom-0 left-1/2 sm:-translate-x-1/2 md:left-[124px] lg:left-[174px] lg:h-[338px] lg:w-[291px]"
         />
       </div>
-      <div className="relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] border border-bd-primary bg-bg-secondary outline-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:h-[419px] lg:w-[996px]">
+      <div
+        className="wow animate__animated animate__fadeInRight relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] border border-bd-primary bg-bg-secondary outline-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:h-[419px] lg:w-[996px]"
+        data-wow-duration="1.5s"
+      >
         <Image
           src={sectionMiddle}
           alt="섹션2 이미지"
@@ -137,7 +160,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative mx-4 h-[467px] w-[343px] rounded-[40px] bg-[#020617] md:mx-6 md:h-[354px] md:w-[696px] lg:h-[419px] lg:w-[996px]">
+      <div
+        className="wow animate__animated animate__fadeInLeft relative mx-4 h-[467px] w-[343px] rounded-[40px] bg-[#020617] md:mx-6 md:h-[354px] md:w-[696px] lg:h-[419px] lg:w-[996px]"
+        data-wow-duration="1.5s"
+      >
         <Image
           src={sectionBottom}
           alt="섹션3 이미지"
