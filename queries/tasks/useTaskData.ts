@@ -191,6 +191,7 @@ export const useToggleTask = (groupId: string) => {
       queryClient.invalidateQueries({
         queryKey: ['taskItem'],
       });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
   });
 };
