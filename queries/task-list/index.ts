@@ -69,6 +69,44 @@ export const useCreateTaskListMutation = (groupId: string) => {
   });
 };
 
+export const reviseTaskList = (
+  groupId: string,
+  taskListId: string,
+  data: { name: string },
+) => {
+  return authAxiosInstance.patch(
+    `groups/${groupId}/task-lists/${taskListId}`,
+    data,
+  );
+};
+
+export const useReviseTaskListMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      groupId,
+      taskListId,
+      data,
+    }: {
+      groupId: string;
+      taskListId: string;
+      data: { name: string };
+    }) => reviseTaskList(groupId, taskListId, data),
+    onSuccess: (_, { groupId }) => {
+      queryClient.invalidateQueries({ queryKey: ['groups', groupId] }),
+        queryClient.invalidateQueries({
+          queryKey: ['tasks'],
+        });
+      toast.success('할 일 목록이 성공적으로 수정되었습니다.');
+    },
+    onError: (error) => {
+      toast.error('할 일 목록을 수정하는 중 오류가 발생했습니다.');
+      console.error(error);
+    },
+  });
+};
+
 /**
  * 할 일 목록을 삭제하는 함수
  * @param groupId - 그룹 ID
