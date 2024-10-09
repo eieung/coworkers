@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
 import { useUsersQuery } from '@/queries/user/user';
 import Error from '@/components/common/error';
+import TeamSettingLoading from '../common/skeleton/team/TeamSettingLoading';
 
 export default function TeamSetting() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function TeamSetting() {
             member.userId === userData.data.id && member.role === 'ADMIN',
         )
       : false;
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <TeamSettingLoading />;
   if (error) {
     return (
       <Error

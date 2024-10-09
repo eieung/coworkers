@@ -6,6 +6,7 @@ import todoIcon from '@/assets/image/task/todo.svg';
 import doneIcon from '@/assets/image/task/done.svg';
 import { useGroupsQuery } from '@/queries/group/group';
 import { useRouter } from 'next/router';
+import TaskReportLoading from '@/components/common/skeleton/team/TaskReportLoading';
 
 export default function TaskReport() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function TaskReport() {
     setPercentage(calcPercentage);
   }, [groupData, isLoading, error]);
 
-  if (isLoading) return <div>로딩 중 . . . . . . .</div>;
+  if (isLoading) return <TaskReportLoading />;
   if (error) return <div>에러 발생</div>;
 
   return (
