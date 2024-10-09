@@ -1,5 +1,4 @@
 import { useState, forwardRef } from 'react';
-import clsx from 'clsx';
 import visibilityOn from '@/assets/image/icon/visibility_on.svg';
 import visibilityOff from '@/assets/image/icon/visibility_off.svg';
 import Image from 'next/image';

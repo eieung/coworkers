@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useUserStore } from '@/store/authStore';
 import useModalStore from '@/store/useModalStore';
 import TeamForm from '../modal/TeamForm';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 
 export default function MobileList() {
   const { accessToken } = useUserStore();

@@ -6,7 +6,7 @@ import TeamForm from '../common/modal/TeamForm';
 import CustomInputModal from '../common/modal/CustomInputModal';
 import { toast } from 'react-toastify';
 import { useUserStore } from '@/store/authStore';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 import NotFound from '@/pages/404';
 
 export default function EmptyTeam() {

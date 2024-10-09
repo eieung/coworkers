@@ -13,9 +13,9 @@ import {
   useUpdateNotificationMutation,
 } from '@/queries/group/notification';
 import { useRouter } from 'next/router';
-import { useGroupsQuery } from '@/queries/group/group';
+import { useGroupsQuery } from '@/queries/group';
 import { useUserStore } from '@/store/authStore';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 import NotificationLoading from '@/components/common/skeleton/team/NotificationLoading';
 
 export default function Notification() {

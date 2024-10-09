@@ -5,10 +5,10 @@ import Dropdown from '@/components/common/dropdown/Dropdown';
 import TeamForm from '@/components/common/modal/TeamForm';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import useModalStore from '@/store/useModalStore';
-import { useDeleteGroupMutation, useGroupsQuery } from '@/queries/group/group';
+import { useDeleteGroupMutation, useGroupsQuery } from '@/queries/group';
 import { useRouter } from 'next/router';
 import { useUserStore } from '@/store/authStore';
-import { useUsersQuery } from '@/queries/user/user';
+import { useUsersQuery } from '@/queries/user';
 import Error from '@/components/common/error';
 import TeamSettingLoading from '../common/skeleton/team/TeamSettingLoading';
 
