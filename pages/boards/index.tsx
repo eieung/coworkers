@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { board } from '@/types/group';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
 import medal from '@/assets/image/icon/medal.svg';
@@ -13,9 +14,9 @@ interface Post {
   content: string;
   id: number;
   title: string;
-  date: string;
-  user: string;
-  views: string;
+  date: string | null;
+  user: string | null; 
+  views: string | null;
   image?: string | StaticImageData;
 }
 
@@ -97,47 +98,54 @@ const PostCard: React.FC<{
 };
 
 export default function BoardPage() {
+const [titles, setTitle] = useState(board ? board.title : ''); 
+const [dates, setDate] = useState(board ? board.date : ''); 
+const [users, setUser] = useState(board ? board.user : ''); 
+const [viewss, setViews] = useState(board ? board.views : ''); 
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState({ id: null, title: '', content: '', user: '' });
   const [bestPosts, setBestPosts] = useState<Post[]>([]);
-  const [originalPosts] = useState<Post[]>([
+
+  
+  const [originalPosts, setOriginalPosts] = useState<Post[]>([
     {
       id: 1,
-      title: "자유게시판에 질문을 올릴 수 있어요",
-      date: "2024.07.25",
-      user: "우지은",
-      views: "3333+",
+      title: titles,
+      date: dates,
+      user: users,
+      views: viewss,
       image: "",
       content: "",
     },
     {
       id: 2,
-      title: "자유게시판에 질문을 올릴 수 있어요",
-      date: "2024.07.26",
-      user: "우지은",
-      views: "5555+",
+      title: titles,
+      date: dates,
+      user: users,
+      views: viewss,
       image: "",
       content: "",
     },
     {
       id: 3,
-      title: "자유게시판에 질문을 올릴 수 있어요",
-      date: "2024.07.28",
-      user: "우지은",
-      views: "7777+",
+      title: titles,
+      date: dates,
+      user: users,
+      views: viewss,
       image: image,
       content: "",
     },
     {
       id: 4,
-      title: "자유게시판에 질문을 올릴 수 있어요",
-      date: "2024.07.27",
-      user: "우지은",
-      views: "9999+",
+      title: titles,
+      date: dates,
+      user: users,
+      views: viewss,
       image: "",
       content: "",
     },
   ]);
+  
   const [sortOrder, setSortOrder] = useState<'최신순' | '좋아요높은순'>('최신순');
   const router = useRouter();
   const currentUser = "우지은"; 
@@ -219,13 +227,13 @@ export default function BoardPage() {
     };
   }, []);
 
-  const sortedPosts123 = [...posts].sort((a, b) => {
+  /*const sortedPosts123 = [...posts].sort((a, b) => {
     if (sortOrder === '최신순') {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     } else {
       return parseInt(b.views) - parseInt(a.views);
     }
-  });
+  });*/
 
 
   const handleEdit = (id: number, user: string) => {
@@ -306,7 +314,10 @@ export default function BoardPage() {
     });
   };  
 
-  const sortedPosts = [...posts].sort((a, b) => {
+  const sortedPosts = [
+    ...originalPosts, // 기존 게시글 4개
+    ...posts.filter(post => !originalPosts.some(original => original.id === post.id)) // 추가된 게시글
+  ].sort((a, b) => {
     if (sortOrder === '최신순') {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     } else {

@@ -45,21 +45,10 @@ export default function TextDropdown({
     setSelectedItem(label);
   };
 
-<<<<<<< HEAD
-=======
-  // 드롭다운 열린 상태 관리
-  const [isOpen, setIsOpen] = useState(false);
-
-  // boards 페이지 일때
-  const router = useRouter();
-  const isBoardsPage = router.pathname === '/boards';
-
->>>>>>> develop
   return (
     <div className="flex items-center">
       <Dropdown
         trigger={
-<<<<<<< HEAD
           <div
             className={twMerge(
               'font-medium-14 flex h-11 items-center justify-between gap-2 rounded-xl p-[10px_12.5px]',
@@ -77,27 +66,6 @@ export default function TextDropdown({
               height={24}
             />
           </div>
-=======
-          <>
-            <div
-              className={twMerge(
-                'font-medium-14 flex h-11 items-center justify-between gap-2 rounded-xl p-[10px_12.5px]',
-                !isBoardsPage
-                  ? 'font-medium-14 bg-bg-darkBlue w-[109px] text-text-default'
-                  : 'font-regular-14 w-[120px] bg-bg-tertiary text-text-primary', // /boards 페이지일 때 색상 변경
-              )}
-            >
-              {selectedItem} {/* 현재 선택된 항목 표시 */}
-              <Image
-                className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} // 드롭다운이 열리면 아이콘 회전
-                src={toggleImg}
-                alt="토글"
-                width={24}
-                height={24}
-              />
-            </div>
-          </>
->>>>>>> develop
         }
         items={items.map(item => ({
           label: item.label,
