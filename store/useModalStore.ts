@@ -47,12 +47,17 @@ const useModalStore = create<ModalState>((set, get) => ({
       if (lastModalIndex < 0) return state;
 
       const lastModal = state.modals[lastModalIndex];
-      return {
-        modals: [
-          ...state.modals.slice(0, lastModalIndex),
-          { ...lastModal, component: (close) => component(close) },
-        ],
-      };
+
+      if (lastModal.component !== component) {
+        return {
+          modals: [
+            ...state.modals.slice(0, lastModalIndex),
+            { ...lastModal, component: (close) => component(close) },
+          ],
+        };
+      }
+
+      return state;
     });
   },
 
@@ -65,10 +70,14 @@ const useModalStore = create<ModalState>((set, get) => ({
       }
     };
 
-    window.addEventListener('popstate', handlePopState);
+    if (!get().removePopStateListener) {
+      window.addEventListener('popstate', handlePopState);
+    }
+
     set({
       removePopStateListener: () => {
         window.removeEventListener('popstate', handlePopState);
+        set({ removePopStateListener: undefined });
       },
     });
   },
