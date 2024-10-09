@@ -42,11 +42,17 @@ const useModalStore = create<ModalState>((set, get) => ({
   },
 
   updateModal: (component) => {
+    console.log('셋 모달');
     set((state) => {
       const lastModalIndex = state.modals.length - 1;
       if (lastModalIndex < 0) return state;
 
       const lastModal = state.modals[lastModalIndex];
+
+      if (lastModal.component === component) {
+        return state;
+      }
+
       return {
         modals: [
           ...state.modals.slice(0, lastModalIndex),
