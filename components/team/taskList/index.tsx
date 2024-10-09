@@ -134,14 +134,12 @@ export default function TaskList() {
             ({taskLists.length}개)
           </span>
         </div>
-        {isAdmin && (
-          <button
-            className="font-regular-14 text-brand-primary"
-            onClick={handleCreateTaskList}
-          >
-            + 새로운 목록 추가하기
-          </button>
-        )}
+        <button
+          className="font-regular-14 text-brand-primary"
+          onClick={handleCreateTaskList}
+        >
+          + 새로운 목록 추가하기
+        </button>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="task-lists" direction="vertical">
