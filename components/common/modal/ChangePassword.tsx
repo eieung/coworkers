@@ -8,6 +8,7 @@ import clsx from 'clsx';
 
 interface ChangePasswordProps {
   close: () => void;
+  onAction: (value: string) => void;
 }
 
 interface FormData {
@@ -34,7 +35,10 @@ const validatePasswordConfirmation = (value: string, password: string) => {
   return true;
 };
 
-export default function ChangePassword({ close }: ChangePasswordProps) {
+export default function ChangePassword({
+  close,
+  onAction,
+}: ChangePasswordProps) {
   const {
     control,
     handleSubmit,
@@ -56,16 +60,7 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
   const password = watch('password');
 
   const onSubmit = (data: FormData) => {
-    const trimmedPassword = data.password.trim();
-    const trimmedPasswordConfirmation = data.passwordConfirmation.trim();
-
-    if (trimmedPassword !== trimmedPasswordConfirmation) {
-      toast.error('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-
-    toast(`비밀번호가 성공적으로 변경되었습니다!`);
-    close();
+    onAction(data.password);
   };
 
   return (
@@ -74,6 +69,7 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
       title={title}
       showCloseIcon={true}
       description={description}
+      childrenClassName="w-[300px]"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         {inputs?.map((input, index) => (

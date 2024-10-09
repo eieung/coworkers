@@ -95,7 +95,7 @@ export default function Home() {
           </span>
           <button
             onClick={startCoworkers}
-            className="font-bold-16 absolute bottom-[48px] h-[45px] w-[343px] rounded-[32px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] text-white md:bottom-[119px] md:w-[373px] lg:bottom-[120px] lg:w-[373px]"
+            className="font-bold-16 animate__bounce absolute bottom-[48px] h-[45px] w-[343px] rounded-[32px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] text-white md:bottom-[119px] md:w-[373px] lg:bottom-[120px] lg:w-[373px]" // 여기에 애니메이션 클래스 추가
           >
             지금 시작하기
           </button>
@@ -103,7 +103,7 @@ export default function Home() {
       </div>
 
       <div
-        className="wow animate__animated animate__slideInLeft relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] p-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:mt-[60px] lg:h-[419px] lg:w-[996px]"
+        className="wow animate__animated animate__bounceInLeft relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] bg-gradient-to-r from-[#10B981] to-[#CEF57E] p-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:mt-[60px] lg:h-[419px] lg:w-[996px]"
         data-wow-duration="1.5s"
       >
         <div className="h-full w-full rounded-[40px] bg-bg-primary">
@@ -130,8 +130,10 @@ export default function Home() {
           className="absolute bottom-0 left-1/2 sm:-translate-x-1/2 md:left-[124px] lg:left-[174px] lg:h-[338px] lg:w-[291px]"
         />
       </div>
+
+      {/* 나머지 섹션에도 애니메이션 추가 */}
       <div
-        className="wow animate__animated animate__slideInRight relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] border border-bd-primary bg-bg-secondary outline-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:h-[419px] lg:w-[996px]"
+        className="wow animate__animated animate__bounceInRight relative mx-4 mb-6 h-[467px] w-[343px] rounded-[40px] border border-bd-primary bg-bg-secondary outline-[1px] md:mx-6 md:h-[354px] md:w-[696px] lg:mb-20 lg:h-[419px] lg:w-[996px]"
         data-wow-duration="1.5s"
       >
         <Image
@@ -149,7 +151,6 @@ export default function Home() {
             height={76}
             className="sm:mb-[-12px] sm:ml-[-12px] md:mb-[-12px] md:ml-[-12px] lg:mb-[-12px] lg:mr-[-12px]"
           />
-
           <div className="md:text-right lg:text-right">
             <span className="sm:font-medium-18 md:font-medium-24 lg:font-medium-24 text-white">
               간단하게 멤버들을
@@ -161,7 +162,7 @@ export default function Home() {
       </div>
 
       <div
-        className="wow animate__animated animate__slideInLeft relative mx-4 h-[467px] w-[343px] rounded-[40px] bg-[#020617] md:mx-6 md:h-[354px] md:w-[696px] lg:h-[419px] lg:w-[996px]"
+        className="wow animate__animated animate__bounceInLeft relative mx-4 h-[467px] w-[343px] rounded-[40px] bg-[#020617] md:mx-6 md:h-[354px] md:w-[696px] lg:h-[419px] lg:w-[996px]"
         data-wow-duration="1.5s"
       >
         <Image
@@ -181,9 +182,7 @@ export default function Home() {
           />
           <div>
             <span className="font-medium-18 lg:font-medium-24 text-white">
-              할 일도 간편하게
-              <br />
-              체크해요
+              완료한 일은 체크해요
             </span>
           </div>
         </div>

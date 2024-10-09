@@ -37,7 +37,7 @@ export default function ModalVariants() {
 
   // 회원 탈퇴하기
   const handleOpenDeleteModal = () => {
-    openModal((close) => <DeleteAccount close={close} />);
+    openModal((close) => <DeleteAccount close={close} onAction={() => {}} />);
   };
 
   // 로그아웃
@@ -59,7 +59,7 @@ export default function ModalVariants() {
 
   // 비밀번호 변경하기
   const handleOpenChangePasswordModal = () => {
-    openModal((close) => <ChangePassword close={close} />);
+    openModal((close) => <ChangePassword close={close} onAction={() => {}} />);
   };
 
   // 비밀번호 재설정

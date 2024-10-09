@@ -22,11 +22,7 @@ export default function TasksPage() {
   } = useGetCategories(groupId as string);
 
   useEffect(() => {
-    const user = getUser();
-
-    if (!user) {
-      router.push('/login');
-    } else if (isTaskListError) {
+    if (isTaskListError) {
       const statusCode = (taskListError as any).response?.status;
 
       // Unauthorized (401)일 때 로그인 페이지로 이동
