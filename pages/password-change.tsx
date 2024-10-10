@@ -47,8 +47,8 @@ export default function ResetPassword() {
           <Input
             label="새 비밀번호"
             type="password"
-            // value={password}
-            // onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
+            value={password.value}
+            onChange={(e) => password.handleChange}
             placeholder="비밀번호 (영문, 숫자 포함, 8자 이상)를 입력해 주세요."
             className="placeholder:font-regular-14 h-11 w-full"
           />
