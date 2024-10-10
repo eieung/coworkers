@@ -40,7 +40,7 @@ export default function TasksPage() {
         console.error('Error fetching task list:', taskListError);
       }
     }
-  }, [router, isTaskListError, taskListError]);
+  }, [router, isTaskListError, taskListError, categories]);
 
   if (!groupId) return null;
 
