@@ -5,11 +5,7 @@ import { publicAxiosInstance } from '@/services/axios';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
-
-
 export default function ResetPassword() {
-  //const { password, setPassword } = usePasswordState(); // 상태 사용
-  //const { confirmPassword } = useValidation();
   const { password, confirmPassword } = useValidation();
   const router = useRouter();
   const isFormValid =
@@ -47,12 +43,12 @@ export default function ResetPassword() {
         비밀번호 재설정
       </h2>
       <form className="flex w-full flex-col gap-10" onSubmit={handleSubmit}>
-        <div className="flex w-full flex-col gap-6">          
-           <Input
+        <div className="flex w-full flex-col gap-6">
+          <Input
             label="새 비밀번호"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} // 상태 업데이트
+            value={password.value}
+            onChange={(e) => password.handleChange}
             placeholder="비밀번호 (영문, 숫자 포함, 8자 이상)를 입력해 주세요."
             className="placeholder:font-regular-14 h-11 w-full"
           />
