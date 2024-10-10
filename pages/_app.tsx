@@ -8,8 +8,6 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { toastContainerProps } from '@/constants/toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Provider } from 'react-redux';
-import store from '@/store/store';
 
 const DynamicToastContainer = dynamic(
   () => import('react-toastify').then((mod) => mod.ToastContainer),
@@ -30,9 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Header />
 
       <main className={mainClassName}>
-      <Provider store={store}>
         <Component {...pageProps} />
-        </Provider>
       </main>
       <ModalRenderer />
       <DynamicToastContainer {...toastContainerProps} />

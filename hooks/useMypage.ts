@@ -1,7 +1,7 @@
-import { postMypage } from '@/libs/postMypage';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import { postMypage } from '@/services/postMypage';
 
 interface PostGroupParams {
   image: string | null;
@@ -14,7 +14,6 @@ export const useCreateGroup = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  
   return useMutation({
     mutationFn: ({ image, name, email, password }: PostGroupParams) =>
       postMypage({ image, name, email, password }),

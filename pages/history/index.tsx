@@ -3,7 +3,7 @@ import { useGetHistory } from '@/queries/history/useHitory';
 import checkImg from '@/assets/image/icon/checkbox.svg';
 import Image from 'next/image';
 import { formatDate } from '@/utils/common';
-import TextDropdown from '@/components/common/dropdown/TextDropdown';
+import CustomDropdown from '@/components/common/dropdown/CustomDropdown';
 
 type SortOrder = 'latest' | 'oldest';
 type SortOrderLabel = '최신순' | '과거순';
@@ -44,7 +44,7 @@ export default function HistoryPage() {
     <section className="my-10 sm:mt-6 md:mt-6">
       <div className="flex justify-between">
         <h1 className="font-bold-20 text-text-primary">마이 히스토리</h1>
-        <TextDropdown
+        <CustomDropdown
           items={[
             {
               label: SORT_OPTIONS['latest'],
