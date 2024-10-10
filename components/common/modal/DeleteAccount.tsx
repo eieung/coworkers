@@ -4,9 +4,10 @@ import { ACTION_TYPE, ModalUserActions } from '@/constants/modal';
 
 interface DeleteAccountProps {
   close: () => void;
+  onAction: () => void;
 }
 
-export default function DeleteAccount({ close }: DeleteAccountProps) {
+export default function DeleteAccount({ close, onAction }: DeleteAccountProps) {
   const { title, description, buttons } =
     ModalUserActions[ACTION_TYPE.DELETE_ACCOUNT];
 
@@ -20,7 +21,7 @@ export default function DeleteAccount({ close }: DeleteAccountProps) {
         confirmText={buttons[1].children as string}
         buttonType="danger"
         onConfirm={() => {
-          toast('탈퇴되었습니다!');
+          onAction();
           close();
         }}
       />

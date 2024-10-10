@@ -34,9 +34,10 @@ const TaskItem = ({
   onRecurringDelete,
 }: TaskItemProps) => {
   const { id: taskId, name, date, frequency, commentCount } = taskData;
-  const { openModal, updateModal } = useModalStore((state) => ({
+  const { openModal, updateModal, isEmpty } = useModalStore((state) => ({
     openModal: state.openModal,
     updateModal: state.updateModal,
+    isEmpty: state.isEmpty,
   }));
 
   const router = useRouter();
@@ -48,7 +49,7 @@ const TaskItem = ({
   } = useGetTaskItem(String(taskId));
 
   useEffect(() => {
-    if (taskdetailData) {
+    if (taskdetailData && !isEmpty()) {
       updateModal((close) => (
         <TaskDetail taskdetailData={taskdetailData} onClose={close} />
       ));

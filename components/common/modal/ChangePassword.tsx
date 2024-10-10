@@ -6,7 +6,7 @@ import Input from '@/components/common/Input';
 import Button from '@/components/common/button';
 import clsx from 'clsx';
 import { fetchData } from '@/services/task/taskListApi';
-import { useAuthQuery } from '@/queries/user/user';
+import { useAuthQuery } from '@/queries/user';
 import { useRouter } from 'next/router';
 
 interface ChangePasswordProps {

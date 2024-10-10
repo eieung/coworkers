@@ -11,7 +11,10 @@ import Loader from '@/components/common/Loader';
 export default function TasksPage() {
   const router = useRouter();
   const { groupId } = router.query;
-  const initialDate = new Date().toISOString().split('T')[0];
+
+  const date = new Date();
+  date.setHours(date.getHours() + 9);
+  const initialDate = date.toISOString().split('T')[0];
   const [currentDate, setCurrentDate] = useState(initialDate);
 
   const {
