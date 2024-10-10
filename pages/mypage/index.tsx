@@ -46,7 +46,7 @@ const DeleteAccountButton = () => {
   const { logout } = useAuthQuery();
 
   const openModal = useModalStore((state) => state.openModal);
-  console.log(imageSrc);
+
   const uploadImageMutation = useUploadImageMutation();
   const editUserMutation = useEditUsersMutation();
   const deleteUserMutation = useDeleteUserMutation();
