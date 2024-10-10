@@ -76,10 +76,9 @@ export default function ChangePassword({ close }: ChangePasswordProps) {
         passwordConfirmation: trimmedPasswordConfirmation,
         password: trimmedPassword,
       });
-
+      toast(`비밀번호가 성공적으로 변경되었습니다!`);
       logout();
 
-      toast(`비밀번호가 성공적으로 변경되었습니다!`);
       close();
       replace('/login');
     } catch (err) {
