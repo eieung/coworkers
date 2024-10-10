@@ -14,6 +14,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { queryOptions } from '../config';
+import { AxiosError } from 'axios';
 
 export const useGetCategories = (groupId: string) => {
   return useQuery({
@@ -25,20 +26,30 @@ export const useGetCategories = (groupId: string) => {
   });
 };
 
+interface ErrorResponse {
+  message: string;
+}
+
 export const useCreateNewCategory = (groupId: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, createNewTaskParams>({
+  return useMutation<void, AxiosError<ErrorResponse>, createNewTaskParams>({
     mutationFn: ({ groupId, taskData }) =>
       createNewCategoryRequest({ groupId, taskData }),
     onSuccess: (_, variables) => {
       toast.success(`${variables.taskData.name} 목록이 생성되었습니다!`);
       queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
     },
     onError: (error) => {
-      const errorMessage = error.message || '목록 생성에 실패했습니다!';
-      console.error('Error adding task list:', errorMessage);
-      toast.error(errorMessage);
+      if (error.response) {
+        const errorMessage =
+          error.response.data.message || '목록 생성에 실패했습니다!';
+        console.error('Error adding task list:', errorMessage);
+        toast.error(errorMessage);
+      } else {
+        toast.error('목록 생성에 실패했습니다!');
+      }
     },
   });
 };
