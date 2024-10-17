@@ -175,8 +175,6 @@ export const reOrderTaskListMutation = () => {
       await queryClient.invalidateQueries({
         queryKey: ['categories'],
       });
-
-      toast('Queries invalidated successfully');
     },
   });
 };
