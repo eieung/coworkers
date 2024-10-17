@@ -25,7 +25,7 @@ export const useDeleteMemberMutation = (groupId: string) => {
   return useMutation({
     mutationFn: (memberUserId: string) => deleteMember(groupId, memberUserId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
+      await queryClient.invalidateQueries({ queryKey: ['groups'] });
 
       toast.success('멤버가 성공적으로 삭제되었습니다.');
       // 왜 강제로 리다이렉트 주소를 정해주지 않으면 루트 페이지로 이동하는지?
