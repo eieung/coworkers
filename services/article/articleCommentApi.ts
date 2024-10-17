@@ -10,6 +10,7 @@ export const getCommentList = ({ articleId, limit }: getCommentListParams) => {
 };
 
 export interface createCommentParams {
+  limit?: number;
   articleId: number;
 }
 export interface createCommentRequestBody {
