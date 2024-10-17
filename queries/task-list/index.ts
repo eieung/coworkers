@@ -60,6 +60,7 @@ export const useCreateTaskListMutation = (groupId: string) => {
     mutationFn: (data: { name: string }) => createTaskList(groupId, data),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
+      await queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast.success('할 일 목록이 성공적으로 생성되었습니다.');
     },
     onError: (error) => {
@@ -96,7 +97,7 @@ export const useReviseTaskListMutation = () => {
     onSuccess: (_, { groupId }) => {
       queryClient.invalidateQueries({ queryKey: ['groups', groupId] }),
         queryClient.invalidateQueries({
-          queryKey: ['tasks'],
+          queryKey: ['categories'],
         });
       toast.success('할 일 목록이 성공적으로 수정되었습니다.');
     },
@@ -131,6 +132,9 @@ export const useDeleteTaskListMutation = (groupId: string) => {
     mutationFn: (taskListId: string) => deleteTaskList(groupId, taskListId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
+      await queryClient.invalidateQueries({
+        queryKey: ['categories'],
+      });
 
       toast.success('할 일 목록이 성공적으로 삭제되었습니다.');
       router.push(`/groups/${groupId}`);
@@ -168,6 +172,11 @@ export const reOrderTaskListMutation = () => {
     }) => reOrderTaskList(groupId, taskListId, data),
     onSuccess: async (_, { groupId }) => {
       await queryClient.invalidateQueries({ queryKey: ['groups', groupId] });
+      await queryClient.invalidateQueries({
+        queryKey: ['categories'],
+      });
+
+      toast('Queries invalidated successfully');
     },
   });
 };
