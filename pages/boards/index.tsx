@@ -162,9 +162,14 @@ export default function BoardPage() {
   const [sortOrder, setSortOrder] = useState<'최신순' | '좋아요높은순'>(
     '최신순',
   );
+  const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
 
   const { data: articleList } = useGetArticleList();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
 
   useEffect(() => {
     if (articleList && articleList.list && articleList.list.length > 0) {
@@ -226,6 +231,10 @@ export default function BoardPage() {
     }
   });
 
+  const filteredAndSortedePost = sortedPosts.filter((post) =>
+    post.title.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()),
+  );
+
   return (
     <div className="relative min-h-screen bg-bg-primary text-white">
       <main className="mx-auto max-w-[1200px] px-4 py-8">
@@ -236,6 +245,8 @@ export default function BoardPage() {
             <input
               type="text"
               placeholder="검색어를 입력해주세요"
+              value={searchValue}
+              onChange={handleInputChange}
               className="ml-2 w-full rounded-[12px] bg-bg-secondary p-2 text-white placeholder:text-text-secondary"
             />
           </div>
@@ -309,7 +320,7 @@ export default function BoardPage() {
             </select>
           </div>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {sortedPosts.map((post) => {
+            {filteredAndSortedePost.map((post) => {
               const postId = post.id != null ? post.id.toString() : '0'; // post.id가 null이나 undefined일 경우 '0'으로 기본값 설정
 
               const url = {
