@@ -7,7 +7,7 @@ export const getArticleList = () => {
 export interface createArticleRequestBody {
   title: string;
   content: string;
-  image: string;
+  image?: string;
 }
 
 export const createArticle = (req: createArticleRequestBody) => {
@@ -28,4 +28,17 @@ export interface deleteArticleParams {
 
 export const deleteArticle = (params: deleteArticleParams) => {
   return fetchData(`/articles/${params.articleId}`, undefined, 'DELETE');
+};
+
+export type EditArticleParams = {
+  articleId: number;
+  articleData: {
+    image?: string;
+    content?: string;
+    title?: string;
+  };
+};
+
+export const editArticle = ({ articleId, articleData }: EditArticleParams) => {
+  return fetchData(`/articles/${articleId}`, undefined, 'PATCH', articleData);
 };

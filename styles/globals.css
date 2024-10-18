@@ -347,7 +347,7 @@ th {
   background: var(--brand-secondary);
 }
 
-.btn123{
+.btn123 {
   color: var(--white);
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -356,21 +356,21 @@ th {
   background-color: rgb(16, 185, 129);
   border-radius: 0.5rem;
   width: 150px;
-  float:right;
+  float: right;
   margin-top: -0.2rem;
   margin-bottom: -40px;
   display: block;
 }
-  
+
 /* styles.css */
 @media (max-width: 768px) {
-.btn123{
-  position: absolute;
-  width: 250px;
-  bottom: 2em; /* 원하는 만큼 더 아래로 이동 */
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: -80px; /* 더 아래로 이동하기 위한 여백 추가 */
+  .btn123 {
+    position: absolute;
+    width: 250px;
+    bottom: 2em; /* 원하는 만큼 더 아래로 이동 */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: -80px; /* 더 아래로 이동하기 위한 여백 추가 */
   }
 }
 
@@ -382,67 +382,65 @@ th {
 }
 
 @media (max-width: 768px) {
-.w-fulls {
-  width: 50%;
-  height: 130px;
-}
-.h-fulls {
-  height: 50%;
-}
+  .w-fulls {
+    width: 50%;
+    height: 130px;
+  }
+  .h-fulls {
+    height: 50%;
+  }
 }
 
 /* 기본 스타일 */
 .button {
-position: fixed; /* 기본 위치 */
+  position: fixed; /* 기본 위치 */
 }
 
 /* 모바일 스타일 */
 @media (max-width: 768px) {
-.button {
-  position: fixed; /* 스크롤에 고정 */   
-  margin-bottom: -40px;
-  right: 20px; /* 오른쪽에서 20px */
-  /* 추가 스타일 필요 시 여기에 추가 */
-}
+  .button {
+    position: fixed; /* 스크롤에 고정 */
+    margin-bottom: -40px;
+    right: 20px; /* 오른쪽에서 20px */
+    /* 추가 스타일 필요 시 여기에 추가 */
+  }
 }
 
 @media (max-width: 768px) {
-.sss{
-display: flex; /* Flexbox 사용 */
-flex-direction: column; /* 세로 방향으로 나열 */
-gap: 24px; /* 항목 간의 간격 (6 * 4px, 기본 Tailwind 설정) */
+  .sss {
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 세로 방향으로 나열 */
+    gap: 24px; /* 항목 간의 간격 (6 * 4px, 기본 Tailwind 설정) */
+  }
 }
-}
-
 
 .container {
-display: flex; /* 가로로 나열 */
-flex-wrap: nowrap; 
-overflow: hidden; 
-align-items: center; /* 세로 중앙 정렬 */
-height: 220px; /* 컨테이너 높이 고정 */
+  display: flex; /* 가로로 나열 */
+  flex-wrap: nowrap;
+  overflow: hidden;
+  align-items: center; /* 세로 중앙 정렬 */
+  height: 220px; /* 컨테이너 높이 고정 */
 }
 
 .kkk {
-flex: 1 1 auto; /* 자식 요소가 가로로 나열되면서 비율에 따라 크기 조정 */
-min-width: 0; /* 자식 요소가 너무 커지는 것을 방지 */
-height: 60%; /* 세로 길이 고정 (부모의 높이에 맞춤) */
+  flex: 1 1 auto; /* 자식 요소가 가로로 나열되면서 비율에 따라 크기 조정 */
+  min-width: 0; /* 자식 요소가 너무 커지는 것을 방지 */
 }
 
-@media (max-width: 768px) { 
-.kkk {
-  display: none; /* 모든 요소 숨기기 */
-}
-.kkk:nth-child(1) {
-  display: block; /* 첫 번째 요소만 보이기 */
-}
+@media (max-width: 768px) {
+  .kkk {
+    display: none; /* 모든 요소 숨기기 */
+  }
+  .kkk:nth-child(1) {
+    display: block; /* 첫 번째 요소만 보이기 */
+  }
 }
 
 @media (max-width: 480px) {
-.kkk {
-  display: none; /* 모든 요소 숨기기 */
-}
-.kkk:nth-child(1) {
-  display: block; /* 첫 번째 요소만 보이기 */
-}
+  .kkk {
+    display: none; /* 모든 요소 숨기기 */
+  }
+  .kkk:nth-child(1) {
+    display: block; /* 첫 번째 요소만 보이기 */
+  }
 }

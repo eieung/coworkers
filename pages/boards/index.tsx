@@ -8,6 +8,7 @@ import search from '@/assets/image/icon/search.svg';
 import member from '@/assets/image/icon/member.svg';
 import heart from '@/assets/image/icon/heart.svg';
 import arrowRight from '@/assets/image/icon/arrow_right.svg';
+import menuImg from '@/assets/image/icon/kebab.svg';
 import {
   useGetArticleList,
   useDeleteArticle,
@@ -17,6 +18,9 @@ import { getUser } from '@/utils/auth';
 import { toast } from 'react-toastify';
 import useModalStore from '@/store/useModalStore';
 import ConfirmModal from '@/components/common/modal/ConfirmModal';
+import { formatDate } from '@/utils/common';
+import Dropdown from '@/components/common/dropdown/Dropdown';
+import Button from '@/components/common/button';
 
 interface Post {
   content: string;
@@ -42,8 +46,6 @@ const PostCard: React.FC<{
   date: string;
   userId: number;
   id: number;
-  isDropdownOpen: boolean;
-  toggleDropdown: (id: number) => void;
 }> = ({
   url,
   title,
@@ -53,8 +55,6 @@ const PostCard: React.FC<{
 
   id,
   userId,
-  isDropdownOpen,
-  toggleDropdown,
 }) => {
   const openModal = useModalStore((state) => state.openModal);
   const currentUserData = getUser();
@@ -96,9 +96,16 @@ const PostCard: React.FC<{
 
   const handleEditClick = (id: number) => {
     if (!isMyPost) {
-      alert('본인의 게시물만 수정할 수 있습니다.');
+      toast.warning('본인의 게시물만 수정할 수 있습니다.');
       return;
     } else {
+      router.push({
+        pathname: '/boards/addboard',
+        query: {
+          mode: 'edit',
+          id,
+        },
+      });
     }
   };
 
@@ -108,43 +115,37 @@ const PostCard: React.FC<{
         <Link href={url}>
           <h3 className="font-medium-18">{title}</h3>
         </Link>
-        {isMyPost && (
-          <button
-            className="text-text-secondary"
-            onClick={() => toggleDropdown(id)}
-          >
-            ⋮
-          </button>
-        )}
-        {isDropdownOpen && (
-          <ul className="absolute right-0 z-20 mt-2 overflow-hidden rounded-xl border border-bd-primary bg-bg-secondary text-white">
-            <li className="w-[135px] cursor-pointer bg-bg-secondary hover:bg-gray-600">
-              <span
-                className="flex-center flex cursor-pointer py-3"
-                onClick={() => handleEditClick(id)}
-              >
-                수정하기
-              </span>
-            </li>
-            <li className="w-[135px] cursor-pointer bg-bg-secondary hover:bg-gray-600">
-              <span
-                className="flex-center flex cursor-pointer py-3"
-                onClick={() => handleDeleteClick(id)}
-              >
-                삭제하기
-              </span>
-            </li>
-          </ul>
-        )}
+
+        <div className="flex-center flex h-6 w-6 rounded-md hover:bg-bg-tertiary">
+          {isMyPost && (
+            <Dropdown
+              trigger={
+                <Image src={menuImg} alt="메뉴더보기" width={16} height={16} />
+              }
+              items={[
+                {
+                  label: '수정하기',
+                  onClick: () => handleEditClick(id),
+                },
+                {
+                  label: '삭제하기',
+                  onClick: () => {
+                    handleDeleteClick(id);
+                  },
+                },
+              ]}
+            />
+          )}
+        </div>
       </div>
       <div className="mt-4 flex items-center gap-3">
         <Image src={member} alt="member" width={32} height={32} />
-        <span className="text-text-secondary">
+        <span className="font-medium-14 text-text-primary">
           {user}{' '}
           <span style={{ color: '#334155', opacity: 1, padding: '0 4px' }}>
             |
           </span>{' '}
-          {date}
+          <span className="text-text-disabled">{date}</span>
         </span>
         <div className="ml-auto flex items-center gap-1">
           <Image src={heart} alt="heart" width={16} height={16} />
@@ -206,12 +207,6 @@ export default function BoardPage() {
     router.push('/boards/addboard');
   };
 
-  const [dropdownState, setDropdownState] = useState<number | null>(null);
-
-  const toggleDropdown = (id: number) => {
-    setDropdownState((prev) => (prev === id ? null : id));
-  };
-
   const sortedPosts = [
     ...originalPosts, // 기존 게시글 4개
     ...posts.filter(
@@ -266,37 +261,66 @@ export default function BoardPage() {
             </a>
           </div>
           <div className="container sm:max-w-unset md:max-w-unset">
-            <div className="align-self-stretch kkk gap-6md:w-full flex w-full items-center justify-between gap-4 md:grid md:grid-cols-2 md:gap-4">
+            <div className="align-self-stretch kkk gap-6md:w-full flex h-full w-full items-center justify-between gap-4 md:grid md:grid-cols-2 md:gap-4">
               {bestPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="w-full flex-col items-center justify-between rounded-lg border border-[var(--Background-Tertiary,#334155)] bg-bg-secondary p-[12px_16px] sm:mb-4 md:mb-8"
+                  className="flex min-h-[220px] w-full flex-col items-center justify-between rounded-lg border border-[var(--Background-Tertiary,#334155)] bg-bg-secondary p-[16px_24px] sm:mb-4 sm:min-h-[178px] md:mb-8"
                 >
-                  <Link href={`/boards/${post.id}`}>
-                    <div className="flex items-center gap-1.5">
-                      <Image src={medal} alt="medal" width={16} height={16} />
-                      <span className="font-medium-16 text-white">Best</span>
-                    </div>
-                    <div className="mt-3.5 flex flex-col">
-                      <div className="flex items-center">
-                        <h3 className="font-medium-18">{post.title}</h3>
-                        &nbsp;{' '}
-                        {post.image && ( // 이미지가 있을 때만 렌더링
+                  <Link
+                    href={`/boards/${post.id}`}
+                    className="flex w-full flex-grow flex-col justify-between"
+                  >
+                    <span>
+                      <div className="flex items-center gap-1.5">
+                        <Image src={medal} alt="medal" width={16} height={16} />
+                        <span className="font-medium-16 text-white">Best</span>
+                      </div>
+                      <div className="mt-3.5 flex flex-col">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-medium-18 whitespace-normal break-words">
+                            {post.title}
+                          </h3>
+                          &nbsp;{' '}
+                          {post.image && ( // 이미지가 있을 때만 렌더링
+                            <Image
+                              className="ml-4 h-[72px] w-[72px] rounded-lg object-contain"
+                              src={post.image}
+                              alt="image"
+                              width={72}
+                              height={72}
+                            />
+                          )}
+                        </div>
+                        <p className="font-medium-14 mt-3 text-text-disabled">
+                          {formatDate(post.createdAt as string, 'dot')}
+                        </p>
+                      </div>
+                    </span>
+                    <span>
+                      <div className="mt-4 flex items-center justify-between text-text-secondary">
+                        <span className="flex items-center">
                           <Image
-                            src={post.image}
-                            alt="image"
+                            src={member}
+                            alt="member"
                             width={32}
                             height={32}
                           />
-                        )}
+                          <span className="font-medium-14 ml-3 text-text-primary">
+                            {post.writer?.nickname}
+                          </span>
+                        </span>
+                        <span className="flex items-center">
+                          <Image
+                            src={heart}
+                            alt="heart"
+                            width={16}
+                            height={16}
+                          />
+                          <span className="ml-1">{post.likeCount}</span>
+                        </span>
                       </div>
-                      <p className="mt-3 text-text-secondary">{post.date}</p>
-                    </div>
-                    <div className="mt-4 flex items-center text-text-secondary">
-                      <Image src={member} alt="member" width={16} height={16} />
-                      <span className="ml-1">{post.user}</span>
-                      <span className="ml-2">{post.views}</span>
-                    </div>
+                    </span>
                   </Link>
                 </div>
               ))}
@@ -336,12 +360,13 @@ export default function BoardPage() {
                   views={String(post.likeCount) ?? 0}
                   date={
                     post.date ??
-                    format(new Date(post.createdAt || Date.now()), 'yyyy.MM.dd')
+                    format(
+                      new Date(post.createdAt || Date.now()),
+                      'yyyy. MM .dd',
+                    )
                   }
                   userId={(post.writer && post.writer?.id) ?? 0}
                   id={post.id ?? 0}
-                  isDropdownOpen={dropdownState === post.id}
-                  toggleDropdown={toggleDropdown}
                 />
               );
             })}
@@ -349,13 +374,13 @@ export default function BoardPage() {
         </section>
 
         <div className="relative flex w-full justify-end">
-          <button
+          <Button
             style={{ bottom: bottomPosition, width: '120px' }}
-            className="button z-20 rounded-full bg-emerald-500 p-4 text-white shadow-lg"
+            className="button z-20 rounded-full text-white shadow-lg"
             onClick={handleClick}
           >
             + 글쓰기
-          </button>
+          </Button>
         </div>
       </main>
     </div>
