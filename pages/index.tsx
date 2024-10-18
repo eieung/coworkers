@@ -189,7 +189,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative flex h-[431px] w-full flex-col items-center overflow-x-hidden md:h-[675px] md:w-full lg:h-[1080px] lg:w-[1080px] lg:w-full">
+      <div className="relative flex h-[431px] w-full flex-col items-center overflow-x-hidden md:h-[675px] md:w-full lg:h-[1080px] lg:w-full">
         <div className="absolute sm:top-[123px] md:top-[176px] lg:top-[230px]">
           <div className="flex flex-col items-center gap-4 md:gap-6 lg:gap-6">
             <span className="font-medium-24 md:font-medium-40 lg:font-medium-40 text-white">

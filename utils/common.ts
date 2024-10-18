@@ -8,7 +8,7 @@ export function formatDate(
   const day = String(date.getDate()).padStart(2, '0');
 
   if (format === 'dot') {
-    return `${year}.${month}.${day}`;
+    return `${year}. ${month}. ${day}`;
   }
 
   return `${year}년 ${month}월 ${day}일`;

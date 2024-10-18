@@ -3,6 +3,8 @@ import {
   createArticleRequestBody,
   deleteArticle,
   deleteArticleParams,
+  editArticle,
+  EditArticleParams,
   getArticleDetail,
   getArticleDetailParams,
   getArticleList,
@@ -54,6 +56,24 @@ export const useDeleteArticle = () => {
     onError: (error) => {
       console.error('게시글 삭제 중 오류 발생:', error);
       toast.error('게시글 삭제에 실패했습니다.');
+    },
+  });
+};
+
+export const useEditArticle = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (params: EditArticleParams) => editArticle(params),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['articles'],
+      });
+      toast.success('게시글이 수정되었습니다.');
+    },
+    onError: (error) => {
+      console.error('게시글 수정 중 오류 발생:', error);
+      toast.error('게시글 수정에 실패했습니다.');
     },
   });
 };
