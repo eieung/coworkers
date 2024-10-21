@@ -1,8 +1,12 @@
 import {
   createArticle,
   createArticleRequestBody,
+  createLike,
+  CreateLikeParams,
   deleteArticle,
   deleteArticleParams,
+  deleteLike,
+  DeleteLikeParams,
   editArticle,
   EditArticleParams,
   getArticleDetail,
@@ -74,6 +78,40 @@ export const useEditArticle = () => {
     onError: (error) => {
       console.error('게시글 수정 중 오류 발생:', error);
       toast.error('게시글 수정에 실패했습니다.');
+    },
+  });
+};
+
+export const useCreateLike = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (params: CreateLikeParams) => createLike(params),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['articles'],
+      });
+    },
+    onError: (error) => {
+      console.error('즐겨찾기 중 오류 발생:', error);
+      toast.error('즐겨찾기에 실패했습니다.');
+    },
+  });
+};
+
+export const useDeleteLike = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (params: DeleteLikeParams) => deleteLike(params),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['articles'],
+      });
+    },
+    onError: (error) => {
+      console.error('즐겨찾기 삭제 중 오류 발생:', error);
+      toast.error('즐겨찾기 삭제에 실패했습니다.');
     },
   });
 };

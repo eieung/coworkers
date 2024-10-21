@@ -12,6 +12,9 @@ import menuImg from '@/assets/image/icon/kebab.svg';
 import {
   useGetArticleList,
   useDeleteArticle,
+  useDeleteLike,
+  useGetArticleDetail,
+  useCreateLike,
 } from '@/queries/article/useArticleData';
 import { format } from 'date-fns';
 import { getUser } from '@/utils/auth';
@@ -21,6 +24,7 @@ import ConfirmModal from '@/components/common/modal/ConfirmModal';
 import { formatDate } from '@/utils/common';
 import Dropdown from '@/components/common/dropdown/Dropdown';
 import Button from '@/components/common/button';
+import clsx from 'clsx';
 
 interface Post {
   content: string;
@@ -46,23 +50,27 @@ const PostCard: React.FC<{
   date: string;
   userId: number;
   id: number;
-}> = ({
-  url,
-  title,
-  user,
-  views,
-  date,
-
-  id,
-  userId,
-}) => {
+}> = ({ url, title, user, views, date, id, userId }) => {
   const openModal = useModalStore((state) => state.openModal);
   const currentUserData = getUser();
   const router = useRouter();
 
   const deleteArticle = useDeleteArticle();
+  const createLike = useCreateLike();
+  const deleteLike = useDeleteLike();
 
   const isMyPost = (currentUserData && currentUserData.id) == userId;
+
+  const { data: articledetail } = useGetArticleDetail({ articleId: id });
+  const isLiked = articledetail?.isLiked;
+
+  const [isFavorited, setIsFavorited] = useState(isLiked);
+
+  useEffect(() => {
+    if (isLiked !== undefined) {
+      setIsFavorited(isLiked);
+    }
+  }, [isLiked]);
 
   const handleDeleteClick = async (id: number) => {
     if (!isMyPost) {
@@ -109,6 +117,38 @@ const PostCard: React.FC<{
     }
   };
 
+  const handleLikeClick = (id: number) => {
+    if (!isFavorited) {
+      createLike.mutate(
+        { articleId: Number(id) },
+        {
+          onSuccess: () => {
+            setIsFavorited(true);
+            toast.success('즐겨찾기에 추가되었습니다');
+          },
+          onError: (err) => {
+            toast.error('즐겨찾기에 추가에 실패했습니다');
+            console.error(err);
+          },
+        },
+      );
+    } else {
+      deleteLike.mutate(
+        { articleId: Number(id) },
+        {
+          onSuccess: () => {
+            setIsFavorited(false);
+            toast.success('즐겨찾기가 삭제되었습니다');
+          },
+          onError: (err) => {
+            toast.error('즐겨찾기 삭제에 실패했습니다');
+            console.error(err);
+          },
+        },
+      );
+    }
+  };
+
   return (
     <div className="relative flex flex-col justify-between rounded-lg bg-bg-secondary p-4">
       <div className="flex justify-between">
@@ -147,10 +187,23 @@ const PostCard: React.FC<{
           </span>{' '}
           <span className="text-text-disabled">{date}</span>
         </span>
-        <div className="ml-auto flex items-center gap-1">
-          <Image src={heart} alt="heart" width={16} height={16} />
-          <span className="text-text-secondary">{views}</span>
-        </div>
+        <span className="font-regular-14 ml-auto flex items-center gap-1 text-text-disabled">
+          <div
+            className="flex-center h-4 w-4 cursor-pointer"
+            onClick={() => handleLikeClick(id)}
+          >
+            <i
+              className={clsx(
+                isFavorited
+                  ? 'fa-solid fa-heart text-red-500'
+                  : 'fa-regular fa-heart',
+              )}
+            />
+          </div>
+          <span className="ml-1">
+            {(Number(views) ?? 0) > 9999 ? '9999+' : views}
+          </span>
+        </span>
       </div>
     </div>
   );
@@ -310,14 +363,15 @@ export default function BoardPage() {
                             {post.writer?.nickname}
                           </span>
                         </span>
-                        <span className="flex items-center">
-                          <Image
-                            src={heart}
-                            alt="heart"
-                            width={16}
-                            height={16}
-                          />
-                          <span className="ml-1">{post.likeCount}</span>
+                        <span className="font-regular-14 flex items-center gap-1 text-text-disabled">
+                          <i className="fa-regular fa-heart"></i>
+                          <span className="ml-1">
+                            {post
+                              ? (post.likeCount ?? 0) > 9999
+                                ? '9999+'
+                                : post.likeCount
+                              : 0}
+                          </span>
                         </span>
                       </div>
                     </span>

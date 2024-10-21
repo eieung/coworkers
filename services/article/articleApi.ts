@@ -42,3 +42,19 @@ export type EditArticleParams = {
 export const editArticle = ({ articleId, articleData }: EditArticleParams) => {
   return fetchData(`/articles/${articleId}`, undefined, 'PATCH', articleData);
 };
+
+export type CreateLikeParams = {
+  articleId: number;
+};
+
+export const createLike = ({ articleId }: CreateLikeParams) => {
+  return fetchData(`/articles/${articleId}/like`, undefined, 'POST');
+};
+
+export interface DeleteLikeParams {
+  articleId: number;
+}
+
+export const deleteLike = (params: DeleteLikeParams) => {
+  return fetchData(`/articles/${params.articleId}/like`, undefined, 'DELETE');
+};
