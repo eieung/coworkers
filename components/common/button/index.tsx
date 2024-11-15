@@ -1,31 +1,5 @@
 import { twMerge } from 'tailwind-merge';
 
-/*
- * @component
- * Button - 각 페이지의 버튼을 모아놓은 컴포넌트.
- *
- * @props
- * - appearance (optional): 각 버튼의 기본 베이스 스타일을 적용합니다.
- * - fullWidth (optional): 버튼의 width를 적용합니다.
- * - size (optional): 버튼의 height를 적용합니다.
- * - disabled(optional): 버튼의 활성화를 선택합니다.
- * - children: 버튼 안의 텍스트를 입력합니다.
- * - className (optional): 버튼에 추가적인 클래스명을 적용할 수 있습니다.
- * - font (optional): 버튼 안의 텍스트를 스타일링 합니다.
- *
- * @usage
- * 1. 버튼 입력 필드:
- *    <Button
- *      size = "large"
- *      font="font-bold-24"
- *      appearance="solid"
- *      fullWidth={true}
- *      children="생성하기"
- *      className=""
- *      disabled={false}
- *    />
- */
-
 const itemVariants = {
   solid:
     'rounded-[12px] bg-brand-primary text-white hover:bg-it-hover active:bg-it-pressed disabled:bg-it-inactive',
@@ -53,6 +27,28 @@ export interface ButtonProps
   font?: string;
 }
 
+/**
+ * Button - 재사용 가능한 버튼 컴포넌트.
+ * @param {ButtonProps} props - Button 컴포넌트의 props.
+ * @prop {ButtonVariant} [props.appearance='solid'] - 각 버튼의 기본 베이스 스타일을 적용합니다.
+ * @prop {boolean} [props.fullWidth=false] - 버튼의 width를 적용합니다.
+ * @prop {'large' | 'xsmall' | 'floating-large' | 'floating-medium'} [props.size='large'] - 버튼의 height를 적용합니다.
+ * @prop {boolean} [props.disabled=false] - 버튼의 활성화를 선택합니다.
+ * @prop {React.ReactNode} props.children - 버튼 안의 텍스트를 입력합니다.
+ * @prop {string} [props.className] - 버튼에 추가적인 클래스명을 적용할 수 있습니다.
+ * @prop {string} [props.font] - 버튼 안의 텍스트를 스타일링 합니다.
+ *
+ * @example
+ * <Button
+ *   size="large"
+ *   font="font-bold-24"
+ *   appearance="solid"
+ *   fullWidth={true}
+ *   children="생성하기"
+ *   className=""
+ *   disabled={false}
+ * />
+ */
 export default function Button({
   appearance = 'solid',
   fullWidth = false,
